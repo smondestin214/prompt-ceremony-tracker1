@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Engineering Ceremony Tracker</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface-hover: #222633;
+      --border: #2a2e3d;
+      --text: #e4e4e7;
+      --text-muted: #8b8d97;
+      --accent: #7c5cfc;
+      --accent-light: #9b82fc;
+
+      --stage-crit: #f59e0b;
+      --stage-swarm: #3b82f6;
+      --stage-bug: #ef4444;
+      --stage-test: #8b5cf6;
+      --stage-eval: #10b981;
+
+      --status-not-started: #3a3d4a;
+      --status-in-progress: #1e3a5f;
+      --status-done: #1a3a2a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    header { margin-bottom: 36px; }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--accent-light), var(--stage-eval));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p { color: var(--text-muted); font-size: 14px; }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .btn:hover { background: var(--surface-hover); }
+
+    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-light); }
+
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    .btn-icon { padding: 6px 10px; font-size: 16px; line-height: 1; }
+    .btn-danger { color: #ef4444; }
+    .btn-danger:hover { background: #2a1a1a; }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface-hover); }
+
+    /* Pipeline */
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border-radius: 12px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .pipeline-stage {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .pipeline-stage .num {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+    }
+
+    .pipeline-arrow { color: var(--text-muted); font-size: 18px; flex-shrink: 0; }
+
+    .stage-crit { background: rgba(245,158,11,0.15); color: var(--stage-crit); }
+    .stage-crit .num { background: var(--stage-crit); }
+    .stage-swarm { background: rgba(59,130,246,0.15); color: var(--stage-swarm); }
+    .stage-swarm .num { background: var(--stage-swarm); }
+    .stage-bug { background: rgba(239,68,68,0.15); color: var(--stage-bug); }
+    .stage-bug .num { background: var(--stage-bug); }
+    .stage-test { background: rgba(139,92,246,0.15); color: var(--stage-test); }
+    .stage-test .num { background: var(--stage-test); }
+    .stage-eval { background: rgba(16,185,129,0.15); color: var(--stage-eval); }
+    .stage-eval .num { background: var(--stage-eval); }
+
+    /* Project cards */
+    .projects { display: flex; flex-direction: column; gap: 16px; }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+    .project-card:hover { border-color: #3a3e50; }
+
+    .project-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; cursor: pointer; user-select: none;
+    }
+
+    .project-header-left {
+      display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;
+    }
+
+    .project-name {
+      font-size: 16px; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+    .progress-bar-mini { display: flex; gap: 3px; align-items: center; }
+
+    .progress-dot {
+      width: 24px; height: 6px; border-radius: 3px; transition: background 0.2s;
+    }
+    .progress-dot.not-started { background: var(--status-not-started); }
+    .progress-dot.in-progress {
+      background: repeating-linear-gradient(90deg, #1e3a5f 0px, #2a5090 4px, #1e3a5f 8px);
+      background-size: 8px 100%; animation: shimmer 1s linear infinite;
+    }
+    .progress-dot.done { background: var(--stage-eval); }
+
+    @keyframes shimmer {
+      0% { background-position: 0 0; }
+      100% { background-position: 8px 0; }
+    }
+
+    .project-header-right { display: flex; align-items: center; gap: 10px; }
+
+    .expand-icon {
+      color: var(--text-muted); font-size: 12px; transition: transform 0.2s;
+    }
+    .project-card.expanded .expand-icon { transform: rotate(180deg); }
+
+    .project-body { display: none; padding: 0 20px 20px; }
+    .project-card.expanded .project-body { display: block; }
+
+    /* Ceremony rows */
+    .ceremonies { display: flex; flex-direction: column; gap: 4px; }
+
+    .ceremony-section {
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .ceremony-section:hover { border-color: var(--border); }
+    .ceremony-section.open { border-color: var(--border); background: rgba(255,255,255,0.01); }
+
+    .ceremony-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; cursor: pointer;
+      background: rgba(255,255,255,0.02); border-radius: 8px;
+    }
+
+    .ceremony-badge {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .ceremony-badge.crit { background: rgba(245,158,11,0.15); }
+    .ceremony-badge.swarm { background: rgba(59,130,246,0.15); }
+    .ceremony-badge.bug { background: rgba(239,68,68,0.15); }
+    .ceremony-badge.test { background: rgba(139,92,246,0.15); }
+    .ceremony-badge.eval { background: rgba(16,185,129,0.15); }
+
+    .ceremony-info { flex: 1; min-width: 0; }
+    .ceremony-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .ceremony-desc { font-size: 12px; color: var(--text-muted); }
+
+    .ceremony-fields { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .status-select {
+      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px; cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b8d97'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
+    }
+    .status-select.done { background-color: var(--status-done); border-color: #2a5a3a; }
+    .status-select.in-progress { background-color: var(--status-in-progress); border-color: #2a4a6f; }
+
+    .date-input {
+      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px; width: 130px;
+    }
+    .date-input::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+    .notes-input {
+      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px; width: 180px;
+    }
+
+    input:focus, select:focus { outline: none; border-color: var(--accent); }
+
+    /* Ceremony detail panel (checklist + findings) */
+    .ceremony-detail {
+      display: none;
+      padding: 12px 16px 16px 60px;
+    }
+    .ceremony-section.open .ceremony-detail { display: block; }
+
+    .detail-tabs {
+      display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .detail-tab {
+      padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer;
+      color: var(--text-muted); border-bottom: 2px solid transparent;
+      transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .detail-tab:hover { color: var(--text); }
+    .detail-tab.active { color: var(--accent-light); border-bottom-color: var(--accent); }
+
+    .detail-panel { display: none; }
+    .detail-panel.active { display: block; }
+
+    /* Checklist */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 6px 0; font-size: 13px; color: var(--text-muted);
+    }
+    .checklist li input[type="checkbox"] {
+      margin-top: 2px; accent-color: var(--accent); cursor: pointer;
+      width: 16px; height: 16px; flex-shrink: 0;
+    }
+    .checklist li.checked { color: var(--text-muted); text-decoration: line-through; opacity: 0.6; }
+    .checklist-progress {
+      font-size: 11px; color: var(--text-muted); margin-top: 8px;
+    }
+
+    /* Findings log */
+    .findings-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .finding-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; background: var(--bg); border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .finding-severity {
+      padding: 2px 8px; border-radius: 4px; font-size: 10px;
+      font-weight: 700; text-transform: uppercase; white-space: nowrap; margin-top: 2px;
+    }
+    .severity-critical { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .severity-major { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .severity-minor { background: rgba(59,130,246,0.2); color: #3b82f6; }
+    .severity-note { background: rgba(139,92,246,0.2); color: #8b5cf6; }
+
+    .finding-content { flex: 1; }
+    .finding-text { font-size: 13px; margin-bottom: 3px; }
+    .finding-meta { font-size: 11px; color: var(--text-muted); }
+
+    .add-finding-form {
+      display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+    }
+    .add-finding-form select,
+    .add-finding-form input {
+      padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px;
+    }
+    .add-finding-form input { flex: 1; min-width: 200px; }
+
+    .no-findings {
+      text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px; width: 420px; max-width: 90vw;
+    }
+    .modal h2 { font-size: 18px; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 14px;
+    }
+
+    .modal-actions {
+      display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;
+    }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+
+    /* Stats */
+    .stats-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 20px; flex: 1; min-width: 140px;
+    }
+    .stat-card .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .stat-card .value { font-size: 24px; font-weight: 700; }
+
+    /* Prompt Versions */
+    .prompt-versions {
+      margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);
+    }
+
+    .versions-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px; cursor: pointer;
+    }
+    .versions-header h3 {
+      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+    }
+    .versions-header .version-count {
+      font-size: 11px; font-weight: 400; color: var(--text-muted);
+      background: var(--bg); padding: 2px 8px; border-radius: 10px;
+    }
+
+    .versions-body { display: none; }
+    .versions-body.open { display: block; }
+
+    .version-entry {
+      position: relative; padding: 14px 16px 14px 28px;
+      border-left: 2px solid var(--border); margin-left: 8px;
+    }
+    .version-entry:last-child { border-left-color: transparent; }
+    .version-entry::before {
+      content: ''; position: absolute; left: -6px; top: 18px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--bg);
+    }
+    .version-entry.latest::before { background: var(--stage-eval); }
+
+    .version-meta {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;
+    }
+    .version-tag {
+      font-size: 11px; font-weight: 700; padding: 2px 8px;
+      border-radius: 4px; background: rgba(124,92,252,0.15); color: var(--accent-light);
+    }
+    .version-tag.latest { background: rgba(16,185,129,0.15); color: var(--stage-eval); }
+    .version-date { font-size: 11px; color: var(--text-muted); }
+    .version-author { font-size: 11px; color: var(--text-muted); }
+
+    .version-change-summary {
+      font-size: 13px; color: var(--text); margin-bottom: 8px; font-weight: 500;
+    }
+
+    .version-prompt-preview {
+      font-size: 12px; color: var(--text-muted); background: var(--bg);
+      border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
+      max-height: 0; overflow: hidden; transition: max-height 0.3s;
+      font-family: 'SF Mono', 'Fira Code', monospace; white-space: pre-wrap;
+      word-break: break-word; line-height: 1.5;
+    }
+    .version-prompt-preview.expanded { max-height: 600px; overflow-y: auto; }
+
+    .version-toggle-btn {
+      font-size: 11px; color: var(--accent-light); background: none;
+      border: none; cursor: pointer; padding: 4px 0; margin-top: 4px;
+    }
+    .version-toggle-btn:hover { text-decoration: underline; }
+
+    .version-delete-btn {
+      position: absolute; top: 12px; right: 8px;
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px;
+    }
+    .version-delete-btn:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+    .add-version-section {
+      margin-top: 12px; padding: 14px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+    }
+    .add-version-section h4 {
+      font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 600;
+    }
+    .add-version-row {
+      display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .add-version-row input {
+      padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 12px; flex: 1; min-width: 140px;
+    }
+    .add-version-textarea {
+      width: 100%; min-height: 120px; padding: 10px 12px; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      font-size: 12px; font-family: 'SF Mono', 'Fira Code', monospace;
+      resize: vertical; line-height: 1.5; margin-bottom: 8px;
+    }
+    .add-version-textarea:focus, .add-version-row input:focus {
+      outline: none; border-color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .ceremony-fields { flex-direction: column; align-items: flex-start; }
+      .notes-input { width: 100%; }
+      .pipeline-flow { padding: 12px; }
+      .ceremony-detail { padding-left: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <div>
+          <h1>Prompt Engineering Ceremonies</h1>
+          <p>Track your team's prompt engineering workflow from critique to evaluation</p>
+        </div>
+        <div id="sync-badge" style="font-size:12px; color:var(--text-muted); padding:6px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; white-space:nowrap;" onclick="openSetup()" title="Click to configure team sync">
+          <span style="color:#f59e0b;">&#9679;</span> Connecting...
+        </div>
+      </div>
+    </header>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-stage stage-crit"><span class="num">1</span> Prompt Crit</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-swarm"><span class="num">2</span> Swarming</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-bug"><span class="num">3</span> Bug Bash</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-test"><span class="num">4</span> Testing</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-eval"><span class="num">5</span> Evals</div>
+    </div>
+
+    <div class="stats-bar" id="stats-bar"></div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="openModal()">+ New Project</button>
+      <button class="btn" onclick="exportData()">Export JSON</button>
+      <button class="btn" onclick="importData()">Import JSON</button>
+    </div>
+
+    <div class="projects" id="projects-container"></div>
+  </div>
+
+  <!-- New Project Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <h2 id="modal-title">New Project</h2>
+      <div class="form-group">
+        <label>Project Name</label>
+        <input type="text" id="project-name-input" placeholder="e.g. Search Ranking Prompt v2">
+      </div>
+      <div class="form-group">
+        <label>Owner</label>
+        <input type="text" id="project-owner-input" placeholder="e.g. Sarah M.">
+      </div>
+      <div class="form-group">
+        <label>Target Date</label>
+        <input type="date" id="project-date-input">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProject()">Create Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GitHub Setup Modal -->
+  <div class="modal-overlay" id="setup-overlay" onclick="closeSetup(event)">
+    <div class="modal" onclick="event.stopPropagation()" style="width:480px;">
+      <h2>Team Sync Setup</h2>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+        Connect to a GitHub repo so your whole team sees the same data. The tracker stores a JSON file in your repo via the GitHub API.
+      </p>
+      <div class="form-group">
+        <label>GitHub Personal Access Token <span style="color:var(--text-muted);">(needs <code>repo</code> scope)</span></label>
+        <input type="password" id="setup-token" placeholder="ghp_xxxxxxxxxxxx">
+      </div>
+      <div class="form-group">
+        <label>Repository Owner <span style="color:var(--text-muted);">(user or org)</span></label>
+        <input type="text" id="setup-owner" placeholder="e.g. your-org">
+      </div>
+      <div class="form-group">
+        <label>Repository Name</label>
+        <input type="text" id="setup-repo" placeholder="e.g. prompt-ceremony-tracker">
+      </div>
+      <div class="form-group">
+        <label>Data File Path <span style="color:var(--text-muted);">(optional)</span></label>
+        <input type="text" id="setup-path" placeholder="shared-data.json" value="shared-data.json">
+      </div>
+      <div id="setup-status" style="font-size:12px; margin-top:8px; min-height:20px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-danger btn-sm" onclick="disconnectGitHub()" id="disconnect-btn" style="margin-right:auto; display:none;">Disconnect</button>
+        <button class="btn" onclick="closeSetup()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSetup()">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+
+  <script>
+    const CEREMONIES = [
+      {
+        key: 'crit', name: 'Prompt Crit',
+        desc: 'Peer review of prompt design, structure, and edge cases', icon: '\u{1F50D}',
+        checklist: [
+          'System prompt reviewed for clarity and specificity',
+          'Instructions are unambiguous (no room for misinterpretation)',
+          'Tone and persona are defined',
+          'Output format is explicitly specified',
+          'Edge cases and boundaries are addressed',
+          'Few-shot examples included where helpful',
+          'Constraints and guardrails are clearly stated',
+          'Prompt length is justified (not bloated)',
+        ]
+      },
+      {
+        key: 'swarm', name: 'Swarming',
+        desc: 'Team collaborative session to improve prompt together', icon: '\u{1F41D}',
+        checklist: [
+          'All relevant team members attended',
+          'Live-tested prompt during session',
+          'Identified at least 3 improvement areas',
+          'Rewrote weakest sections collaboratively',
+          'Tested revised prompt in real-time',
+          'Documented changes and rationale',
+          'Assigned follow-up owners for remaining items',
+        ]
+      },
+      {
+        key: 'bug', name: 'Bug Bash',
+        desc: 'Focused session finding failure modes and adversarial inputs', icon: '\u{1F41B}',
+        checklist: [
+          'Tried ambiguous / vague inputs',
+          'Tried adversarial / jailbreak attempts',
+          'Tested with extremely long inputs',
+          'Tested with empty or minimal inputs',
+          'Tested with multilingual inputs',
+          'Tried inputs outside intended domain',
+          'Checked for hallucination on factual queries',
+          'Tested for harmful or biased outputs',
+          'Logged all failures as findings below',
+        ]
+      },
+      {
+        key: 'test', name: 'Testing',
+        desc: 'Systematic testing across scenarios and edge cases', icon: '\u{1F9EA}',
+        checklist: [
+          'Created test suite with 10+ representative inputs',
+          'Covered happy path scenarios',
+          'Covered known failure modes from bug bash',
+          'Tested output format consistency',
+          'Tested across different input lengths',
+          'Verified guardrails hold under pressure',
+          'Compared outputs to golden examples',
+          'Tested latency / token usage is acceptable',
+        ]
+      },
+      {
+        key: 'eval', name: 'Evals',
+        desc: 'Quantitative evaluation with metrics and benchmarks', icon: '\u{1F4CA}',
+        checklist: [
+          'Defined success metrics (accuracy, relevance, etc.)',
+          'Built or selected eval dataset (50+ examples)',
+          'Ran automated scoring / grading',
+          'Compared against baseline / previous version',
+          'Documented eval results and scores',
+          'Identified remaining failure categories',
+          'Got stakeholder sign-off on results',
+          'Archived eval data for future regression testing',
+        ]
+      },
+    ];
+
+    let projects = [];
+    let backendMode = 'local'; // 'github', 'server', 'local'
+    let syncTimer = null;
+    let saving = false;
+    let ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+    let ghSha = null; // tracks the file SHA for GitHub API updates
+
+    function migrateProjects(list) {
+      list.forEach(p => {
+        CEREMONIES.forEach(c => {
+          if (!p.ceremonies[c.key]) p.ceremonies[c.key] = {};
+          if (!p.ceremonies[c.key].checklistState) p.ceremonies[c.key].checklistState = {};
+          if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
+        });
+        if (!p.versions) p.versions = [];
+      });
+      return list;
+    }
+
+    function stripUIState(p) {
+      const clean = JSON.parse(JSON.stringify(p));
+      delete clean.expanded;
+      delete clean._versionsOpen;
+      CEREMONIES.forEach(c => {
+        if (clean.ceremonies[c.key]) {
+          delete clean.ceremonies[c.key]._open;
+          delete clean.ceremonies[c.key]._activeTab;
+        }
+      });
+      return clean;
+    }
+
+    // ---- GitHub API backend ----
+
+    async function ghFetch(method, body) {
+      const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.path || 'shared-data.json'}`;
+      const opts = {
+        method,
+        headers: {
+          'Authorization': `Bearer ${ghConfig.token}`,
+          'Accept': 'application/vnd.github.v3+json',
+        },
+      };
+      if (body) {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(body);
+      }
+      return fetch(url, opts);
+    }
+
+    async function ghRead() {
+      const res = await ghFetch('GET');
+      if (res.status === 404) {
+        // File doesn't exist yet — create it
+        ghSha = null;
+        return [];
+      }
+      if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+      const data = await res.json();
+      ghSha = data.sha;
+      return JSON.parse(atob(data.content));
+    }
+
+    async function ghWrite(projects) {
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(projects, null, 2))));
+      const body = {
+        message: 'Update ceremony tracker data',
+        content,
+      };
+      if (ghSha) body.sha = ghSha;
+      const res = await ghFetch('PUT', body);
+      if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+      const data = await res.json();
+      ghSha = data.content.sha;
+    }
+
+    // ---- Local Python server backend ----
+
+    async function serverRead() {
+      const res = await fetch('/api/projects');
+      if (!res.ok) throw new Error('Server error');
+      return res.json();
+    }
+
+    async function serverWrite(projects) {
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(projects),
+      });
+      if (!res.ok) throw new Error('Server error');
+    }
+
+    // ---- Init & Sync ----
+
+    async function init() {
+      // 1. Try GitHub if configured
+      if (ghConfig?.token && ghConfig?.owner && ghConfig?.repo) {
+        try {
+          projects = migrateProjects(await ghRead());
+          backendMode = 'github';
+          updateSyncBadge('connected');
+          syncTimer = setInterval(pollRemote, 8000);
+          render();
+          return;
+        } catch (e) {
+          console.warn('GitHub backend failed:', e);
+        }
+      }
+
+      // 2. Try local Python server
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          projects = migrateProjects(await res.json());
+          backendMode = 'server';
+          updateSyncBadge('connected');
+          syncTimer = setInterval(pollRemote, 5000);
+          render();
+          return;
+        }
+      } catch {}
+
+      // 3. Fall back to localStorage
+      projects = migrateProjects(JSON.parse(localStorage.getItem('pe-ceremonies') || '[]'));
+      backendMode = 'local';
+      updateSyncBadge('local');
+      render();
+    }
+
+    function captureUIState() {
+      const uiState = {};
+      projects.forEach(p => {
+        uiState[p.name + p.createdAt] = {
+          expanded: p.expanded,
+          _versionsOpen: p._versionsOpen,
+          ceremonyUI: {}
+        };
+        CEREMONIES.forEach(c => {
+          uiState[p.name + p.createdAt].ceremonyUI[c.key] = {
+            _open: p.ceremonies[c.key]?._open,
+            _activeTab: p.ceremonies[c.key]?._activeTab,
+          };
+        });
+      });
+      return uiState;
+    }
+
+    function restoreUIState(uiState) {
+      projects.forEach(p => {
+        const saved = uiState[p.name + p.createdAt];
+        if (saved) {
+          p.expanded = saved.expanded;
+          p._versionsOpen = saved._versionsOpen;
+          CEREMONIES.forEach(c => {
+            if (saved.ceremonyUI[c.key]) {
+              p.ceremonies[c.key]._open = saved.ceremonyUI[c.key]._open;
+              p.ceremonies[c.key]._activeTab = saved.ceremonyUI[c.key]._activeTab;
+            }
+          });
+        }
+      });
+    }
+
+    async function pollRemote() {
+      if (saving) return;
+      try {
+        let serverData;
+        if (backendMode === 'github') {
+          serverData = await ghRead();
+        } else {
+          const res = await fetch('/api/projects');
+          if (!res.ok) throw new Error();
+          serverData = await res.json();
+        }
+
+        const serverJson = JSON.stringify(serverData);
+        const localJson = JSON.stringify(projects.map(stripUIState));
+        if (serverJson !== localJson) {
+          const uiState = captureUIState();
+          projects = migrateProjects(serverData);
+          restoreUIState(uiState);
+          render();
+        }
+        updateSyncBadge('connected');
+      } catch {
+        updateSyncBadge('disconnected');
+      }
+    }
+
+    function updateSyncBadge(state) {
+      const badge = document.getElementById('sync-badge');
+      if (!badge) return;
+      const modeLabel = backendMode === 'github' ? 'GitHub' : backendMode === 'server' ? 'Server' : 'Local';
+      if (state === 'connected') {
+        badge.innerHTML = `<span style="color:#10b981;">&#9679;</span> ${modeLabel} synced`;
+        badge.title = `Connected to ${modeLabel} — changes sync automatically`;
+        badge.onclick = openSetup;
+      } else if (state === 'disconnected') {
+        badge.innerHTML = `<span style="color:#ef4444;">&#9679;</span> ${modeLabel} disconnected`;
+        badge.title = 'Lost connection — retrying...';
+        badge.onclick = openSetup;
+      } else {
+        badge.innerHTML = '<span style="color:#f59e0b;">&#9679;</span> Local only';
+        badge.title = 'Click to connect to GitHub for team sync';
+        badge.onclick = openSetup;
+        badge.style.cursor = 'pointer';
+      }
+    }
+
+    async function save() {
+      render();
+
+      // Always save to localStorage as backup
+      localStorage.setItem('pe-ceremonies', JSON.stringify(projects));
+
+      if (backendMode !== 'local') {
+        saving = true;
+        try {
+          const clean = projects.map(stripUIState);
+          if (backendMode === 'github') {
+            await ghWrite(clean);
+          } else {
+            await serverWrite(clean);
+          }
+          updateSyncBadge('connected');
+        } catch (e) {
+          console.warn('Save failed:', e);
+          updateSyncBadge('disconnected');
+        }
+        saving = false;
+      }
+    }
+
+    function render() {
+      renderStats();
+      renderProjects();
+    }
+
+    function renderStats() {
+      const total = projects.length;
+      const totalCeremonies = total * 5;
+      let done = 0, inProgress = 0, totalFindings = 0;
+      projects.forEach(p => {
+        CEREMONIES.forEach(c => {
+          const status = p.ceremonies[c.key]?.status || 'not-started';
+          if (status === 'done') done++;
+          else if (status === 'in-progress') inProgress++;
+          totalFindings += (p.ceremonies[c.key]?.findings || []).length;
+        });
+      });
+
+      const fullyComplete = projects.filter(p =>
+        CEREMONIES.every(c => p.ceremonies[c.key]?.status === 'done')
+      ).length;
+
+      document.getElementById('stats-bar').innerHTML = `
+        <div class="stat-card"><div class="label">Active Projects</div><div class="value">${total}</div></div>
+        <div class="stat-card"><div class="label">Ceremonies Done</div><div class="value">${done}/${totalCeremonies}</div></div>
+        <div class="stat-card"><div class="label">In Progress</div><div class="value">${inProgress}</div></div>
+        <div class="stat-card"><div class="label">Total Findings</div><div class="value">${totalFindings}</div></div>
+      `;
+    }
+
+    function renderProjects() {
+      const container = document.getElementById('projects-container');
+
+      if (projects.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No projects yet</h3>
+            <p>Create a project to start tracking your prompt engineering ceremonies.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = projects.map((p, i) => `
+        <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}">
+          <div class="project-header" onclick="toggleProject(${i})">
+            <div class="project-header-left">
+              <div class="progress-bar-mini">
+                ${CEREMONIES.map(c => {
+                  const s = p.ceremonies[c.key]?.status || 'not-started';
+                  return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
+                }).join('')}
+              </div>
+              <span class="project-name">${esc(p.name)}</span>
+              <span class="project-meta">${p.owner ? esc(p.owner) : ''} ${p.targetDate ? '&middot; Due ' + p.targetDate : ''}</span>
+            </div>
+            <div class="project-header-right">
+              <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
+              <span class="expand-icon">&#9660;</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <div class="ceremonies">
+              ${CEREMONIES.map((c, ci) => {
+                const cd = p.ceremonies[c.key] || {};
+                const status = cd.status || 'not-started';
+                const isOpen = cd._open;
+                const activeTab = cd._activeTab || 'checklist';
+                const checkState = cd.checklistState || {};
+                const findings = cd.findings || [];
+                const checkedCount = c.checklist.filter((_, idx) => checkState[idx]).length;
+
+                return `
+                  <div class="ceremony-section ${isOpen ? 'open' : ''}">
+                    <div class="ceremony-row" onclick="toggleCeremonyDetail(${i}, '${c.key}')">
+                      <div class="ceremony-badge ${c.key}">${c.icon}</div>
+                      <div class="ceremony-info">
+                        <div class="ceremony-name">${c.name}
+                          <span style="font-weight:400; font-size:11px; color:var(--text-muted); margin-left:8px;">
+                            ${checkedCount}/${c.checklist.length} checks
+                            ${findings.length ? ' &middot; ' + findings.length + ' finding' + (findings.length > 1 ? 's' : '') : ''}
+                          </span>
+                        </div>
+                        <div class="ceremony-desc">${c.desc}</div>
+                      </div>
+                      <div class="ceremony-fields" onclick="event.stopPropagation()">
+                        <select class="status-select ${status}" onchange="updateCeremony(${i}, '${c.key}', 'status', this.value)">
+                          <option value="not-started" ${status === 'not-started' ? 'selected' : ''}>Not Started</option>
+                          <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                          <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
+                        </select>
+                        <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)" title="Date completed">
+                      </div>
+                    </div>
+
+                    <div class="ceremony-detail">
+                      <div class="detail-tabs">
+                        <button class="detail-tab ${activeTab === 'checklist' ? 'active' : ''}"
+                          onclick="switchTab(${i}, '${c.key}', 'checklist')">Checklist (${checkedCount}/${c.checklist.length})</button>
+                        <button class="detail-tab ${activeTab === 'findings' ? 'active' : ''}"
+                          onclick="switchTab(${i}, '${c.key}', 'findings')">Findings (${findings.length})</button>
+                      </div>
+
+                      <!-- Checklist Panel -->
+                      <div class="detail-panel ${activeTab === 'checklist' ? 'active' : ''}">
+                        <ul class="checklist">
+                          ${c.checklist.map((item, idx) => `
+                            <li class="${checkState[idx] ? 'checked' : ''}">
+                              <input type="checkbox" ${checkState[idx] ? 'checked' : ''}
+                                onchange="toggleCheck(${i}, '${c.key}', ${idx})">
+                              <span>${item}</span>
+                            </li>
+                          `).join('')}
+                        </ul>
+                      </div>
+
+                      <!-- Findings Panel -->
+                      <div class="detail-panel ${activeTab === 'findings' ? 'active' : ''}">
+                        <div class="findings-list">
+                          ${findings.length === 0 ? '<div class="no-findings">No findings yet. Add one below.</div>' :
+                            findings.map((f, fi) => `
+                              <div class="finding-item">
+                                <span class="finding-severity severity-${f.severity}">${f.severity}</span>
+                                <div class="finding-content">
+                                  <div class="finding-text">${esc(f.text)}</div>
+                                  <div class="finding-meta">${f.author ? esc(f.author) + ' &middot; ' : ''}${f.date || ''}</div>
+                                </div>
+                                <button class="btn-ghost" onclick="deleteFinding(${i}, '${c.key}', ${fi})" title="Remove">&times;</button>
+                              </div>
+                            `).join('')
+                          }
+                        </div>
+                        <div class="add-finding-form">
+                          <select id="sev-${i}-${c.key}">
+                            <option value="note">Note</option>
+                            <option value="minor">Minor</option>
+                            <option value="major">Major</option>
+                            <option value="critical">Critical</option>
+                          </select>
+                          <input type="text" id="ftxt-${i}-${c.key}" placeholder="Describe the finding..."
+                            onkeydown="if(event.key==='Enter')addFinding(${i},'${c.key}')">
+                          <button class="btn btn-sm btn-primary" onclick="addFinding(${i}, '${c.key}')">Add</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+
+            <!-- Prompt Versions -->
+            <div class="prompt-versions">
+              <div class="versions-header" onclick="toggleVersions(${i})">
+                <h3>
+                  Prompt Versions
+                  <span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>
+                </h3>
+                <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._versionsOpen ? '\u25B2' : '\u25BC'}</span>
+              </div>
+              <div class="versions-body ${p._versionsOpen ? 'open' : ''}">
+                ${(p.versions || []).length === 0
+                  ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
+                  : (p.versions || []).map((v, vi) => `
+                    <div class="version-entry ${vi === 0 ? 'latest' : ''}">
+                      <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
+                      <div class="version-meta">
+                        <span class="version-tag ${vi === 0 ? 'latest' : ''}">v${(p.versions || []).length - vi}</span>
+                        <span class="version-date">${v.date || ''}</span>
+                        ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
+                      </div>
+                      <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
+                      <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
+                      <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">
+                        Show prompt
+                      </button>
+                    </div>
+                  `).join('')
+                }
+
+                <div class="add-version-section">
+                  <h4>${(p.versions || []).length === 0 ? 'Add Initial Prompt' : 'Add New Version'}</h4>
+                  <div class="add-version-row">
+                    <input type="text" id="vsumm-${i}" placeholder="What changed? (e.g. Added guardrails for medical queries)">
+                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px;">
+                  </div>
+                  <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
+                  <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
+                    ${(p.versions || []).length === 0 ? 'Add Prompt' : 'Save New Version'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleProject(index) {
+      projects[index].expanded = !projects[index].expanded;
+      render(); // UI-only, no server sync needed
+    }
+
+    function toggleCeremonyDetail(pi, ckey) {
+      const cd = projects[pi].ceremonies[ckey];
+      cd._open = !cd._open;
+      render(); // UI-only
+    }
+
+    function switchTab(pi, ckey, tab) {
+      projects[pi].ceremonies[ckey]._activeTab = tab;
+      render(); // UI-only
+    }
+
+    function toggleCheck(pi, ckey, idx) {
+      const cs = projects[pi].ceremonies[ckey].checklistState;
+      cs[idx] = !cs[idx];
+      save();
+    }
+
+    function addFinding(pi, ckey) {
+      const sevEl = document.getElementById(`sev-${pi}-${ckey}`);
+      const txtEl = document.getElementById(`ftxt-${pi}-${ckey}`);
+      const text = txtEl.value.trim();
+      if (!text) return;
+
+      projects[pi].ceremonies[ckey].findings.push({
+        severity: sevEl.value,
+        text,
+        date: new Date().toISOString().slice(0, 10),
+        author: '',
+      });
+      save();
+    }
+
+    function deleteFinding(pi, ckey, fi) {
+      projects[pi].ceremonies[ckey].findings.splice(fi, 1);
+      save();
+    }
+
+    // --- Prompt Versions ---
+
+    function toggleVersions(pi) {
+      projects[pi]._versionsOpen = !projects[pi]._versionsOpen;
+      render(); // UI-only
+    }
+
+    function toggleVersionPreview(pi, vi) {
+      const el = document.getElementById(`vprev-${pi}-${vi}`);
+      if (!el) return;
+      const btn = el.nextElementSibling;
+      if (el.classList.contains('expanded')) {
+        el.classList.remove('expanded');
+        btn.textContent = 'Show prompt';
+      } else {
+        el.classList.add('expanded');
+        btn.textContent = 'Hide prompt';
+      }
+    }
+
+    function addVersion(pi) {
+      const summEl = document.getElementById(`vsumm-${pi}`);
+      const authEl = document.getElementById(`vauth-${pi}`);
+      const promptEl = document.getElementById(`vprompt-${pi}`);
+      const prompt = promptEl.value.trim();
+      if (!prompt) return;
+
+      if (!projects[pi].versions) projects[pi].versions = [];
+
+      projects[pi].versions.unshift({
+        prompt,
+        summary: summEl.value.trim() || (projects[pi].versions.length === 0 ? 'Initial version' : 'Updated prompt'),
+        author: authEl.value.trim(),
+        date: new Date().toISOString().slice(0, 10),
+      });
+
+      // Auto-open versions panel
+      projects[pi]._versionsOpen = true;
+      save();
+    }
+
+    function deleteVersion(pi, vi) {
+      const v = projects[pi].versions[vi];
+      if (confirm(`Delete v${projects[pi].versions.length - vi}?`)) {
+        projects[pi].versions.splice(vi, 1);
+        save();
+      }
+    }
+
+    function updateCeremony(projectIndex, ceremonyKey, field, value) {
+      if (!projects[projectIndex].ceremonies[ceremonyKey]) {
+        projects[projectIndex].ceremonies[ceremonyKey] = { checklistState: {}, findings: [] };
+      }
+      projects[projectIndex].ceremonies[ceremonyKey][field] = value;
+      save();
+    }
+
+    function deleteProject(index) {
+      if (confirm(`Delete "${projects[index].name}"?`)) {
+        projects.splice(index, 1);
+        save();
+      }
+    }
+
+    function openModal() {
+      document.getElementById('modal-overlay').classList.add('active');
+      document.getElementById('project-name-input').value = '';
+      document.getElementById('project-owner-input').value = '';
+      document.getElementById('project-date-input').value = '';
+      setTimeout(() => document.getElementById('project-name-input').focus(), 100);
+    }
+
+    function closeModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    function saveProject() {
+      const name = document.getElementById('project-name-input').value.trim();
+      if (!name) return;
+
+      const ceremonies = {};
+      CEREMONIES.forEach(c => {
+        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [] };
+      });
+
+      projects.unshift({
+        name,
+        owner: document.getElementById('project-owner-input').value.trim(),
+        targetDate: document.getElementById('project-date-input').value,
+        ceremonies,
+        versions: [],
+        expanded: true,
+        createdAt: new Date().toISOString(),
+      });
+      closeModal();
+      save();
+    }
+
+    function exportData() {
+      const clean = JSON.parse(JSON.stringify(projects));
+      clean.forEach(p => {
+        CEREMONIES.forEach(c => {
+          if (p.ceremonies[c.key]) {
+            delete p.ceremonies[c.key]._open;
+            delete p.ceremonies[c.key]._activeTab;
+          }
+        });
+        delete p.expanded;
+      });
+      const blob = new Blob([JSON.stringify(clean, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pe-ceremonies-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+    }
+
+    function importData() { document.getElementById('import-file').click(); }
+
+    function handleImport(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (Array.isArray(data)) {
+            data.forEach(p => {
+              CEREMONIES.forEach(c => {
+                if (!p.ceremonies[c.key]) p.ceremonies[c.key] = {};
+                if (!p.ceremonies[c.key].checklistState) p.ceremonies[c.key].checklistState = {};
+                if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
+              });
+            });
+            projects = data;
+            save();
+          }
+        } catch { alert('Invalid JSON file'); }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    // ---- GitHub Setup Modal ----
+
+    function openSetup() {
+      const overlay = document.getElementById('setup-overlay');
+      overlay.classList.add('active');
+      if (ghConfig) {
+        document.getElementById('setup-token').value = ghConfig.token || '';
+        document.getElementById('setup-owner').value = ghConfig.owner || '';
+        document.getElementById('setup-repo').value = ghConfig.repo || '';
+        document.getElementById('setup-path').value = ghConfig.path || 'shared-data.json';
+        document.getElementById('disconnect-btn').style.display = 'inline-block';
+      } else {
+        document.getElementById('disconnect-btn').style.display = 'none';
+      }
+      document.getElementById('setup-status').textContent = '';
+    }
+
+    function closeSetup(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('setup-overlay').classList.remove('active');
+    }
+
+    async function saveSetup() {
+      const token = document.getElementById('setup-token').value.trim();
+      const owner = document.getElementById('setup-owner').value.trim();
+      const repo = document.getElementById('setup-repo').value.trim();
+      const path = document.getElementById('setup-path').value.trim() || 'shared-data.json';
+      const statusEl = document.getElementById('setup-status');
+
+      if (!token || !owner || !repo) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">Please fill in token, owner, and repo.</span>';
+        return;
+      }
+
+      statusEl.innerHTML = '<span style="color:var(--accent-light);">Testing connection...</span>';
+
+      // Save config temporarily to test
+      ghConfig = { token, owner, repo, path };
+
+      try {
+        const data = await ghRead();
+        localStorage.setItem('pe-gh-config', JSON.stringify(ghConfig));
+
+        // If we had local data and remote is empty, push local data up
+        if (data.length === 0 && projects.length > 0) {
+          statusEl.innerHTML = '<span style="color:var(--accent-light);">Uploading local data to GitHub...</span>';
+          await ghWrite(projects.map(stripUIState));
+        } else {
+          projects = migrateProjects(data);
+        }
+
+        backendMode = 'github';
+        if (syncTimer) clearInterval(syncTimer);
+        syncTimer = setInterval(pollRemote, 8000);
+        updateSyncBadge('connected');
+        render();
+        closeSetup();
+      } catch (e) {
+        statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
+        ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+      }
+    }
+
+    function disconnectGitHub() {
+      ghConfig = null;
+      ghSha = null;
+      localStorage.removeItem('pe-gh-config');
+      backendMode = 'local';
+      if (syncTimer) clearInterval(syncTimer);
+      updateSyncBadge('local');
+      closeSetup();
+    }
+
+    function esc(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('modal-overlay').classList.contains('active')) {
+        saveProject();
+      }
+      if (e.key === 'Escape') closeModal();
+    });
+
+    init();
+  </script>
+</body>
+</html>
