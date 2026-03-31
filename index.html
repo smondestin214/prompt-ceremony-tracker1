@@ -15,6 +15,7 @@
       --accent: #7c5cfc;
       --accent-light: #9b82fc;
 
+      --stage-strategy: #06b6d4;
       --stage-crit: #f59e0b;
       --stage-swarm: #3b82f6;
       --stage-bug: #ef4444;
@@ -133,6 +134,8 @@
     .stage-bug .num { background: var(--stage-bug); }
     .stage-test { background: rgba(139,92,246,0.15); color: var(--stage-test); }
     .stage-test .num { background: var(--stage-test); }
+    .stage-strategy { background: rgba(6,182,212,0.15); color: var(--stage-strategy); }
+    .stage-strategy .num { background: var(--stage-strategy); }
     .stage-eval { background: rgba(16,185,129,0.15); color: var(--stage-eval); }
     .stage-eval .num { background: var(--stage-eval); }
 
@@ -217,6 +220,7 @@
     .ceremony-badge.swarm { background: rgba(59,130,246,0.15); }
     .ceremony-badge.bug { background: rgba(239,68,68,0.15); }
     .ceremony-badge.test { background: rgba(139,92,246,0.15); }
+    .ceremony-badge.strategy { background: rgba(6,182,212,0.15); }
     .ceremony-badge.eval { background: rgba(16,185,129,0.15); }
 
     .ceremony-info { flex: 1; min-width: 0; }
@@ -283,6 +287,23 @@
     .checklist-progress {
       font-size: 11px; color: var(--text-muted); margin-top: 8px;
     }
+
+    /* Sign-off */
+    .signoff-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .signoff-badge {
+      font-size: 12px; color: var(--stage-eval); font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .signoff-meta { font-size: 11px; color: var(--text-muted); }
+    .signoff-input {
+      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px; width: 110px;
+    }
+    .signoff-input:focus { outline: none; border-color: var(--accent); }
 
     /* Findings log */
     .findings-list { display: flex; flex-direction: column; gap: 8px; }
@@ -467,8 +488,8 @@
     <header>
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
         <div>
-          <h1>Prompt Engineering Ceremonies</h1>
-          <p>Track your team's prompt engineering workflow from critique to evaluation</p>
+          <h1>Prompt engineering ceremonies</h1>
+          <p>Track your team's prompt engineering workflow from strategy to evaluation</p>
         </div>
         <div id="sync-badge" style="font-size:12px; color:var(--text-muted); padding:6px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; white-space:nowrap;" onclick="openSetup()" title="Click to configure team sync">
           <span style="color:#f59e0b;">&#9679;</span> Connecting...
@@ -477,21 +498,23 @@
     </header>
 
     <div class="pipeline-flow">
-      <div class="pipeline-stage stage-crit"><span class="num">1</span> Prompt Crit</div>
+      <div class="pipeline-stage stage-strategy"><span class="num">1</span> Prompt strategy</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-swarm"><span class="num">2</span> Swarming</div>
+      <div class="pipeline-stage stage-crit"><span class="num">2</span> Prompt crit</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-bug"><span class="num">3</span> Bug Bash</div>
+      <div class="pipeline-stage stage-swarm"><span class="num">3</span> Swarming</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-test"><span class="num">4</span> Testing</div>
+      <div class="pipeline-stage stage-bug"><span class="num">4</span> Bug bash</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-eval"><span class="num">5</span> Evals</div>
+      <div class="pipeline-stage stage-test"><span class="num">5</span> Testing</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-eval"><span class="num">6</span> Evals</div>
     </div>
 
     <div class="stats-bar" id="stats-bar"></div>
 
     <div class="controls">
-      <button class="btn btn-primary" onclick="openModal()">+ New Project</button>
+      <button class="btn btn-primary" onclick="openModal()">+ New project</button>
       <button class="btn" onclick="exportData()">Export JSON</button>
       <button class="btn" onclick="importData()">Import JSON</button>
     </div>
@@ -502,9 +525,9 @@
   <!-- New Project Modal -->
   <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
-      <h2 id="modal-title">New Project</h2>
+      <h2 id="modal-title">New project</h2>
       <div class="form-group">
-        <label>Project Name</label>
+        <label>Project name</label>
         <input type="text" id="project-name-input" placeholder="e.g. Search Ranking Prompt v2">
       </div>
       <div class="form-group">
@@ -512,12 +535,12 @@
         <input type="text" id="project-owner-input" placeholder="e.g. Sarah M.">
       </div>
       <div class="form-group">
-        <label>Target Date</label>
+        <label>Target date</label>
         <input type="date" id="project-date-input">
       </div>
       <div class="modal-actions">
         <button class="btn" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveProject()">Create Project</button>
+        <button class="btn btn-primary" onclick="saveProject()">Create project</button>
       </div>
     </div>
   </div>
@@ -525,24 +548,24 @@
   <!-- GitHub Setup Modal -->
   <div class="modal-overlay" id="setup-overlay" onclick="closeSetup(event)">
     <div class="modal" onclick="event.stopPropagation()" style="width:480px;">
-      <h2>Team Sync Setup</h2>
+      <h2>Team sync setup</h2>
       <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
         Connect to a GitHub repo so your whole team sees the same data. The tracker stores a JSON file in your repo via the GitHub API.
       </p>
       <div class="form-group">
-        <label>GitHub Personal Access Token <span style="color:var(--text-muted);">(needs <code>repo</code> scope)</span></label>
+        <label>GitHub personal access token <span style="color:var(--text-muted);">(needs <code>repo</code> scope)</span></label>
         <input type="password" id="setup-token" placeholder="ghp_xxxxxxxxxxxx">
       </div>
       <div class="form-group">
-        <label>Repository Owner <span style="color:var(--text-muted);">(user or org)</span></label>
+        <label>Repository owner <span style="color:var(--text-muted);">(user or org)</span></label>
         <input type="text" id="setup-owner" placeholder="e.g. your-org">
       </div>
       <div class="form-group">
-        <label>Repository Name</label>
+        <label>Repository name</label>
         <input type="text" id="setup-repo" placeholder="e.g. prompt-ceremony-tracker">
       </div>
       <div class="form-group">
-        <label>Data File Path <span style="color:var(--text-muted);">(optional)</span></label>
+        <label>Data file path <span style="color:var(--text-muted);">(optional)</span></label>
         <input type="text" id="setup-path" placeholder="shared-data.json" value="shared-data.json">
       </div>
       <div id="setup-status" style="font-size:12px; margin-top:8px; min-height:20px;"></div>
@@ -559,73 +582,69 @@
   <script>
     const CEREMONIES = [
       {
-        key: 'crit', name: 'Prompt Crit',
-        desc: 'Peer review of prompt design, structure, and edge cases', icon: '\u{1F50D}',
+        key: 'strategy', name: 'Prompt strategy',
+        desc: 'Align on purpose, scope, constraints, and success criteria before writing', icon: '\u{1F3AF}',
         checklist: [
-          'System prompt reviewed for clarity and specificity',
-          'Instructions are unambiguous (no room for misinterpretation)',
-          'Tone and persona are defined',
-          'Output format is explicitly specified',
-          'Edge cases and boundaries are addressed',
-          'Few-shot examples included where helpful',
-          'Constraints and guardrails are clearly stated',
-          'Prompt length is justified (not bloated)',
+          'Purpose, scope, and definition of success are documented',
+          'Technical constraints and model selection are identified',
+          'Ownership is clear — what\'s prompt-driven vs. engineering',
+          'Open questions and blockers are flagged',
+          'Strategy doc is shared for async review before prompt crit',
+        ]
+      },
+      {
+        key: 'crit', name: 'Prompt crit',
+        desc: 'Focused peer critique of format, clarity, persona, task logic, and schema coverage', icon: '\u{1F50D}',
+        checklist: [
+          'First draft shared at least 24 hours in advance',
+          'Format, structure, and task logic are reviewed',
+          'Clarity, persona, and tone are assessed',
+          'Schema and output coverage are confirmed',
+          'Feedback is documented and action items are assigned',
         ]
       },
       {
         key: 'swarm', name: 'Swarming',
-        desc: 'Team collaborative session to improve prompt together', icon: '\u{1F41D}',
+        desc: 'Whole team generates diverse test inputs simultaneously — quantity and variety over quality', icon: '\u{1F41D}',
         checklist: [
-          'All relevant team members attended',
-          'Live-tested prompt during session',
-          'Identified at least 3 improvement areas',
-          'Rewrote weakest sections collaboratively',
-          'Tested revised prompt in real-time',
-          'Documented changes and rationale',
-          'Assigned follow-up owners for remaining items',
+          'All relevant team members participated',
+          'Inputs are diverse — varied scenarios, edge cases, and formats',
+          'Quantity is prioritized over quality during generation',
+          'All inputs are logged in the findings tracker',
+          'Owner has triaged inputs before bug bash',
         ]
       },
       {
-        key: 'bug', name: 'Bug Bash',
-        desc: 'Focused session finding failure modes and adversarial inputs', icon: '\u{1F41B}',
+        key: 'bug', name: 'Bug bash',
+        desc: 'Structured adversarial testing — each bug logged with severity and type', icon: '\u{1F41B}',
         checklist: [
-          'Tried ambiguous / vague inputs',
-          'Tried adversarial / jailbreak attempts',
-          'Tested with extremely long inputs',
-          'Tested with empty or minimal inputs',
-          'Tested with multilingual inputs',
-          'Tried inputs outside intended domain',
-          'Checked for hallucination on factual queries',
-          'Tested for harmful or biased outputs',
-          'Logged all failures as findings below',
+          'Engineering is present',
+          'Adversarial, off-topic, and edge-case inputs are tested',
+          'Each bug is logged with a severity rating (blocking / high / low)',
+          'Bugs are flagged as prompt-fixable or an engineering concern',
+          'All blocking issues are clearly identified',
         ]
       },
       {
         key: 'test', name: 'Testing',
-        desc: 'Systematic testing across scenarios and edge cases', icon: '\u{1F9EA}',
+        desc: 'Owner iterates on findings and re-tests every flagged case', icon: '\u{1F9EA}',
         checklist: [
-          'Created test suite with 10+ representative inputs',
-          'Covered happy path scenarios',
-          'Covered known failure modes from bug bash',
-          'Tested output format consistency',
-          'Tested across different input lengths',
-          'Verified guardrails hold under pressure',
-          'Compared outputs to golden examples',
-          'Tested latency / token usage is acceptable',
+          'All flagged cases from bug bash are re-tested',
+          'Changes are versioned with notes on what changed and why',
+          'Output format is consistent across test inputs',
+          'No regressions introduced from previous version',
+          'Results are documented and pass rate is acceptable',
         ]
       },
       {
         key: 'eval', name: 'Evals',
-        desc: 'Quantitative evaluation with metrics and benchmarks', icon: '\u{1F4CA}',
+        desc: 'Outputs scored against the eval rubric — prompt ships when it meets the threshold', icon: '\u{1F4CA}',
         checklist: [
-          'Defined success metrics (accuracy, relevance, etc.)',
-          'Built or selected eval dataset (50+ examples)',
-          'Ran automated scoring / grading',
-          'Compared against baseline / previous version',
-          'Documented eval results and scores',
-          'Identified remaining failure categories',
-          'Got stakeholder sign-off on results',
-          'Archived eval data for future regression testing',
+          'Rubric and minimum pass threshold agreed before starting',
+          'Outputs are scored against the rubric',
+          'Scores are compared against the agreed threshold',
+          'Failing cases are documented with reasons',
+          'Prompt owner and engineering lead align on go/no-go jointly',
         ]
       },
     ];
@@ -643,6 +662,7 @@
           if (!p.ceremonies[c.key]) p.ceremonies[c.key] = {};
           if (!p.ceremonies[c.key].checklistState) p.ceremonies[c.key].checklistState = {};
           if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
+          if (!p.ceremonies[c.key].hasOwnProperty('signoff')) p.ceremonies[c.key].signoff = null;
         });
         if (!p.versions) p.versions = [];
       });
@@ -657,6 +677,7 @@
         if (clean.ceremonies[c.key]) {
           delete clean.ceremonies[c.key]._open;
           delete clean.ceremonies[c.key]._activeTab;
+          delete clean.ceremonies[c.key]._signoffOpen;
         }
       });
       return clean;
@@ -871,7 +892,7 @@
 
     function renderStats() {
       const total = projects.length;
-      const totalCeremonies = total * 5;
+      const totalCeremonies = total * CEREMONIES.length;
       let done = 0, inProgress = 0, totalFindings = 0;
       projects.forEach(p => {
         CEREMONIES.forEach(c => {
@@ -887,10 +908,10 @@
       ).length;
 
       document.getElementById('stats-bar').innerHTML = `
-        <div class="stat-card"><div class="label">Active Projects</div><div class="value">${total}</div></div>
-        <div class="stat-card"><div class="label">Ceremonies Done</div><div class="value">${done}/${totalCeremonies}</div></div>
-        <div class="stat-card"><div class="label">In Progress</div><div class="value">${inProgress}</div></div>
-        <div class="stat-card"><div class="label">Total Findings</div><div class="value">${totalFindings}</div></div>
+        <div class="stat-card"><div class="label">Active projects</div><div class="value">${total}</div></div>
+        <div class="stat-card"><div class="label">Ceremonies done</div><div class="value">${done}/${totalCeremonies}</div></div>
+        <div class="stat-card"><div class="label">In progress</div><div class="value">${inProgress}</div></div>
+        <div class="stat-card"><div class="label">Total findings</div><div class="value">${totalFindings}</div></div>
       `;
     }
 
@@ -944,14 +965,15 @@
                           <span style="font-weight:400; font-size:11px; color:var(--text-muted); margin-left:8px;">
                             ${checkedCount}/${c.checklist.length} checks
                             ${findings.length ? ' &middot; ' + findings.length + ' finding' + (findings.length > 1 ? 's' : '') : ''}
+                            ${cd.signoff ? ' &middot; <span style="color:var(--stage-eval)">&#10003; signed off</span>' : ''}
                           </span>
                         </div>
                         <div class="ceremony-desc">${c.desc}</div>
                       </div>
                       <div class="ceremony-fields" onclick="event.stopPropagation()">
                         <select class="status-select ${status}" onchange="updateCeremony(${i}, '${c.key}', 'status', this.value)">
-                          <option value="not-started" ${status === 'not-started' ? 'selected' : ''}>Not Started</option>
-                          <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                          <option value="not-started" ${status === 'not-started' ? 'selected' : ''}>Not started</option>
+                          <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In progress</option>
                           <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
                         </select>
                         <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)" title="Date completed">
@@ -977,6 +999,14 @@
                             </li>
                           `).join('')}
                         </ul>
+                        <div class="signoff-row">
+                          ${cd.signoff
+                            ? `<span class="signoff-badge">&#10003; ${esc(cd.signoff.initials)}</span><span class="signoff-meta">&middot; ${cd.signoff.date}</span><button class="btn-ghost" onclick="clearSignoff(${i}, '${c.key}')" title="Remove sign-off" style="margin-left:auto;">Remove</button>`
+                            : cd._signoffOpen
+                              ? `<input type="text" class="signoff-input" id="siginput-${i}-${c.key}" placeholder="Your initials" maxlength="6" onkeydown="if(event.key==='Enter')submitSignoff(${i},'${c.key}')"><button class="btn btn-sm btn-primary" onclick="submitSignoff(${i},'${c.key}')">Confirm</button><button class="btn btn-sm" onclick="cancelSignoff(${i},'${c.key}')">Cancel</button>`
+                              : `<button class="btn btn-sm" onclick="openSignoff(${i},'${c.key}')">Sign off</button>`
+                          }
+                        </div>
                       </div>
 
                       <!-- Findings Panel -->
@@ -1016,7 +1046,7 @@
             <div class="prompt-versions">
               <div class="versions-header" onclick="toggleVersions(${i})">
                 <h3>
-                  Prompt Versions
+                  Prompt versions
                   <span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>
                 </h3>
                 <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._versionsOpen ? '\u25B2' : '\u25BC'}</span>
@@ -1042,14 +1072,14 @@
                 }
 
                 <div class="add-version-section">
-                  <h4>${(p.versions || []).length === 0 ? 'Add Initial Prompt' : 'Add New Version'}</h4>
+                  <h4>${(p.versions || []).length === 0 ? 'Add initial prompt' : 'Add new version'}</h4>
                   <div class="add-version-row">
                     <input type="text" id="vsumm-${i}" placeholder="What changed? (e.g. Added guardrails for medical queries)">
                     <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px;">
                   </div>
                   <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
                   <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
-                    ${(p.versions || []).length === 0 ? 'Add Prompt' : 'Save New Version'}
+                    ${(p.versions || []).length === 0 ? 'Add prompt' : 'Save new version'}
                   </button>
                 </div>
               </div>
@@ -1184,7 +1214,7 @@
 
       const ceremonies = {};
       CEREMONIES.forEach(c => {
-        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [] };
+        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoff: null };
       });
 
       projects.unshift({
@@ -1315,6 +1345,37 @@
       if (syncTimer) clearInterval(syncTimer);
       updateSyncBadge('local');
       closeSetup();
+    }
+
+    function openSignoff(pi, ckey) {
+      projects[pi].ceremonies[ckey]._signoffOpen = true;
+      render();
+      setTimeout(() => {
+        const el = document.getElementById(`siginput-${pi}-${ckey}`);
+        if (el) el.focus();
+      }, 50);
+    }
+
+    function cancelSignoff(pi, ckey) {
+      projects[pi].ceremonies[ckey]._signoffOpen = false;
+      render();
+    }
+
+    function submitSignoff(pi, ckey) {
+      const el = document.getElementById(`siginput-${pi}-${ckey}`);
+      const initials = el ? el.value.trim() : '';
+      if (!initials) return;
+      projects[pi].ceremonies[ckey].signoff = {
+        initials,
+        date: new Date().toISOString().slice(0, 10),
+      };
+      projects[pi].ceremonies[ckey]._signoffOpen = false;
+      save();
+    }
+
+    function clearSignoff(pi, ckey) {
+      projects[pi].ceremonies[ckey].signoff = null;
+      save();
     }
 
     function esc(s) {
