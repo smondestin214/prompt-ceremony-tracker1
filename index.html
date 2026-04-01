@@ -163,9 +163,22 @@
       display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;
     }
 
-    .project-name {
-      font-size: 16px; font-weight: 600;
+    .project-name-input {
+      font-size: 16px; font-weight: 600; background: transparent;
+      border: none; border-bottom: 1px solid transparent; color: var(--text);
+      padding: 0 2px; min-width: 80px; max-width: 260px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .project-name-input:hover, .project-name-input:focus {
+      border-bottom-color: var(--accent); outline: none;
+    }
+    .project-owner-input {
+      font-size: 12px; background: transparent; border: none;
+      border-bottom: 1px solid transparent; color: var(--text-muted);
+      padding: 0 2px; max-width: 160px;
+    }
+    .project-owner-input:hover, .project-owner-input:focus {
+      border-bottom-color: var(--accent); outline: none; color: var(--text);
     }
 
     .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
@@ -1058,8 +1071,15 @@
                   return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
                 }).join('')}
               </div>
-              <span class="project-name">${esc(p.name)}</span>
-              <span class="project-meta">${p.owner ? esc(p.owner) : ''} ${p.targetDate ? '&middot; Launch ' + p.targetDate : ''}</span>
+              <input class="project-name-input" value="${esc(p.name)}"
+                onclick="event.stopPropagation()"
+                onchange="updateProjectField(${i},'name',this.value)"
+                placeholder="Project name">
+              <input class="project-owner-input" value="${esc(p.owner || '')}"
+                onclick="event.stopPropagation()"
+                onchange="updateProjectField(${i},'owner',this.value)"
+                placeholder="Owner">
+              ${p.targetDate ? `<span class="project-meta">&middot; Launch ${p.targetDate}</span>` : ''}
             </div>
             <div class="project-header-right">
               <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
@@ -1459,6 +1479,12 @@
         projects[projectIndex].ceremonies[ceremonyKey] = { checklistState: {}, findings: [] };
       }
       projects[projectIndex].ceremonies[ceremonyKey][field] = value;
+      save();
+    }
+
+    function updateProjectField(pi, field, value) {
+      if (!value.trim() && field === 'name') return; // don't allow blank name
+      projects[pi][field] = value.trim();
       save();
     }
 
