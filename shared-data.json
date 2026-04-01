@@ -1,0 +1,392 @@
+[
+  {
+    "name": "DQ2",
+    "owner": "Sarah M",
+    "targetDate": "2026-04-01",
+    "ceremonies": {
+      "strategy": {
+        "status": "in-progress",
+        "date": "2026-03-11",
+        "notes": "",
+        "checklistState": {},
+        "findings": [
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "text": "doesn't work",
+            "date": "2026-04-01",
+            "author": ""
+          },
+          {
+            "severity": "high",
+            "type": "prompt-fixable",
+            "text": "really doesn't work",
+            "date": "2026-04-01",
+            "author": ""
+          },
+          {
+            "severity": "low",
+            "type": "engineering",
+            "text": "fix it!",
+            "date": "2026-04-01",
+            "author": ""
+          },
+          {
+            "severity": "low",
+            "type": "input-data",
+            "title": "This thang don't work",
+            "details": "We need to fix this pronto",
+            "date": "2026-04-01",
+            "author": ""
+          }
+        ],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "crit": {
+        "status": "in-progress",
+        "date": "2026-03-18",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
+        "notesState": {}
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-03-22",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-03-25",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-03-28",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-03-31",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-04-15",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      }
+    },
+    "versions": [],
+    "createdAt": "2026-04-01T03:19:57.163Z",
+    "docs": []
+  },
+  {
+    "name": "Test project",
+    "owner": "",
+    "targetDate": "2026-05-01",
+    "ceremonies": {
+      "strategy": {
+        "status": "not-started",
+        "date": "2026-04-10",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-17",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-21",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-24",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-27",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-30",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-15",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      }
+    },
+    "versions": [],
+    "createdAt": "2026-04-01T03:18:20.963Z",
+    "docs": []
+  },
+  {
+    "name": "dqf",
+    "owner": "grace",
+    "targetDate": "",
+    "ceremonies": {
+      "crit": {
+        "status": "in-progress",
+        "date": "",
+        "notes": "",
+        "checklistState": {
+          "0": false,
+          "1": false,
+          "2": false,
+          "3": false,
+          "4": false,
+          "5": true,
+          "6": true,
+          "7": true
+        },
+        "findings": [
+          {
+            "severity": "note",
+            "text": "Massive hallucinations",
+            "date": "2026-03-25",
+            "author": ""
+          }
+        ],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
+        "notesState": {
+          "0": "Not 24-hrs but close!"
+        }
+      },
+      "swarm": {
+        "status": "in-progress",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
+        "notesState": {}
+      },
+      "bug": {
+        "status": "in-progress",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
+        "notesState": {}
+      },
+      "test": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "strategy": {
+        "checklistState": {
+          "0": false
+        },
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
+        "notesState": {
+          "0": "this is my note"
+        },
+        "status": "in-progress",
+        "date": "2026-04-08"
+      },
+      "postlaunch": {
+        "checklistState": {
+          "3": false
+        },
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      }
+    },
+    "versions": [],
+    "createdAt": "2026-03-25T16:37:50.546Z",
+    "docs": []
+  },
+  {
+    "name": "Search Ranking v2",
+    "owner": "",
+    "targetDate": "",
+    "ceremonies": {
+      "crit": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "test": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "strategy": {
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      },
+      "postlaunch": {
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {}
+      }
+    },
+    "createdAt": "2026-03-25T16:26:09.731Z",
+    "versions": [
+      {
+        "prompt": "You are a search ranking assistant. Given a user query and a list of results, re-rank them by relevance. Consider semantic meaning, recency, and user intent. Do NOT rank sponsored results higher. Return as a numbered list with brief relevance explanations.",
+        "summary": "Added guardrails for sponsored content + relevance explanations",
+        "author": "Grace K.",
+        "date": "2026-03-25"
+      },
+      {
+        "prompt": "You are a search ranking assistant. Given a user query and a list of results, re-rank them by relevance.",
+        "summary": "Initial draft of search ranking prompt",
+        "author": "Sarah M.",
+        "date": "2026-03-25"
+      }
+    ],
+    "docs": []
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ceremony-tracker",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/sarahmondestin/Claude_Code/prompt-ceremony-tracker", "-l", "3000", "--no-clipboard"],
+      "port": 3000
+    }
+  ]
+}
