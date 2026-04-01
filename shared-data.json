@@ -69,7 +69,12 @@
       }
     },
     "versions": [],
-    "docs": [],
+    "docs": [
+      {
+        "url": "https://docs.google.com/document/d/1zGRhHq1u3wF3Beu27uUjZO5k4hElbo_ta4XfptLseaU/edit?tab=t.9wqzqv5gzenh",
+        "label": "prompt versions on Gdocs"
+      }
+    ],
     "createdAt": "2026-04-01T15:08:12.191Z"
   },
   {
