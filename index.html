@@ -1025,7 +1025,10 @@
                           <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In progress</option>
                           <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
                         </select>
-                        <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)" title="Date completed">
+                        <label style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted);">
+                          Deadline
+                          <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)">
+                        </label>
                       </div>
                     </div>
 
