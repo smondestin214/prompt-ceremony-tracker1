@@ -356,6 +356,7 @@
     }
     .bug-type-prompt-fixable { background: rgba(16,185,129,0.15); color: #10b981; }
     .bug-type-engineering { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .bug-type-other { background: rgba(156,163,175,0.15); color: #9ca3af; }
 
     .finding-content { flex: 1; }
     .finding-text { font-size: 13px; margin-bottom: 3px; }
@@ -1061,6 +1062,50 @@
                 <button class="btn btn-sm" onclick="addDoc(${i})">Add link</button>
               </div>
             </div>
+
+            <!-- Prompt Versions -->
+            <div class="prompt-versions">
+              <div class="versions-header" onclick="toggleVersions(${i})">
+                <h3>
+                  Prompt versions
+                  <span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>
+                </h3>
+                <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._versionsOpen ? '\u25B2' : '\u25BC'}</span>
+              </div>
+              <div class="versions-body ${p._versionsOpen ? 'open' : ''}">
+                ${(p.versions || []).length === 0
+                  ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
+                  : (p.versions || []).map((v, vi) => `
+                    <div class="version-entry ${vi === 0 ? 'latest' : ''}">
+                      <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
+                      <div class="version-meta">
+                        <span class="version-tag ${vi === 0 ? 'latest' : ''}">v${(p.versions || []).length - vi}</span>
+                        <span class="version-date">${v.date || ''}</span>
+                        ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
+                      </div>
+                      <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
+                      <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
+                      <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">
+                        Show prompt
+                      </button>
+                    </div>
+                  `).join('')
+                }
+
+                <div class="add-version-section">
+                  <h4>${(p.versions || []).length === 0 ? 'Add initial prompt' : 'Add new version'}</h4>
+                  <div class="add-version-row">
+                    <input type="text" id="vsumm-${i}" placeholder="What changed? (e.g. Added guardrails for medical queries)">
+                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px;">
+                  </div>
+                  <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
+                  <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
+                    ${(p.versions || []).length === 0 ? 'Add prompt' : 'Save new version'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <div class="ceremonies">
               ${CEREMONIES.map((c, ci) => {
                 const cd = p.ceremonies[c.key] || {};
@@ -1138,7 +1183,7 @@
                               <div class="finding-item">
                                 <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                                   <span class="finding-severity severity-${f.severity}">${f.severity}</span>
-                                  ${f.type ? `<span class="bug-type bug-type-${f.type}">${f.type}</span>` : ''}
+                                  ${f.type ? `<span class="bug-type bug-type-${f.type}">${esc(f.typeCustom || f.type)}</span>` : ''}
                                 </div>
                                 <div class="finding-content">
                                   <div class="finding-title">${esc(f.title || f.text)}</div>
@@ -1158,11 +1203,14 @@
                               <option value="high">High</option>
                               <option value="blocking">Blocking</option>
                             </select>
-                            <select id="type-${i}-${c.key}">
+                            <select id="type-${i}-${c.key}" onchange="toggleOtherType(this, ${i}, '${c.key}')">
                               <option value="prompt-fixable">Prompt-fixable</option>
                               <option value="engineering">Engineering</option>
+                              <option value="other">Other</option>
                             </select>
                           </div>
+                          <input type="text" id="typecustom-${i}-${c.key}" placeholder="Describe type..."
+                            style="margin-top:6px; display:none;">
                           <input type="text" id="ftxt-${i}-${c.key}" placeholder="Bug title..."
                             style="margin-top:6px;">
                           <textarea id="fdetail-${i}-${c.key}" placeholder="More details (optional)..."
@@ -1177,48 +1225,6 @@
               }).join('')}
             </div>
 
-            <!-- Prompt Versions -->
-            <div class="prompt-versions">
-              <div class="versions-header" onclick="toggleVersions(${i})">
-                <h3>
-                  Prompt versions
-                  <span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>
-                </h3>
-                <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._versionsOpen ? '\u25B2' : '\u25BC'}</span>
-              </div>
-              <div class="versions-body ${p._versionsOpen ? 'open' : ''}">
-                ${(p.versions || []).length === 0
-                  ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
-                  : (p.versions || []).map((v, vi) => `
-                    <div class="version-entry ${vi === 0 ? 'latest' : ''}">
-                      <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
-                      <div class="version-meta">
-                        <span class="version-tag ${vi === 0 ? 'latest' : ''}">v${(p.versions || []).length - vi}</span>
-                        <span class="version-date">${v.date || ''}</span>
-                        ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
-                      </div>
-                      <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
-                      <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
-                      <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">
-                        Show prompt
-                      </button>
-                    </div>
-                  `).join('')
-                }
-
-                <div class="add-version-section">
-                  <h4>${(p.versions || []).length === 0 ? 'Add initial prompt' : 'Add new version'}</h4>
-                  <div class="add-version-row">
-                    <input type="text" id="vsumm-${i}" placeholder="What changed? (e.g. Added guardrails for medical queries)">
-                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px;">
-                  </div>
-                  <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
-                  <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
-                    ${(p.versions || []).length === 0 ? 'Add prompt' : 'Save new version'}
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       `).join('');
@@ -1249,14 +1255,18 @@
     function addFinding(pi, ckey) {
       const sevEl = document.getElementById(`sev-${pi}-${ckey}`);
       const typeEl = document.getElementById(`type-${pi}-${ckey}`);
+      const typeCustomEl = document.getElementById(`typecustom-${pi}-${ckey}`);
       const txtEl = document.getElementById(`ftxt-${pi}-${ckey}`);
       const detailEl = document.getElementById(`fdetail-${pi}-${ckey}`);
       const title = txtEl.value.trim();
       if (!title) return;
+      const type = typeEl ? typeEl.value : '';
+      const typeCustom = (type === 'other' && typeCustomEl) ? typeCustomEl.value.trim() : '';
 
       projects[pi].ceremonies[ckey].findings.push({
         severity: sevEl.value,
-        type: typeEl ? typeEl.value : '',
+        type,
+        typeCustom,
         title,
         details: detailEl ? detailEl.value.trim() : '',
         date: new Date().toISOString().slice(0, 10),
@@ -1264,7 +1274,14 @@
       });
       txtEl.value = '';
       if (detailEl) detailEl.value = '';
+      if (typeCustomEl) { typeCustomEl.value = ''; typeCustomEl.style.display = 'none'; }
+      if (typeEl) typeEl.value = 'prompt-fixable';
       save();
+    }
+
+    function toggleOtherType(sel, pi, ckey) {
+      const customEl = document.getElementById(`typecustom-${pi}-${ckey}`);
+      if (customEl) customEl.style.display = sel.value === 'other' ? 'block' : 'none';
     }
 
     function saveItemNote(pi, ckey, idx, value) {
