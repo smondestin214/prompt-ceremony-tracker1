@@ -364,11 +364,21 @@
       display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
     }
     .add-finding-form select,
-    .add-finding-form input {
+    .add-finding-form input,
+    .add-finding-form textarea {
       padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
       background: var(--bg); color: var(--text); font-size: 12px;
     }
     .add-finding-form input { flex: 1; min-width: 200px; }
+    .add-finding-form textarea {
+      width: 100%; resize: vertical; min-height: 56px;
+      font-family: inherit; line-height: 1.5;
+    }
+    .add-finding-form select:focus,
+    .add-finding-form input:focus,
+    .add-finding-form textarea:focus { outline: none; border-color: var(--accent); }
+    .finding-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: pre-wrap; }
 
     .no-findings {
       text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;
@@ -1130,7 +1140,8 @@
                                   ${f.type ? `<span class="bug-type">${f.type}</span>` : ''}
                                 </div>
                                 <div class="finding-content">
-                                  <div class="finding-text">${esc(f.text)}</div>
+                                  <div class="finding-title">${esc(f.title || f.text)}</div>
+                                  ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
                                   <div class="finding-meta">${f.author ? esc(f.author) + ' &middot; ' : ''}${f.date || ''}</div>
                                 </div>
                                 <button class="btn-ghost" onclick="deleteFinding(${i}, '${c.key}', ${fi})" title="Remove">&times;</button>
@@ -1138,21 +1149,27 @@
                             `).join('')
                           }
                         </div>
-                        <div class="add-finding-form">
-                          <select id="sev-${i}-${c.key}">
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                            <option value="blocking">Blocking</option>
-                          </select>
-                          <select id="type-${i}-${c.key}">
-                            <option value="prompt-fixable">Prompt-fixable</option>
-                            <option value="engineering">Engineering</option>
-                            <option value="input-data">Input data</option>
-                          </select>
-                          <input type="text" id="ftxt-${i}-${c.key}" placeholder="Describe the bug..."
-                            onkeydown="if(event.key==='Enter')addFinding(${i},'${c.key}')">
-                          <button class="btn btn-sm btn-primary" onclick="addFinding(${i}, '${c.key}')">Add bug</button>
+                        <div class="add-finding-form" style="flex-direction:column; align-items:stretch;">
+                          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <select id="sev-${i}-${c.key}">
+                              <option value="low">Low</option>
+                              <option value="medium">Medium</option>
+                              <option value="high">High</option>
+                              <option value="blocking">Blocking</option>
+                            </select>
+                            <select id="type-${i}-${c.key}">
+                              <option value="prompt-fixable">Prompt-fixable</option>
+                              <option value="engineering">Engineering</option>
+                              <option value="input-data">Input data</option>
+                            </select>
+                          </div>
+                          <input type="text" id="ftxt-${i}-${c.key}" placeholder="Bug title..."
+                            style="margin-top:6px;">
+                          <textarea id="fdetail-${i}-${c.key}" placeholder="More details (optional)..."
+                            style="margin-top:6px;"></textarea>
+                          <div style="margin-top:6px; text-align:right;">
+                            <button class="btn btn-sm btn-primary" onclick="addFinding(${i}, '${c.key}')">Add bug</button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1233,17 +1250,20 @@
       const sevEl = document.getElementById(`sev-${pi}-${ckey}`);
       const typeEl = document.getElementById(`type-${pi}-${ckey}`);
       const txtEl = document.getElementById(`ftxt-${pi}-${ckey}`);
-      const text = txtEl.value.trim();
-      if (!text) return;
+      const detailEl = document.getElementById(`fdetail-${pi}-${ckey}`);
+      const title = txtEl.value.trim();
+      if (!title) return;
 
       projects[pi].ceremonies[ckey].findings.push({
         severity: sevEl.value,
         type: typeEl ? typeEl.value : '',
-        text,
+        title,
+        details: detailEl ? detailEl.value.trim() : '',
         date: new Date().toISOString().slice(0, 10),
         author: '',
       });
       txtEl.value = '';
+      if (detailEl) detailEl.value = '';
       save();
     }
 
