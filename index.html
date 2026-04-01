@@ -1165,7 +1165,11 @@
                     <div class="version-entry ${vi === 0 ? 'latest' : ''}">
                       <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
                       <div class="version-meta">
-                        <span class="version-tag ${vi === 0 ? 'latest' : ''}">v${(p.versions || []).length - vi}</span>
+                        ${v._editing
+                          ? `<input class="version-edit-summary" style="max-width:80px; font-weight:700;" value="${esc(v.label || 'v' + ((p.versions || []).length - vi))}"
+                              onchange="updateVersion(${i},${vi},'label',this.value)" placeholder="v1">`
+                          : `<span class="version-tag ${vi === 0 ? 'latest' : ''}">${esc(v.label || 'v' + ((p.versions || []).length - vi))}</span>`
+                        }
                         <span class="version-date">${v.date || ''}</span>
                         ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
                       </div>
