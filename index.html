@@ -827,7 +827,13 @@
       if (!res.ok) throw new Error(`GitHub API ${res.status}`);
       const data = await res.json();
       ghSha = data.sha;
-      return JSON.parse(atob(data.content));
+      try {
+        const text = atob(data.content.replace(/\s/g, ''));
+        return text ? JSON.parse(text) : [];
+      } catch(e) {
+        console.warn('shared-data.json is malformed, resetting:', e);
+        return [];
+      }
     }
 
     async function ghWrite(projects) {
