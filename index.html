@@ -16,6 +16,7 @@
       --accent-light: #9b82fc;
 
       --stage-strategy: #06b6d4;
+      --stage-postlaunch: #a855f7;
       --stage-crit: #f59e0b;
       --stage-swarm: #3b82f6;
       --stage-bug: #ef4444;
@@ -136,6 +137,8 @@
     .stage-test .num { background: var(--stage-test); }
     .stage-strategy { background: rgba(6,182,212,0.15); color: var(--stage-strategy); }
     .stage-strategy .num { background: var(--stage-strategy); }
+    .stage-postlaunch { background: rgba(168,85,247,0.15); color: var(--stage-postlaunch); }
+    .stage-postlaunch .num { background: var(--stage-postlaunch); }
     .stage-eval { background: rgba(16,185,129,0.15); color: var(--stage-eval); }
     .stage-eval .num { background: var(--stage-eval); }
 
@@ -222,6 +225,7 @@
     .ceremony-badge.test { background: rgba(139,92,246,0.15); }
     .ceremony-badge.strategy { background: rgba(6,182,212,0.15); }
     .ceremony-badge.eval { background: rgba(16,185,129,0.15); }
+    .ceremony-badge.postlaunch { background: rgba(168,85,247,0.15); }
 
     .ceremony-info { flex: 1; min-width: 0; }
     .ceremony-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
@@ -288,22 +292,36 @@
       font-size: 11px; color: var(--text-muted); margin-top: 8px;
     }
 
-    /* Sign-off */
-    .signoff-row {
-      display: flex; align-items: center; gap: 8px;
-      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
-      flex-wrap: wrap;
+    /* Per-item sign-off */
+    .item-signoff-area {
+      margin-left: auto; display: flex; align-items: center; gap: 4px; flex-shrink: 0;
     }
-    .signoff-badge {
-      font-size: 12px; color: var(--stage-eval); font-weight: 600;
-      display: flex; align-items: center; gap: 4px;
+    .item-sign-btn {
+      font-size: 10px; color: var(--text-muted); background: none;
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 7px; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+      white-space: nowrap;
     }
-    .signoff-meta { font-size: 11px; color: var(--text-muted); }
-    .signoff-input {
-      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 12px; width: 110px;
+    .checklist li:hover .item-sign-btn { opacity: 1; }
+    .item-signoff-badge {
+      font-size: 11px; color: var(--stage-eval); font-weight: 600; white-space: nowrap;
     }
-    .signoff-input:focus { outline: none; border-color: var(--accent); }
+    .item-signoff-input {
+      width: 64px; font-size: 11px; padding: 2px 6px;
+      border: 1px solid var(--accent); border-radius: 4px;
+      background: var(--bg); color: var(--text);
+    }
+    .item-signoff-input:focus { outline: none; }
+    .item-signoff-btn {
+      font-size: 12px; padding: 1px 6px; background: none;
+      border: 1px solid var(--stage-eval); border-radius: 4px;
+      cursor: pointer; color: var(--stage-eval);
+    }
+    .item-signoff-cancel {
+      font-size: 12px; padding: 1px 6px; background: none;
+      border: 1px solid var(--border); border-radius: 4px;
+      cursor: pointer; color: var(--text-muted);
+    }
 
     /* Findings log */
     .findings-list { display: flex; flex-direction: column; gap: 8px; }
@@ -509,6 +527,8 @@
       <div class="pipeline-stage stage-test"><span class="num">5</span> Testing</div>
       <span class="pipeline-arrow">&#8594;</span>
       <div class="pipeline-stage stage-eval"><span class="num">6</span> Evals</div>
+      <span class="pipeline-arrow">&#8594;</span>
+      <div class="pipeline-stage stage-postlaunch"><span class="num">7</span> Post-launch eval</div>
     </div>
 
     <div class="stats-bar" id="stats-bar"></div>
@@ -647,6 +667,17 @@
           'Prompt owner and engineering lead align on go/no-go jointly',
         ]
       },
+      {
+        key: 'postlaunch', name: 'Post-launch eval',
+        desc: 'Check prompt performance in production 1–2 weeks after launch', icon: '\u{1F680}',
+        checklist: [
+          'Post-launch check scheduled for 1–2 weeks after launch',
+          'Real-world outputs reviewed against the eval rubric',
+          'Unexpected failure modes or edge cases are logged',
+          'Prompt version and any changes are documented',
+          'Findings shared with the broader team',
+        ]
+      },
     ];
 
     let projects = [];
@@ -662,7 +693,7 @@
           if (!p.ceremonies[c.key]) p.ceremonies[c.key] = {};
           if (!p.ceremonies[c.key].checklistState) p.ceremonies[c.key].checklistState = {};
           if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
-          if (!p.ceremonies[c.key].hasOwnProperty('signoff')) p.ceremonies[c.key].signoff = null;
+          if (!p.ceremonies[c.key].signoffState) p.ceremonies[c.key].signoffState = {};
         });
         if (!p.versions) p.versions = [];
       });
@@ -677,7 +708,7 @@
         if (clean.ceremonies[c.key]) {
           delete clean.ceremonies[c.key]._open;
           delete clean.ceremonies[c.key]._activeTab;
-          delete clean.ceremonies[c.key]._signoffOpen;
+          delete clean.ceremonies[c.key]._signoffOpenIdx;
         }
       });
       return clean;
@@ -953,6 +984,7 @@
                 const isOpen = cd._open;
                 const activeTab = cd._activeTab || 'checklist';
                 const checkState = cd.checklistState || {};
+                const signoffState = cd.signoffState || {};
                 const findings = cd.findings || [];
                 const checkedCount = c.checklist.filter((_, idx) => checkState[idx]).length;
 
@@ -965,7 +997,7 @@
                           <span style="font-weight:400; font-size:11px; color:var(--text-muted); margin-left:8px;">
                             ${checkedCount}/${c.checklist.length} checks
                             ${findings.length ? ' &middot; ' + findings.length + ' finding' + (findings.length > 1 ? 's' : '') : ''}
-                            ${cd.signoff ? ' &middot; <span style="color:var(--stage-eval)">&#10003; signed off</span>' : ''}
+                            ${Object.keys(signoffState).length > 0 ? ' &middot; <span style="color:var(--stage-eval)">&#10003; ' + Object.keys(signoffState).length + '/' + c.checklist.length + ' signed</span>' : ''}
                           </span>
                         </div>
                         <div class="ceremony-desc">${c.desc}</div>
@@ -995,18 +1027,18 @@
                             <li class="${checkState[idx] ? 'checked' : ''}">
                               <input type="checkbox" ${checkState[idx] ? 'checked' : ''}
                                 onchange="toggleCheck(${i}, '${c.key}', ${idx})">
-                              <span>${item}</span>
+                              <span style="flex:1;">${item}</span>
+                              <span class="item-signoff-area">
+                                ${signoffState[idx]
+                                  ? `<span class="item-signoff-badge">&#10003; ${esc(signoffState[idx].initials)}</span><button class="item-signoff-cancel" onclick="clearItemSignoff(${i},'${c.key}',${idx})" title="Remove">&#215;</button>`
+                                  : cd._signoffOpenIdx === idx
+                                    ? `<input class="item-signoff-input" id="isig-${i}-${c.key}-${idx}" placeholder="Initials" maxlength="6" onkeydown="if(event.key==='Enter')submitItemSignoff(${i},'${c.key}',${idx})"><button class="item-signoff-btn" onclick="submitItemSignoff(${i},'${c.key}',${idx})">&#10003;</button><button class="item-signoff-cancel" onclick="cancelItemSignoff(${i},'${c.key}')">&#215;</button>`
+                                    : `<button class="item-sign-btn" onclick="openItemSignoff(${i},'${c.key}',${idx})">Sign</button>`
+                                }
+                              </span>
                             </li>
                           `).join('')}
                         </ul>
-                        <div class="signoff-row">
-                          ${cd.signoff
-                            ? `<span class="signoff-badge">&#10003; ${esc(cd.signoff.initials)}</span><span class="signoff-meta">&middot; ${cd.signoff.date}</span><button class="btn-ghost" onclick="clearSignoff(${i}, '${c.key}')" title="Remove sign-off" style="margin-left:auto;">Remove</button>`
-                            : cd._signoffOpen
-                              ? `<input type="text" class="signoff-input" id="siginput-${i}-${c.key}" placeholder="Your initials" maxlength="6" onkeydown="if(event.key==='Enter')submitSignoff(${i},'${c.key}')"><button class="btn btn-sm btn-primary" onclick="submitSignoff(${i},'${c.key}')">Confirm</button><button class="btn btn-sm" onclick="cancelSignoff(${i},'${c.key}')">Cancel</button>`
-                              : `<button class="btn btn-sm" onclick="openSignoff(${i},'${c.key}')">Sign off</button>`
-                          }
-                        </div>
                       </div>
 
                       <!-- Findings Panel -->
@@ -1214,7 +1246,7 @@
 
       const ceremonies = {};
       CEREMONIES.forEach(c => {
-        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoff: null };
+        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoffState: {} };
       });
 
       projects.unshift({
@@ -1347,34 +1379,35 @@
       closeSetup();
     }
 
-    function openSignoff(pi, ckey) {
-      projects[pi].ceremonies[ckey]._signoffOpen = true;
+    function openItemSignoff(pi, ckey, idx) {
+      projects[pi].ceremonies[ckey]._signoffOpenIdx = idx;
       render();
       setTimeout(() => {
-        const el = document.getElementById(`siginput-${pi}-${ckey}`);
+        const el = document.getElementById(`isig-${pi}-${ckey}-${idx}`);
         if (el) el.focus();
       }, 50);
     }
 
-    function cancelSignoff(pi, ckey) {
-      projects[pi].ceremonies[ckey]._signoffOpen = false;
+    function cancelItemSignoff(pi, ckey) {
+      projects[pi].ceremonies[ckey]._signoffOpenIdx = null;
       render();
     }
 
-    function submitSignoff(pi, ckey) {
-      const el = document.getElementById(`siginput-${pi}-${ckey}`);
+    function submitItemSignoff(pi, ckey, idx) {
+      const el = document.getElementById(`isig-${pi}-${ckey}-${idx}`);
       const initials = el ? el.value.trim() : '';
       if (!initials) return;
-      projects[pi].ceremonies[ckey].signoff = {
+      if (!projects[pi].ceremonies[ckey].signoffState) projects[pi].ceremonies[ckey].signoffState = {};
+      projects[pi].ceremonies[ckey].signoffState[idx] = {
         initials,
         date: new Date().toISOString().slice(0, 10),
       };
-      projects[pi].ceremonies[ckey]._signoffOpen = false;
+      projects[pi].ceremonies[ckey]._signoffOpenIdx = null;
       save();
     }
 
-    function clearSignoff(pi, ckey) {
-      projects[pi].ceremonies[ckey].signoff = null;
+    function clearItemSignoff(pi, ckey, idx) {
+      delete projects[pi].ceremonies[ckey].signoffState[idx];
       save();
     }
 
