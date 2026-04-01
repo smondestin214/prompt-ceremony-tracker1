@@ -5,12 +5,17 @@
     "targetDate": "2026-03-20",
     "ceremonies": {
       "strategy": {
-        "status": "not-started",
+        "status": "in-progress",
         "date": "2026-02-27",
         "notes": "",
         "checklistState": {},
         "findings": [],
-        "signoffState": {},
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          }
+        },
         "notesState": {}
       },
       "crit": {
