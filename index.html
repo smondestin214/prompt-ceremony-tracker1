@@ -1188,7 +1188,7 @@
                         <div class="version-change-summary">${formatChangelog(v.summary)}</div>
                         <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
                         <div style="display:flex; gap:8px; margin-top:6px;">
-                          <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
+                          <button class="version-toggle-btn" id="vshow-${i}-${vi}" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
                           <button class="version-toggle-btn" onclick="toggleEditVersion(${i},${vi})">Edit</button>
                         </div>
                       `}
@@ -1428,14 +1428,14 @@
 
     function toggleVersionPreview(pi, vi) {
       const el = document.getElementById(`vprev-${pi}-${vi}`);
+      const btn = document.getElementById(`vshow-${pi}-${vi}`);
       if (!el) return;
-      const btn = el.nextElementSibling;
       if (el.classList.contains('expanded')) {
         el.classList.remove('expanded');
-        btn.textContent = 'Show prompt';
+        if (btn) btn.textContent = 'Show prompt';
       } else {
         el.classList.add('expanded');
-        btn.textContent = 'Hide prompt';
+        if (btn) btn.textContent = 'Hide prompt';
       }
     }
 
