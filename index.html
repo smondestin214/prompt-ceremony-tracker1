@@ -493,6 +493,10 @@
     .version-change-summary {
       font-size: 13px; color: var(--text); margin-bottom: 8px; font-weight: 500;
     }
+    .version-change-summary ul {
+      margin: 4px 0 0 16px; padding: 0; font-weight: 400;
+    }
+    .version-change-summary li { margin-bottom: 3px; line-height: 1.5; }
 
     .version-prompt-preview {
       font-size: 12px; color: var(--text-muted); background: var(--bg);
@@ -1174,14 +1178,14 @@
                         ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
                       </div>
                       ${v._editing ? `
-                        <input class="version-edit-summary" value="${esc(v.summary || '')}"
+                        <textarea class="add-version-textarea" style="min-height:80px;"
                           onchange="updateVersion(${i},${vi},'summary',this.value)"
-                          placeholder="What changed?">
+                          placeholder="What changed? Paste a bulleted list or plain text...">${esc(v.summary || '')}</textarea>
                         <textarea class="add-version-textarea" style="margin-top:8px;"
                           onchange="updateVersion(${i},${vi},'prompt',this.value)">${esc(v.prompt)}</textarea>
                         <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
                       ` : `
-                        <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
+                        <div class="version-change-summary">${formatChangelog(v.summary)}</div>
                         <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
                         <div style="display:flex; gap:8px; margin-top:6px;">
                           <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
@@ -1195,8 +1199,8 @@
                 <div class="add-version-section">
                   <h4>${(p.versions || []).length === 0 ? 'Add initial prompt' : 'Add new version'}</h4>
                   <div class="add-version-row">
-                    <input type="text" id="vsumm-${i}" placeholder="What changed? (e.g. Added guardrails for medical queries)">
-                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px;">
+                    <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="What changed? Paste a bulleted list or plain text..." style="min-height:80px;"></textarea>
+                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px; align-self:flex-start;">
                   </div>
                   <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
                   <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
@@ -1401,6 +1405,21 @@
     }
 
     // --- Prompt Versions ---
+
+    function formatChangelog(text) {
+      if (!text) return '<em style="color:var(--text-muted)">Initial version</em>';
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      const headerLines = lines.filter(l => !/^[\*\-]/.test(l));
+      const bulletLines = lines.filter(l => /^[\*\-]/.test(l));
+      let html = '';
+      if (headerLines.length) html += headerLines.map(l => `<div>${esc(l)}</div>`).join('');
+      if (bulletLines.length) {
+        html += '<ul>';
+        html += bulletLines.map(l => `<li>${esc(l.replace(/^[\*\-]\s*/, ''))}</li>`).join('');
+        html += '</ul>';
+      }
+      return html || esc(text);
+    }
 
     function toggleVersions(pi) {
       projects[pi]._versionsOpen = !projects[pi]._versionsOpen;
