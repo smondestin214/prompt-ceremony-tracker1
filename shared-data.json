@@ -69,7 +69,7 @@
         "notesState": {}
       },
       "swarm": {
-        "status": "in-progress",
+        "status": "done",
         "date": "2026-03-10",
         "notes": "",
         "checklistState": {},
@@ -88,6 +88,10 @@
             "date": "2026-04-01"
           },
           "3": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "4": {
             "initials": "sm",
             "date": "2026-04-01"
           }
