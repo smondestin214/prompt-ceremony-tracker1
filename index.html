@@ -1411,6 +1411,16 @@
       closeSetup();
     }
 
+    function syncStatusFromSignoffs(pi, ckey) {
+      const cd = projects[pi].ceremonies[ckey];
+      const ceremony = CEREMONIES.find(c => c.key === ckey);
+      const total = ceremony.checklist.length;
+      const signed = Object.keys(cd.signoffState || {}).length;
+      if (signed === 0) cd.status = 'not-started';
+      else if (signed >= total) cd.status = 'done';
+      else cd.status = 'in-progress';
+    }
+
     function submitItemSignoff(pi, ckey, idx) {
       const el = document.getElementById(`isig-${pi}-${ckey}-${idx}`);
       const initials = el ? el.value.trim() : '';
@@ -1421,11 +1431,13 @@
         date: new Date().toISOString().slice(0, 10),
       };
       projects[pi].ceremonies[ckey]._signoffOpenIdx = null;
+      syncStatusFromSignoffs(pi, ckey);
       save();
     }
 
     function clearItemSignoff(pi, ckey, idx) {
       delete projects[pi].ceremonies[ckey].signoffState[idx];
+      syncStatusFromSignoffs(pi, ckey);
       save();
     }
 
