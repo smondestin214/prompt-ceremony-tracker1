@@ -99,13 +99,29 @@
         "notesState": {}
       },
       "bug": {
-        "status": "in-progress",
+        "status": "done",
         "date": "2026-03-13",
         "notes": "",
         "checklistState": {},
         "findings": [],
         "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
           "2": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "4": {
             "initials": "sm",
             "date": "2026-04-01"
           }
