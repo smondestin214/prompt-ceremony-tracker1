@@ -1038,6 +1038,17 @@
     function render() {
       renderStats();
       renderProjects();
+      // Populate version edit textareas imperatively (keeps large prompt text out of the HTML template)
+      projects.forEach((p, i) => {
+        (p.versions || []).forEach((v, vi) => {
+          if (v._editing) {
+            const summTA = document.getElementById(`vedit-summ-${i}-${vi}`);
+            const promptTA = document.getElementById(`vedit-prompt-${i}-${vi}`);
+            if (summTA) summTA.value = v.summary || '';
+            if (promptTA) promptTA.value = v.prompt || '';
+          }
+        });
+      });
     }
 
     function renderStats() {
@@ -1188,15 +1199,15 @@
                         ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
                       </div>
                       ${v._editing ? `
-                        <textarea class="add-version-textarea" style="min-height:80px;"
+                        <textarea class="add-version-textarea" style="min-height:80px;" id="vedit-summ-${i}-${vi}"
                           onchange="updateVersion(${i},${vi},'summary',this.value)"
-                          placeholder="What changed? Paste a bulleted list or plain text...">${esc(v.summary || '')}</textarea>
-                        <textarea class="add-version-textarea" style="margin-top:8px;"
-                          onchange="updateVersion(${i},${vi},'prompt',this.value)">${esc(v.prompt)}</textarea>
+                          placeholder="What changed? Paste a bulleted list or plain text..."></textarea>
+                        <textarea class="add-version-textarea" style="margin-top:8px;" id="vedit-prompt-${i}-${vi}"
+                          onchange="updateVersion(${i},${vi},'prompt',this.value)"></textarea>
                         <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
                       ` : `
                         <div class="version-change-summary">${formatChangelog(v.summary)}</div>
-                        <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
+                        <div class="version-prompt-preview" id="vprev-${i}-${vi}"></div>
                         <div style="display:flex; gap:8px; margin-top:6px;">
                           <button class="version-toggle-btn" id="vshow-${i}-${vi}" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
                           <button class="version-toggle-btn" onclick="toggleEditVersion(${i},${vi})">Edit</button>
@@ -1444,6 +1455,12 @@
         el.classList.remove('expanded');
         if (btn) btn.textContent = 'Show prompt';
       } else {
+        // Load content lazily via textContent to keep it out of the HTML template
+        if (!el.dataset.loaded) {
+          const v = projects[pi] && projects[pi].versions && projects[pi].versions[vi];
+          el.textContent = (v && v.prompt) ? v.prompt : '';
+          el.dataset.loaded = '1';
+        }
         el.classList.add('expanded');
         if (btn) btn.textContent = 'Hide prompt';
       }
