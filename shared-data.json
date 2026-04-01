@@ -5,7 +5,7 @@
     "targetDate": "2026-03-20",
     "ceremonies": {
       "strategy": {
-        "status": "in-progress",
+        "status": "done",
         "date": "2026-02-27",
         "notes": "",
         "checklistState": {},
@@ -28,6 +28,10 @@
             "date": "2026-04-01"
           },
           "4": {
+            "initials": "sm",
+            "date": "2026-04-01"
+          },
+          "5": {
             "initials": "sm",
             "date": "2026-04-01"
           }
