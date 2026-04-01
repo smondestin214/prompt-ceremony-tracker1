@@ -373,6 +373,20 @@
     .bug-type-engineering { background: rgba(59,130,246,0.15); color: #3b82f6; }
     .bug-type-other { background: rgba(156,163,175,0.15); color: #9ca3af; }
 
+    .bug-status-select {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      padding: 2px 6px; border-radius: 4px; cursor: pointer;
+      white-space: nowrap; margin-top: 4px; border: 1px solid transparent;
+      background: var(--surface-hover); color: var(--text-muted);
+    }
+    .bug-status-select:focus { outline: none; }
+    .bug-status-open   { background: rgba(239,68,68,0.15);  color: #ef4444; border-color: rgba(239,68,68,0.3); }
+    .bug-status-in-progress { background: rgba(59,130,246,0.15); color: #3b82f6; border-color: rgba(59,130,246,0.3); }
+    .bug-status-fixed  { background: rgba(16,185,129,0.15); color: #10b981; border-color: rgba(16,185,129,0.3); }
+    .bug-status-wontfix { background: rgba(139,141,151,0.12); color: var(--text-muted); border-color: var(--border); }
+    .finding-item.status-fixed  { opacity: 0.55; }
+    .finding-item.status-wontfix { opacity: 0.45; }
+
     .finding-content { flex: 1; }
     .finding-text { font-size: 13px; margin-bottom: 3px; }
     .finding-meta { font-size: 11px; color: var(--text-muted); }
@@ -1145,22 +1159,29 @@
             <!-- All Bugs -->
             ${(() => {
               const allBugs = CEREMONIES.flatMap(c =>
-                (p.ceremonies[c.key]?.findings || []).map(f => ({ f, ceremonyName: c.name, ckey: c.key }))
+                (p.ceremonies[c.key]?.findings || []).map((f, fi) => ({ f, fi, ceremonyName: c.name, ckey: c.key }))
               );
+              const openCount = allBugs.filter(({f}) => !f.status || f.status === 'open').length;
               return `<div class="prompt-versions">
                 <div class="versions-header" onclick="toggleAllBugs(${i})">
-                  <h3>All bugs <span class="version-count">${allBugs.length} bug${allBugs.length !== 1 ? 's' : ''}</span></h3>
+                  <h3>All bugs <span class="version-count">${allBugs.length} bug${allBugs.length !== 1 ? 's' : ''}${openCount < allBugs.length ? ' &middot; ' + openCount + ' open' : ''}</span></h3>
                   <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._allBugsOpen ? '\u25B2' : '\u25BC'}</span>
                 </div>
                 <div class="versions-body ${p._allBugsOpen ? 'open' : ''}">
                   ${allBugs.length === 0
                     ? '<div class="no-findings" style="padding:16px;">No bugs logged yet.</div>'
-                    : `<div class="findings-list" style="padding:8px 0;">${allBugs.map(({f, ceremonyName}) => `
-                        <div class="finding-item">
+                    : `<div class="findings-list" style="padding:8px 0;">${allBugs.map(({f, fi, ceremonyName, ckey}) => `
+                        <div class="finding-item status-${f.status || 'open'}">
                           <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                             <span class="finding-severity" style="background:rgba(124,92,252,0.15);color:var(--accent);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;">${esc(ceremonyName)}</span>
                             <span class="finding-severity severity-${f.severity}">${f.severity}</span>
                             ${f.type ? `<span class="bug-type bug-type-${f.type}">${esc(f.typeCustom || f.type)}</span>` : ''}
+                            <select class="bug-status-select bug-status-${f.status || 'open'}" onchange="updateFindingStatus(${i},'${ckey}',${fi},this.value)">
+                              <option value="open" ${(!f.status||f.status==='open')?'selected':''}>Open</option>
+                              <option value="in-progress" ${f.status==='in-progress'?'selected':''}>In progress</option>
+                              <option value="fixed" ${f.status==='fixed'?'selected':''}>Fixed</option>
+                              <option value="wontfix" ${f.status==='wontfix'?'selected':''}>Won't fix</option>
+                            </select>
                           </div>
                           <div class="finding-content">
                             <div class="finding-title">${esc(f.title || f.text)}</div>
@@ -1310,10 +1331,16 @@
                         <div class="findings-list">
                           ${findings.length === 0 ? '<div class="no-findings">No bugs yet. Add one below.</div>' :
                             findings.map((f, fi) => `
-                              <div class="finding-item">
+                              <div class="finding-item status-${f.status || 'open'}">
                                 <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                                   <span class="finding-severity severity-${f.severity}">${f.severity}</span>
                                   ${f.type ? `<span class="bug-type bug-type-${f.type}">${esc(f.typeCustom || f.type)}</span>` : ''}
+                                  <select class="bug-status-select bug-status-${f.status || 'open'}" onchange="updateFindingStatus(${i},'${c.key}',${fi},this.value)">
+                                    <option value="open" ${(!f.status||f.status==='open')?'selected':''}>Open</option>
+                                    <option value="in-progress" ${f.status==='in-progress'?'selected':''}>In progress</option>
+                                    <option value="fixed" ${f.status==='fixed'?'selected':''}>Fixed</option>
+                                    <option value="wontfix" ${f.status==='wontfix'?'selected':''}>Won't fix</option>
+                                  </select>
                                 </div>
                                 <div class="finding-content">
                                   <div class="finding-title">${esc(f.title || f.text)}</div>
@@ -1422,6 +1449,13 @@
 
     function deleteFinding(pi, ckey, fi) {
       projects[pi].ceremonies[ckey].findings.splice(fi, 1);
+      save();
+    }
+
+    function updateFindingStatus(pi, ckey, fi, status) {
+      const findings = projects[pi]?.ceremonies[ckey]?.findings;
+      if (!findings || !findings[fi]) return;
+      findings[fi].status = status;
       save();
     }
 
