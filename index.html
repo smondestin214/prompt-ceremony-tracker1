@@ -283,7 +283,7 @@
       display: flex; align-items: flex-start; gap: 10px;
       padding: 6px 0; font-size: 13px; color: var(--text-muted);
     }
-    .checklist li.checked { color: var(--text-muted); text-decoration: line-through; opacity: 0.6; }
+    .checklist li.checked { color: var(--text-muted); opacity: 0.7; }
     .checklist-progress {
       font-size: 11px; color: var(--text-muted); margin-top: 8px;
     }
@@ -321,16 +321,17 @@
 
     /* Item notes */
     .item-note-input {
-      font-size: 11px; color: var(--text-muted); background: none;
+      font-size: 11px; color: var(--border); background: none;
       border: none; border-bottom: 1px solid transparent;
       padding: 1px 0; width: 100%; outline: none;
-      transition: border-color 0.15s;
-      font-family: inherit;
+      transition: border-color 0.15s, color 0.15s;
+      font-family: inherit; font-style: italic;
     }
     .item-note-input:hover, .item-note-input:focus {
-      border-bottom-color: var(--border); color: var(--text);
+      border-bottom-color: var(--border);
     }
-    .item-note-input::placeholder { color: var(--border); font-style: italic; }
+    .item-note-input::placeholder { color: var(--border); }
+    .item-note-input:not(:placeholder-shown) { color: var(--accent-light); }
 
     /* Findings log */
     .findings-list { display: flex; flex-direction: column; gap: 8px; }
