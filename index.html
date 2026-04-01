@@ -346,9 +346,10 @@
       padding: 2px 8px; border-radius: 4px; font-size: 10px;
       font-weight: 700; text-transform: uppercase; white-space: nowrap; margin-top: 2px;
     }
+    .severity-low { background: rgba(234,179,8,0.2); color: #eab308; }
+    .severity-medium { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .severity-high { background: rgba(236,72,153,0.2); color: #ec4899; }
     .severity-blocking { background: rgba(239,68,68,0.2); color: #ef4444; }
-    .severity-high { background: rgba(245,158,11,0.2); color: #f59e0b; }
-    .severity-low { background: rgba(59,130,246,0.2); color: #3b82f6; }
     .bug-type {
       font-size: 10px; padding: 2px 7px; border-radius: 4px;
       background: rgba(139,92,246,0.15); color: #a78bfa; font-weight: 600;
@@ -1140,6 +1141,7 @@
                         <div class="add-finding-form">
                           <select id="sev-${i}-${c.key}">
                             <option value="low">Low</option>
+                            <option value="medium">Medium</option>
                             <option value="high">High</option>
                             <option value="blocking">Blocking</option>
                           </select>
