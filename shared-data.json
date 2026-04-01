@@ -69,7 +69,12 @@
       }
     },
     "versions": [],
-    "docs": [],
+    "docs": [
+      {
+        "url": "https://docs.google.com/document/d/1iiOhYa8mY4bgmY2GZEIJqqVRVwWfWca6aZNSAW-a9-0/edit?tab=t.cgmxl534ekqy#heading=h.l4moc2ikup0a",
+        "label": "All prompt versions"
+      }
+    ],
     "createdAt": "2026-04-01T14:45:01.943Z"
   },
   {
