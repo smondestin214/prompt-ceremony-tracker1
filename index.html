@@ -569,7 +569,7 @@
         <input type="text" id="project-owner-input" placeholder="e.g. Sarah M.">
       </div>
       <div class="form-group">
-        <label>Target date</label>
+        <label>Launch date <span style="color:var(--text-muted); font-weight:400;">(deadlines auto-filled, editable)</span></label>
         <input type="date" id="project-date-input">
       </div>
       <div class="modal-actions">
@@ -985,7 +985,7 @@
                 }).join('')}
               </div>
               <span class="project-name">${esc(p.name)}</span>
-              <span class="project-meta">${p.owner ? esc(p.owner) : ''} ${p.targetDate ? '&middot; Due ' + p.targetDate : ''}</span>
+              <span class="project-meta">${p.owner ? esc(p.owner) : ''} ${p.targetDate ? '&middot; Launch ' + p.targetDate : ''}</span>
             </div>
             <div class="project-header-right">
               <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
@@ -1277,13 +1277,27 @@
       document.getElementById('modal-overlay').classList.remove('active');
     }
 
+    const CEREMONY_OFFSETS = {
+      strategy: -21, crit: -14, swarm: -10,
+      bug: -7, test: -4, eval: -1, postlaunch: 14,
+    };
+
+    function offsetDate(launchDateStr, days) {
+      const d = new Date(launchDateStr);
+      d.setDate(d.getDate() + days);
+      return d.toISOString().slice(0, 10);
+    }
+
     function saveProject() {
       const name = document.getElementById('project-name-input').value.trim();
       if (!name) return;
 
+      const launchDate = document.getElementById('project-date-input').value;
+
       const ceremonies = {};
       CEREMONIES.forEach(c => {
-        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoffState: {}, notesState: {} };
+        const date = launchDate ? offsetDate(launchDate, CEREMONY_OFFSETS[c.key] || 0) : '';
+        ceremonies[c.key] = { status: 'not-started', date, notes: '', checklistState: {}, findings: [], signoffState: {}, notesState: {} };
       });
 
       projects.unshift({
