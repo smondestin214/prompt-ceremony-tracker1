@@ -352,9 +352,10 @@
     .severity-blocking { background: rgba(239,68,68,0.2); color: #ef4444; }
     .bug-type {
       font-size: 10px; padding: 2px 7px; border-radius: 4px;
-      background: rgba(139,92,246,0.15); color: #a78bfa; font-weight: 600;
-      white-space: nowrap; margin-top: 2px;
+      font-weight: 600; white-space: nowrap; margin-top: 2px;
     }
+    .bug-type-prompt-fixable { background: rgba(16,185,129,0.15); color: #10b981; }
+    .bug-type-engineering { background: rgba(59,130,246,0.15); color: #3b82f6; }
 
     .finding-content { flex: 1; }
     .finding-text { font-size: 13px; margin-bottom: 3px; }
@@ -1137,7 +1138,7 @@
                               <div class="finding-item">
                                 <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                                   <span class="finding-severity severity-${f.severity}">${f.severity}</span>
-                                  ${f.type ? `<span class="bug-type">${f.type}</span>` : ''}
+                                  ${f.type ? `<span class="bug-type bug-type-${f.type}">${f.type}</span>` : ''}
                                 </div>
                                 <div class="finding-content">
                                   <div class="finding-title">${esc(f.title || f.text)}</div>
@@ -1160,7 +1161,6 @@
                             <select id="type-${i}-${c.key}">
                               <option value="prompt-fixable">Prompt-fixable</option>
                               <option value="engineering">Engineering</option>
-                              <option value="input-data">Input data</option>
                             </select>
                           </div>
                           <input type="text" id="ftxt-${i}-${c.key}" placeholder="Bug title..."
