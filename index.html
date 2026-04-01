@@ -444,6 +444,11 @@
       background: var(--bg); padding: 2px 8px; border-radius: 10px;
     }
 
+    .version-edit-summary {
+      width: 100%; font-size: 13px; padding: 6px 10px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); margin-top: 4px;
+    }
     .versions-body { display: none; }
     .versions-body.open { display: block; }
 
@@ -763,6 +768,7 @@
       const clean = JSON.parse(JSON.stringify(p));
       delete clean.expanded;
       delete clean._versionsOpen;
+      if (clean.versions) clean.versions.forEach(v => delete v._editing);
       CEREMONIES.forEach(c => {
         if (clean.ceremonies[c.key]) {
           delete clean.ceremonies[c.key]._open;
@@ -1108,11 +1114,21 @@
                         <span class="version-date">${v.date || ''}</span>
                         ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
                       </div>
-                      <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
-                      <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
-                      <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">
-                        Show prompt
-                      </button>
+                      ${v._editing ? `
+                        <input class="version-edit-summary" value="${esc(v.summary || '')}"
+                          onchange="updateVersion(${i},${vi},'summary',this.value)"
+                          placeholder="What changed?">
+                        <textarea class="add-version-textarea" style="margin-top:8px;"
+                          onchange="updateVersion(${i},${vi},'prompt',this.value)">${esc(v.prompt)}</textarea>
+                        <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
+                      ` : `
+                        <div class="version-change-summary">${esc(v.summary || 'Initial version')}</div>
+                        <div class="version-prompt-preview" id="vprev-${i}-${vi}">${esc(v.prompt)}</div>
+                        <div style="display:flex; gap:8px; margin-top:6px;">
+                          <button class="version-toggle-btn" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
+                          <button class="version-toggle-btn" onclick="toggleEditVersion(${i},${vi})">Edit</button>
+                        </div>
+                      `}
                     </div>
                   `).join('')
                 }
@@ -1358,6 +1374,16 @@
 
       // Auto-open versions panel
       projects[pi]._versionsOpen = true;
+      save();
+    }
+
+    function toggleEditVersion(pi, vi) {
+      projects[pi].versions[vi]._editing = !projects[pi].versions[vi]._editing;
+      render();
+    }
+
+    function updateVersion(pi, vi, field, value) {
+      projects[pi].versions[vi][field] = value;
       save();
     }
 
