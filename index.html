@@ -740,6 +740,7 @@
     let backendMode = 'local'; // 'github', 'server', 'local'
     let syncTimer = null;
     let saving = false;
+    let pendingWrite = false;
     let ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
     let ghSha = null; // tracks the file SHA for GitHub API updates
 
@@ -810,7 +811,13 @@
         content,
       };
       if (ghSha) body.sha = ghSha;
-      const res = await ghFetch('PUT', body);
+      let res = await ghFetch('PUT', body);
+      // Stale SHA conflict — refresh and retry once
+      if (res.status === 409) {
+        await ghRead();
+        body.sha = ghSha;
+        res = await ghFetch('PUT', body);
+      }
       if (!res.ok) throw new Error(`GitHub API ${res.status}`);
       const data = await res.json();
       ghSha = data.content.sha;
@@ -906,6 +913,21 @@
 
     async function pollRemote() {
       if (saving) return;
+      // If local has unsaved changes, retry pushing them instead of pulling remote
+      if (pendingWrite) {
+        try {
+          const clean = projects.map(stripUIState);
+          if (backendMode === 'github') {
+            await ghRead(); // refresh stale SHA
+            await ghWrite(clean);
+          } else {
+            await serverWrite(clean);
+          }
+          pendingWrite = false;
+          updateSyncBadge('connected');
+        } catch { updateSyncBadge('disconnected'); }
+        return;
+      }
       try {
         let serverData;
         if (backendMode === 'github') {
@@ -958,6 +980,7 @@
 
       if (backendMode !== 'local') {
         saving = true;
+        pendingWrite = true;
         try {
           const clean = projects.map(stripUIState);
           if (backendMode === 'github') {
@@ -965,10 +988,12 @@
           } else {
             await serverWrite(clean);
           }
+          pendingWrite = false;
           updateSyncBadge('connected');
         } catch (e) {
           console.warn('Save failed:', e);
           updateSyncBadge('disconnected');
+          // pendingWrite stays true — poll will retry push instead of overwriting
         }
         saving = false;
       }
