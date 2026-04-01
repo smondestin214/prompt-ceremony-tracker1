@@ -507,6 +507,34 @@
       outline: none; border-color: var(--accent);
     }
 
+    /* Documents */
+    .docs-section {
+      padding: 12px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 4px;
+    }
+    .docs-header {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .docs-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .doc-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--accent-light); text-decoration: none;
+      background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.2);
+      border-radius: 6px; padding: 3px 10px;
+    }
+    .doc-link:hover { background: rgba(124,92,252,0.2); }
+    .doc-remove {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 13px; padding: 0; line-height: 1;
+    }
+    .doc-remove:hover { color: #ef4444; }
+    .add-doc-form { display: flex; gap: 6px; flex-wrap: wrap; }
+    .add-doc-form input {
+      padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 12px;
+    }
+    .add-doc-form input:focus { outline: none; border-color: var(--accent); }
+
     @media (max-width: 768px) {
       .ceremony-fields { flex-direction: column; align-items: flex-start; }
       .notes-input { width: 100%; }
@@ -569,7 +597,7 @@
         <input type="text" id="project-owner-input" placeholder="e.g. Sarah M.">
       </div>
       <div class="form-group">
-        <label>Launch date <span style="color:var(--text-muted); font-weight:400;">(deadlines auto-filled, editable)</span></label>
+        <label>Launch date <span style="color:var(--text-muted); font-weight:400;">(target dates auto-filled, editable)</span></label>
         <input type="date" id="project-date-input">
       </div>
       <div class="modal-actions">
@@ -712,6 +740,7 @@
           if (!p.ceremonies[c.key].notesState) p.ceremonies[c.key].notesState = {};
         });
         if (!p.versions) p.versions = [];
+        if (!p.docs) p.docs = [];
       });
       return list;
     }
@@ -993,6 +1022,33 @@
             </div>
           </div>
           <div class="project-body">
+            <!-- Launch date + Documents -->
+            <div class="docs-section">
+              <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:10px;">
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text-muted);">
+                  Launch date
+                  <input type="date" class="date-input" value="${p.targetDate || ''}"
+                    onchange="updateLaunchDate(${i}, this.value)" style="font-size:12px;">
+                </label>
+                ${p.targetDate ? `<button class="btn-ghost" style="font-size:11px;" onclick="recalcDeadlines(${i})" title="Recalculate all ceremony target dates from launch date">&#8635; Recalculate target dates</button>` : ''}
+              </div>
+              <div class="docs-header">&#128206; Documents</div>
+              ${(p.docs || []).length > 0 ? `
+                <div class="docs-list">
+                  ${(p.docs || []).map((d, di) => `
+                    <a href="${esc(d.url)}" target="_blank" rel="noopener" class="doc-link">
+                      &#128279; ${esc(d.label || d.url)}
+                      <button class="doc-remove" onclick="event.preventDefault(); event.stopPropagation(); removeDoc(${i}, ${di})" title="Remove">&#215;</button>
+                    </a>
+                  `).join('')}
+                </div>
+              ` : ''}
+              <div class="add-doc-form">
+                <input type="text" id="docurl-${i}" placeholder="Paste a link..." style="flex:1; min-width:180px;">
+                <input type="text" id="doclabel-${i}" placeholder="Label (optional)" style="max-width:140px;">
+                <button class="btn btn-sm" onclick="addDoc(${i})">Add link</button>
+              </div>
+            </div>
             <div class="ceremonies">
               ${CEREMONIES.map((c, ci) => {
                 const cd = p.ceremonies[c.key] || {};
@@ -1026,7 +1082,7 @@
                           <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
                         </select>
                         <label style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted);">
-                          Deadline
+                          Target date
                           <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)">
                         </label>
                       </div>
@@ -1303,9 +1359,10 @@
       projects.unshift({
         name,
         owner: document.getElementById('project-owner-input').value.trim(),
-        targetDate: document.getElementById('project-date-input').value,
+        targetDate: launchDate,
         ceremonies,
         versions: [],
+        docs: [],
         expanded: true,
         createdAt: new Date().toISOString(),
       });
@@ -1428,6 +1485,37 @@
       if (syncTimer) clearInterval(syncTimer);
       updateSyncBadge('local');
       closeSetup();
+    }
+
+    function updateLaunchDate(pi, value) {
+      projects[pi].targetDate = value;
+      save();
+    }
+
+    function recalcDeadlines(pi) {
+      const launchDate = projects[pi].targetDate;
+      if (!launchDate) return;
+      CEREMONIES.forEach(c => {
+        projects[pi].ceremonies[c.key].date = offsetDate(launchDate, CEREMONY_OFFSETS[c.key] || 0);
+      });
+      save();
+    }
+
+    function addDoc(pi) {
+      const urlEl = document.getElementById(`docurl-${pi}`);
+      const labelEl = document.getElementById(`doclabel-${pi}`);
+      const url = urlEl.value.trim();
+      if (!url) return;
+      if (!projects[pi].docs) projects[pi].docs = [];
+      projects[pi].docs.push({ url, label: labelEl.value.trim() });
+      urlEl.value = '';
+      labelEl.value = '';
+      save();
+    }
+
+    function removeDoc(pi, di) {
+      projects[pi].docs.splice(di, 1);
+      save();
     }
 
     function syncStatusFromSignoffs(pi, ckey) {
