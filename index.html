@@ -283,10 +283,6 @@
       display: flex; align-items: flex-start; gap: 10px;
       padding: 6px 0; font-size: 13px; color: var(--text-muted);
     }
-    .checklist li input[type="checkbox"] {
-      margin-top: 2px; accent-color: var(--accent); cursor: pointer;
-      width: 16px; height: 16px; flex-shrink: 0;
-    }
     .checklist li.checked { color: var(--text-muted); text-decoration: line-through; opacity: 0.6; }
     .checklist-progress {
       font-size: 11px; color: var(--text-muted); margin-top: 8px;
@@ -294,15 +290,15 @@
 
     /* Per-item sign-off */
     .item-signoff-area {
-      margin-left: auto; display: flex; align-items: center; gap: 4px; flex-shrink: 0;
+      display: flex; align-items: center; gap: 4px; flex-shrink: 0; min-width: 72px;
     }
-    .item-sign-btn {
-      font-size: 10px; color: var(--text-muted); background: none;
-      border: 1px solid var(--border); border-radius: 4px;
-      padding: 1px 7px; cursor: pointer; opacity: 0; transition: opacity 0.15s;
-      white-space: nowrap;
+    .item-check-circle {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 1.5px solid var(--border); cursor: pointer;
+      flex-shrink: 0; background: none; margin-top: 1px;
+      transition: border-color 0.15s;
     }
-    .checklist li:hover .item-sign-btn { opacity: 1; }
+    .item-check-circle:hover { border-color: var(--accent-light); }
     .item-signoff-badge {
       font-size: 11px; color: var(--stage-eval); font-weight: 600; white-space: nowrap;
     }
@@ -323,6 +319,19 @@
       cursor: pointer; color: var(--text-muted);
     }
 
+    /* Item notes */
+    .item-note-input {
+      font-size: 11px; color: var(--text-muted); background: none;
+      border: none; border-bottom: 1px solid transparent;
+      padding: 1px 0; width: 100%; outline: none;
+      transition: border-color 0.15s;
+      font-family: inherit;
+    }
+    .item-note-input:hover, .item-note-input:focus {
+      border-bottom-color: var(--border); color: var(--text);
+    }
+    .item-note-input::placeholder { color: var(--border); font-style: italic; }
+
     /* Findings log */
     .findings-list { display: flex; flex-direction: column; gap: 8px; }
 
@@ -336,10 +345,14 @@
       padding: 2px 8px; border-radius: 4px; font-size: 10px;
       font-weight: 700; text-transform: uppercase; white-space: nowrap; margin-top: 2px;
     }
-    .severity-critical { background: rgba(239,68,68,0.2); color: #ef4444; }
-    .severity-major { background: rgba(245,158,11,0.2); color: #f59e0b; }
-    .severity-minor { background: rgba(59,130,246,0.2); color: #3b82f6; }
-    .severity-note { background: rgba(139,92,246,0.2); color: #8b5cf6; }
+    .severity-blocking { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .severity-high { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .severity-low { background: rgba(59,130,246,0.2); color: #3b82f6; }
+    .bug-type {
+      font-size: 10px; padding: 2px 7px; border-radius: 4px;
+      background: rgba(139,92,246,0.15); color: #a78bfa; font-weight: 600;
+      white-space: nowrap; margin-top: 2px;
+    }
 
     .finding-content { flex: 1; }
     .finding-text { font-size: 13px; margin-bottom: 3px; }
@@ -694,6 +707,7 @@
           if (!p.ceremonies[c.key].checklistState) p.ceremonies[c.key].checklistState = {};
           if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
           if (!p.ceremonies[c.key].signoffState) p.ceremonies[c.key].signoffState = {};
+          if (!p.ceremonies[c.key].notesState) p.ceremonies[c.key].notesState = {};
         });
         if (!p.versions) p.versions = [];
       });
@@ -985,8 +999,9 @@
                 const activeTab = cd._activeTab || 'checklist';
                 const checkState = cd.checklistState || {};
                 const signoffState = cd.signoffState || {};
+                const notesState = cd.notesState || {};
                 const findings = cd.findings || [];
-                const checkedCount = c.checklist.filter((_, idx) => checkState[idx]).length;
+                const checkedCount = Object.keys(signoffState).length;
 
                 return `
                   <div class="ceremony-section ${isOpen ? 'open' : ''}">
@@ -1017,25 +1032,26 @@
                         <button class="detail-tab ${activeTab === 'checklist' ? 'active' : ''}"
                           onclick="switchTab(${i}, '${c.key}', 'checklist')">Checklist (${checkedCount}/${c.checklist.length})</button>
                         <button class="detail-tab ${activeTab === 'findings' ? 'active' : ''}"
-                          onclick="switchTab(${i}, '${c.key}', 'findings')">Findings (${findings.length})</button>
+                          onclick="switchTab(${i}, '${c.key}', 'findings')">Bugs (${findings.length})</button>
                       </div>
 
                       <!-- Checklist Panel -->
                       <div class="detail-panel ${activeTab === 'checklist' ? 'active' : ''}">
                         <ul class="checklist">
                           ${c.checklist.map((item, idx) => `
-                            <li class="${checkState[idx] ? 'checked' : ''}">
-                              <input type="checkbox" ${checkState[idx] ? 'checked' : ''}
-                                onchange="toggleCheck(${i}, '${c.key}', ${idx})">
-                              <span style="flex:1;">${item}</span>
+                            <li class="${signoffState[idx] ? 'checked' : ''}">
                               <span class="item-signoff-area">
                                 ${signoffState[idx]
                                   ? `<span class="item-signoff-badge">&#10003; ${esc(signoffState[idx].initials)}</span><button class="item-signoff-cancel" onclick="clearItemSignoff(${i},'${c.key}',${idx})" title="Remove">&#215;</button>`
-                                  : cd._signoffOpenIdx === idx
-                                    ? `<input class="item-signoff-input" id="isig-${i}-${c.key}-${idx}" placeholder="Initials" maxlength="6" onkeydown="if(event.key==='Enter')submitItemSignoff(${i},'${c.key}',${idx})"><button class="item-signoff-btn" onclick="submitItemSignoff(${i},'${c.key}',${idx})">&#10003;</button><button class="item-signoff-cancel" onclick="cancelItemSignoff(${i},'${c.key}')">&#215;</button>`
-                                    : `<button class="item-sign-btn" onclick="openItemSignoff(${i},'${c.key}',${idx})">Sign</button>`
+                                  : `<input class="item-signoff-input" id="isig-${i}-${c.key}-${idx}" placeholder="Init." maxlength="6" onkeydown="if(event.key==='Enter')submitItemSignoff(${i},'${c.key}',${idx})"><button class="item-signoff-btn" onclick="submitItemSignoff(${i},'${c.key}',${idx})">&#10003;</button>`
                                 }
                               </span>
+                              <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
+                                <span>${item}</span>
+                                <input class="item-note-input" value="${esc(notesState[idx] || '')}"
+                                  onchange="saveItemNote(${i},'${c.key}',${idx},this.value)"
+                                  placeholder="Add a note...">
+                              </div>
                             </li>
                           `).join('')}
                         </ul>
@@ -1044,10 +1060,13 @@
                       <!-- Findings Panel -->
                       <div class="detail-panel ${activeTab === 'findings' ? 'active' : ''}">
                         <div class="findings-list">
-                          ${findings.length === 0 ? '<div class="no-findings">No findings yet. Add one below.</div>' :
+                          ${findings.length === 0 ? '<div class="no-findings">No bugs yet. Add one below.</div>' :
                             findings.map((f, fi) => `
                               <div class="finding-item">
-                                <span class="finding-severity severity-${f.severity}">${f.severity}</span>
+                                <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
+                                  <span class="finding-severity severity-${f.severity}">${f.severity}</span>
+                                  ${f.type ? `<span class="bug-type">${f.type}</span>` : ''}
+                                </div>
                                 <div class="finding-content">
                                   <div class="finding-text">${esc(f.text)}</div>
                                   <div class="finding-meta">${f.author ? esc(f.author) + ' &middot; ' : ''}${f.date || ''}</div>
@@ -1059,14 +1078,18 @@
                         </div>
                         <div class="add-finding-form">
                           <select id="sev-${i}-${c.key}">
-                            <option value="note">Note</option>
-                            <option value="minor">Minor</option>
-                            <option value="major">Major</option>
-                            <option value="critical">Critical</option>
+                            <option value="low">Low</option>
+                            <option value="high">High</option>
+                            <option value="blocking">Blocking</option>
                           </select>
-                          <input type="text" id="ftxt-${i}-${c.key}" placeholder="Describe the finding..."
+                          <select id="type-${i}-${c.key}">
+                            <option value="prompt-fixable">Prompt-fixable</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="input-data">Input data</option>
+                          </select>
+                          <input type="text" id="ftxt-${i}-${c.key}" placeholder="Describe the bug..."
                             onkeydown="if(event.key==='Enter')addFinding(${i},'${c.key}')">
-                          <button class="btn btn-sm btn-primary" onclick="addFinding(${i}, '${c.key}')">Add</button>
+                          <button class="btn btn-sm btn-primary" onclick="addFinding(${i}, '${c.key}')">Add bug</button>
                         </div>
                       </div>
                     </div>
@@ -1145,16 +1168,25 @@
 
     function addFinding(pi, ckey) {
       const sevEl = document.getElementById(`sev-${pi}-${ckey}`);
+      const typeEl = document.getElementById(`type-${pi}-${ckey}`);
       const txtEl = document.getElementById(`ftxt-${pi}-${ckey}`);
       const text = txtEl.value.trim();
       if (!text) return;
 
       projects[pi].ceremonies[ckey].findings.push({
         severity: sevEl.value,
+        type: typeEl ? typeEl.value : '',
         text,
         date: new Date().toISOString().slice(0, 10),
         author: '',
       });
+      txtEl.value = '';
+      save();
+    }
+
+    function saveItemNote(pi, ckey, idx, value) {
+      if (!projects[pi].ceremonies[ckey].notesState) projects[pi].ceremonies[ckey].notesState = {};
+      projects[pi].ceremonies[ckey].notesState[idx] = value;
       save();
     }
 
@@ -1246,7 +1278,7 @@
 
       const ceremonies = {};
       CEREMONIES.forEach(c => {
-        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoffState: {} };
+        ceremonies[c.key] = { status: 'not-started', date: '', notes: '', checklistState: {}, findings: [], signoffState: {}, notesState: {} };
       });
 
       projects.unshift({
@@ -1377,20 +1409,6 @@
       if (syncTimer) clearInterval(syncTimer);
       updateSyncBadge('local');
       closeSetup();
-    }
-
-    function openItemSignoff(pi, ckey, idx) {
-      projects[pi].ceremonies[ckey]._signoffOpenIdx = idx;
-      render();
-      setTimeout(() => {
-        const el = document.getElementById(`isig-${pi}-${ckey}-${idx}`);
-        if (el) el.focus();
-      }, 50);
-    }
-
-    function cancelItemSignoff(pi, ckey) {
-      projects[pi].ceremonies[ckey]._signoffOpenIdx = null;
-      render();
     }
 
     function submitItemSignoff(pi, ckey, idx) {
