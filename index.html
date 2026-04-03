@@ -873,7 +873,14 @@
       const data = await res.json();
       ghSha = data.sha;
       try {
-        const text = atob(data.content.replace(/\s/g, ''));
+        let text;
+        if (!data.content && data.download_url) {
+          // File too large for Contents API — fetch raw content directly
+          const raw = await fetch(data.download_url);
+          text = await raw.text();
+        } else {
+          text = atob(data.content.replace(/\s/g, ''));
+        }
         const parsed = text ? JSON.parse(text) : null;
         // Only return parsed data if it's a non-empty array — never silently wipe local data
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -1766,15 +1773,26 @@
       ghConfig = { token, owner, repo, path };
 
       try {
-        const data = await ghRead();
+        let remoteData = null;
+        let shouldPushLocal = false;
+
+        try {
+          remoteData = await ghRead();
+          if (remoteData.length === 0 && projects.length > 0) shouldPushLocal = true;
+        } catch (readErr) {
+          // Network or auth errors (TypeError, "GitHub API NNN") should abort
+          if (readErr instanceof TypeError || (readErr.message && readErr.message.startsWith('GitHub API'))) throw readErr;
+          // Anything else is a data problem (corrupt JSON, empty file, not an array, etc.)
+          shouldPushLocal = true;
+        }
+
         localStorage.setItem('pe-gh-config', JSON.stringify(ghConfig));
 
-        // If we had local data and remote is empty, push local data up
-        if (data.length === 0 && projects.length > 0) {
+        if (shouldPushLocal) {
           statusEl.innerHTML = '<span style="color:var(--accent-light);">Uploading local data to GitHub...</span>';
           await ghWrite(projects.map(stripUIState));
         } else {
-          projects = migrateProjects(data);
+          projects = migrateProjects(remoteData);
         }
 
         backendMode = 'github';
@@ -1784,27 +1802,8 @@
         render();
         closeSetup();
       } catch (e) {
-        const isDataError = e.message.includes('not a valid array') || e.message.includes('empty');
-        if (isDataError) {
-          // Remote file is corrupt/empty — initialize it with local data and connect
-          statusEl.innerHTML = '<span style="color:var(--accent-light);">Remote file invalid — uploading local data to GitHub...</span>';
-          try {
-            await ghWrite(projects.map(stripUIState));
-            localStorage.setItem('pe-gh-config', JSON.stringify(ghConfig));
-            backendMode = 'github';
-            if (syncTimer) clearInterval(syncTimer);
-            syncTimer = setInterval(pollRemote, 8000);
-            updateSyncBadge('connected');
-            render();
-            closeSetup();
-          } catch (writeErr) {
-            statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${writeErr.message}. Check your token and repo name.</span>`;
-            ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
-          }
-        } else {
-          statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
-          ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
-        }
+        statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
+        ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
       }
     }
 
