@@ -1784,8 +1784,27 @@
         render();
         closeSetup();
       } catch (e) {
-        statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
-        ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+        const isDataError = e.message.includes('not a valid array') || e.message.includes('empty');
+        if (isDataError) {
+          // Remote file is corrupt/empty — initialize it with local data and connect
+          statusEl.innerHTML = '<span style="color:var(--accent-light);">Remote file invalid — uploading local data to GitHub...</span>';
+          try {
+            await ghWrite(projects.map(stripUIState));
+            localStorage.setItem('pe-gh-config', JSON.stringify(ghConfig));
+            backendMode = 'github';
+            if (syncTimer) clearInterval(syncTimer);
+            syncTimer = setInterval(pollRemote, 8000);
+            updateSyncBadge('connected');
+            render();
+            closeSetup();
+          } catch (writeErr) {
+            statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${writeErr.message}. Check your token and repo name.</span>`;
+            ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+          }
+        } else {
+          statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
+          ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+        }
       }
     }
 
