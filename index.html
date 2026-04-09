@@ -1658,9 +1658,16 @@
     };
 
     function offsetDate(launchDateStr, days) {
-      const d = new Date(launchDateStr);
-      d.setDate(d.getDate() + days);
-      return d.toISOString().slice(0, 10);
+      const [y, m, d] = launchDateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d + days);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date < today) date.setTime(today.getTime());
+      return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+      ].join('-');
     }
 
     function saveProject() {
