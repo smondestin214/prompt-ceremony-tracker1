@@ -812,6 +812,7 @@
     let pendingWrite = false;
     let ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
     let ghSha = null; // tracks the file SHA for GitHub API updates
+    let lastWriteTime = 0; // timestamp of last successful write — skip pull for a few seconds after
 
     function migrateProjects(list) {
       list.forEach(p => {
@@ -1030,6 +1031,11 @@
           serverData = await res.json();
         }
 
+        // Skip overwrite for 15s after a successful write — GitHub CDN may serve stale data
+        if (Date.now() - lastWriteTime < 15000) {
+          updateSyncBadge('connected');
+          return;
+        }
         const serverJson = JSON.stringify(serverData);
         const localJson = JSON.stringify(projects.map(stripUIState));
         if (serverJson !== localJson) {
@@ -1081,6 +1087,7 @@
             await serverWrite(clean);
           }
           pendingWrite = false;
+          lastWriteTime = Date.now();
           updateSyncBadge('connected');
         } catch (e) {
           console.warn('Save failed:', e);
