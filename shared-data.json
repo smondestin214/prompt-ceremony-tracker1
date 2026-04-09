@@ -403,16 +403,6 @@
             "severity": "low",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Dynamic Questions (DQ) — Context & Intelligence",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "These issues relate to the prompt not leveraging available context or generating irrelevant/overwhelming answer choices.",
             "details": "",
             "date": "2026-04-09",
