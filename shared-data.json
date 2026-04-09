@@ -403,16 +403,6 @@
             "severity": "low",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "— Home Profile bleeding into non-home categories",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "— Redundant questions ignoring query context",
             "details": "",
             "date": "2026-04-09",
