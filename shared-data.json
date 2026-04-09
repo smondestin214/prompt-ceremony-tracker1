@@ -78,15 +78,38 @@
     "targetDate": "2026-04-20",
     "ceremonies": {
       "strategy": {
-        "status": "not-started",
+        "status": "done",
         "date": "2026-03-30",
         "notes": "",
         "checklistState": {},
         "findings": [],
-        "signoffState": {},
-        "notesState": {
-          "4": "quick strat via slack"
-        }
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          }
+        },
+        "notesState": {}
       },
       "crit": {
         "status": "not-started",
