@@ -839,6 +839,7 @@
           delete clean.ceremonies[c.key]._open;
           delete clean.ceremonies[c.key]._activeTab;
           delete clean.ceremonies[c.key]._signoffOpenIdx;
+          delete clean.ceremonies[c.key]._bulkOpen;
         }
       });
       return clean;
@@ -1369,6 +1370,29 @@
 
                       <!-- Findings Panel -->
                       <div class="detail-panel ${activeTab === 'findings' ? 'active' : ''}">
+                        <!-- Bulk import -->
+                        <div style="margin-bottom:10px;">
+                          <button class="btn-ghost" style="font-size:12px; padding:4px 10px;" onclick="toggleBulkImport(${i},'${c.key}')">&#8675; Bulk import bugs</button>
+                        </div>
+                        <div id="bulk-${i}-${c.key}" style="display:${cd._bulkOpen ? 'block' : 'none'}; margin-bottom:12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px;">
+                          <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">Paste a list of bugs below. Each bug should be on its own line (or a numbered list). Optionally include <code>reporter: Name</code> and <code>status: fixed</code> on the same line or the next line.</div>
+                          <textarea id="bulk-text-${i}-${c.key}" placeholder="e.g.&#10;1.1 Home Profile data bleeding into non-home categories — reporter: Ewa Chang — status: To Do&#10;1.2 Unrealistic answer options for square footage reporter: Angeline Vu&#10;&#10;Or paste rows from a doc/spreadsheet..." style="width:100%; min-height:140px; font-size:12px; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); resize:vertical;"></textarea>
+                          <div style="display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">
+                            <select id="bulk-sev-${i}-${c.key}" style="font-size:12px; padding:5px 8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                              <option value="low">Low severity</option>
+                              <option value="medium">Medium severity</option>
+                              <option value="high">High severity</option>
+                              <option value="blocking">Blocking</option>
+                            </select>
+                            <select id="bulk-type-${i}-${c.key}" style="font-size:12px; padding:5px 8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                              <option value="prompt-fixable">Prompt-fixable</option>
+                              <option value="engineering">Engineering</option>
+                              <option value="other">Other</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="importBulkBugs(${i},'${c.key}')">Import bugs</button>
+                            <span id="bulk-result-${i}-${c.key}" style="font-size:12px; color:var(--stage-eval);"></span>
+                          </div>
+                        </div>
                         <div class="findings-list">
                           ${findings.length === 0 ? '<div class="no-findings">No bugs yet. Add one below.</div>' :
                             findings.map((f, fi) => `
@@ -1490,6 +1514,86 @@
 
     function deleteFinding(pi, ckey, fi) {
       projects[pi].ceremonies[ckey].findings.splice(fi, 1);
+      save();
+    }
+
+    function toggleBulkImport(pi, ckey) {
+      const cd = projects[pi].ceremonies[ckey];
+      cd._bulkOpen = !cd._bulkOpen;
+      render();
+    }
+
+    function parseBulkBugs(text) {
+      const bugs = [];
+      // Split on newlines; skip blanks
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+      for (const line of lines) {
+        // Extract reporter — "reporter: Name" or "Reported By: Name"
+        const reporterMatch = line.match(/(?:reporter|reported by)\s*[:\-]\s*([^—\-|,\n]+)/i);
+        const reporter = reporterMatch ? reporterMatch[1].trim() : '';
+
+        // Extract status — "status: fixed" / "☐ To Do" / "☑ Done" / "☒ Won't fix" etc.
+        let status = 'open';
+        const statusMatch = line.match(/status\s*[:\-]\s*(\w[\w\s]*)/i);
+        if (statusMatch) {
+          const s = statusMatch[1].toLowerCase().trim();
+          if (s.includes('fix') && !s.includes("won")) status = 'fixed';
+          else if (s.includes('progress') || s.includes('in progress')) status = 'in-progress';
+          else if (s.includes("won") || s.includes('wont') || s.includes('n/a')) status = 'wontfix';
+        }
+        if (line.includes('☑') || line.includes('✅')) status = 'fixed';
+        if (line.includes('☒')) status = 'wontfix';
+
+        // Strip metadata tokens from title
+        let title = line
+          .replace(/^[\d]+[\.\)]\d*\s*/,'')           // leading numbering like "1.1 "
+          .replace(/(?:reporter|reported by)\s*[:\-]\s*[^—\-|\n,]+/gi, '')
+          .replace(/status\s*[:\-]\s*\w[\w\s]*/gi, '')
+          .replace(/[☐☑☒✅]/g, '')
+          .replace(/\s{2,}/g, ' ')
+          .replace(/[—\-]+\s*$/, '')
+          .trim();
+
+        if (title.length < 3) continue; // skip near-empty lines
+
+        bugs.push({ title, author: reporter, status });
+      }
+      return bugs;
+    }
+
+    function importBulkBugs(pi, ckey) {
+      const textEl = document.getElementById(`bulk-text-${pi}-${ckey}`);
+      const sevEl = document.getElementById(`bulk-sev-${pi}-${ckey}`);
+      const typeEl = document.getElementById(`bulk-type-${pi}-${ckey}`);
+      const resultEl = document.getElementById(`bulk-result-${pi}-${ckey}`);
+      if (!textEl) return;
+
+      const bugs = parseBulkBugs(textEl.value);
+      if (!bugs.length) {
+        resultEl.textContent = 'No bugs found — check the format.';
+        resultEl.style.color = '#ef4444';
+        return;
+      }
+
+      const today = new Date().toISOString().slice(0, 10);
+      const findings = projects[pi].ceremonies[ckey].findings;
+      bugs.forEach(b => {
+        findings.push({
+          severity: sevEl ? sevEl.value : 'medium',
+          type: typeEl ? typeEl.value : 'prompt-fixable',
+          typeCustom: '',
+          title: b.title,
+          details: '',
+          date: today,
+          author: b.author,
+          status: b.status,
+        });
+      });
+
+      textEl.value = '';
+      resultEl.style.color = 'var(--stage-eval)';
+      resultEl.textContent = `✓ Imported ${bugs.length} bug${bugs.length !== 1 ? 's' : ''}`;
       save();
     }
 
