@@ -78,42 +78,17 @@
     "targetDate": "2026-04-20",
     "ceremonies": {
       "strategy": {
-        "status": "done",
+        "status": "not-started",
         "date": "2026-03-30",
         "notes": "",
         "checklistState": {},
         "findings": [],
-        "signoffState": {
-          "0": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "1": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "2": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "3": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "4": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "5": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          }
-        },
+        "signoffState": {},
         "notesState": {}
       },
       "crit": {
         "status": "not-started",
-        "date": "2026-04-06",
+        "date": "2026-04-01",
         "notes": "",
         "checklistState": {},
         "findings": [],
