@@ -398,28 +398,7 @@
         "date": "2026-03-13",
         "notes": "",
         "checklistState": {},
-        "findings": [
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "— Photo skip affordance",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "— LMM scroll (M3 revert)",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          }
-        ],
+        "findings": [],
         "signoffState": {
           "0": {
             "initials": "sm",
