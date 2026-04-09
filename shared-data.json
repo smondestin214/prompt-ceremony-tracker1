@@ -403,46 +403,6 @@
             "severity": "low",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Language & Localization",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "#IssueReported ByPotential FixStatus2.1Language fallback mid-flow — Query started in Spanish, category disambiguation responded in Spanish, but DQs reverted to English (because RF questions are passed in English).Valerie Peppers, Jesse StaufferAdd explicit prompt instruction to maintain the customer's detected language throughout the flow. If RF questions are in English, instruct the LLM to translate them before presenting. To Do",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "Match Explanations (ME) — Accuracy & Trust",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "#IssueReported ByPotential FixStatus3.1Hallucinated review counts — ME claimed \"1,000+ five-star reviews\" when pro's actual profile shows 113 total. Destroys trust.Valerie PeppersKnown issue — M3 MEs will significantly reduce this. Prompt fix: constrain ME generation to only cite verifiable data fields; add validation step or source-grounding instructions. M3 Fix3.2Thin-profile pros elevated as \"best match\" without reasoning — Pro card looked broken/empty, no explanation of why they're a good fit, undermines other recommendations.Anaïs Ziae-MohseniM3 constrains to 3 best matches and adds fallbacks for thin-data scenarios. Prompt fix: add a rule that if insufficient data exists for a meaningful ME, generate a fallback explanation (e.g., emphasize responsiveness, availability, category match). M3 Fix",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "Address & Location Experience",
             "details": "",
             "date": "2026-04-09",
