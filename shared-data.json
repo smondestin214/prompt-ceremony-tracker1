@@ -398,7 +398,388 @@
         "date": "2026-03-13",
         "notes": "",
         "checklistState": {},
-        "findings": [],
+        "findings": [
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "NHX Prompt Changes Checklist",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Compiled from #nhx-ncx-dogfooding channel feedback (April 6–9, 2026)",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Dynamic Questions (DQ) — Context & Intelligence",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "These issues relate to the prompt not leveraging available context or generating irrelevant/overwhelming answer choices.",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus1.1Home Profile data bleeding into non-home categories — Birthday party DQs assumed \"large group in an apartment\" because Home Profile data (apartment type) was applied to a non-home category.Ewa ChangAdd a prompt rule: only inject Home Profile data for known home-service categories. For non-home categories, ask about location before making assumptions. To Do1.2Unrealistic answer options for square footage — Powder room wallpapering offered 6 size options up to 2,000 sqft when only one was plausible. Subtext (\"most rooms under 250 sqft\") was smart, but the options weren't.Angeline VuInstruct the prompt to constrain answer ranges based on category context (e.g., half-bath ≠ 2,000 sqft). Add size proxies (\"about the size of a small bedroom\") to help users estimate. To Do1.3Redundant questions that ignore query intent — Spanish-language AC repair query: system acknowledged it was for AC, then still asked \"what appliance type?\" and followed up with \"what type of AC?\" after skip.Valerie PeppersStrengthen inference-from-query rules in the prompt — if the query already specifies appliance type, skip or pre-fill that DQ. The redundancy handling exists but isn't catching inferences from the initial query. To Do1.4\"Known vs. unknown\" leak question is confusing — Asks customers to assess their own certainty about leak location rather than describe observable symptoms. Inherited from RF questions.Valerie PeppersRewrite prompt guidance for plumbing/leak DQs to ask descriptive questions (\"Where do you see water?\") instead of abstract certainty questions. Coordinate with CatMan who owns RF questions. To Do1.5Irrelevant ownership question — \"Are you the renter, owner, or property manager?\" asked during a wallpaper job for a powder room — feels unnecessary and odd for the context.Angeline VuEvaluate whether ownership DQ is needed per-category; suppress it for cosmetic/decorative projects or move it later in the flow. To Do1.6Single-select vs. multi-select misclassification — Carpet cleaning stain types presented as single-select; user wanted to pick both \"pet hair\" and \"stains.\"Valerie PeppersRefine questionType rules in the prompt with more examples of co-occurring answers that should trigger MULTI_SELECT. (Sarah noted this is being added.) To Do1.7Missing answer options — No \"pen/marker stains\" option for couch cleaning; no \"other\" write-in.Valerie PeppersConsider adding an \"Other (please describe)\" option for stain-type DQs, or instruct the prompt to generate more comprehensive answer sets for cleaning categories. To Do1.8Oddball/off-topic query handling — \"How to grow my allowance\" was not caught as a non-serviceable query.Waqas SheikhAdd prompt guardrails for non-service queries — detect and gracefully redirect when the input doesn't map to a Thumbtack category. To Do",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Language & Localization",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus2.1Language fallback mid-flow — Query started in Spanish, category disambiguation responded in Spanish, but DQs reverted to English (because RF questions are passed in English).Valerie Peppers, Jesse StaufferAdd explicit prompt instruction to maintain the customer's detected language throughout the flow. If RF questions are in English, instruct the LLM to translate them before presenting. To Do",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Match Explanations (ME) — Accuracy & Trust",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus3.1Hallucinated review counts — ME claimed \"1,000+ five-star reviews\" when pro's actual profile shows 113 total. Destroys trust.Valerie PeppersKnown issue — M3 MEs will significantly reduce this. Prompt fix: constrain ME generation to only cite verifiable data fields; add validation step or source-grounding instructions. M3 Fix3.2Thin-profile pros elevated as \"best match\" without reasoning — Pro card looked broken/empty, no explanation of why they're a good fit, undermines other recommendations.Anaïs Ziae-MohseniM3 constrains to 3 best matches and adds fallbacks for thin-data scenarios. Prompt fix: add a rule that if insufficient data exists for a meaningful ME, generate a fallback explanation (e.g., emphasize responsiveness, availability, category match). M3 Fix",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Address & Location Experience",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus4.1Address change mid-flow not reflected in results — User updated address to West Virginia but still received California pros. Initial zip is what's passed through.Valerie PeppersBackend fix: ensure updated address propagates to matching. Not strictly a prompt issue, but the prompt's confirmation screen should reflect the updated address. To Do4.2Property type not pre-filled after address confirmation — After entering/confirming address, system didn't auto-detect property type.Valerie PeppersIf address data includes property type info, pass it to the prompt context so it can pre-fill or skip that DQ. To Do4.3Address confirmation feels like an interruption — Heavy-weight step that breaks DQ flow; payoff isn't clear to the user yet.Anaïs Ziae-MohseniCurrently a learning test ending at M3. If retained, prompt should frame address collection as part of the \"understanding your project\" experience, not a separate step. Learning Test",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "UX & Formatting Issues",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus5.1Extra space before apostrophe in user's name — Personalization greeting had a stray space before the apostrophe (e.g., \"Valerie 's\").Valerie PeppersFix string interpolation in the prompt template — trim whitespace before possessive apostrophe. To Do5.2\"Skip to results\" uses caution button style — Skipping ahead feels like progress to the user, not a destructive action. Caution styling is misleading.Anaïs Ziae-MohseniUX/design fix: change to secondary button style. Not a prompt change, but affects perceived tone of the flow. Design Fix5.3Photos DQ lacks skip affordance — Photo upload step doesn't clearly communicate that it's optional; \"Next\" button is enabled but not obviously so.Anaïs Ziae-MohseniAdd explicit \"Skip\" option or clearer \"optional\" labeling for photo collection DQ. To Do5.4LMM scroll area too small for long lists — \"Last mile matching\" list of oven types in a tiny scrollable area; missing options cause users to get stuck.Melissa HribarKnown WIP — LMM UX is being reverted in M3 and replaced with a new design. M3 Revert",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Confirmation Screen & Project Summary",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "#IssueReported ByPotential FixStatus6.1Summary reflects incorrect assumptions — \"Large group in an apartment\" for a birthday party that isn't at home. Directly caused by issue 1.1.Ewa ChangFix flows upstream from the confirmation screen (see 1.1). Also add a prompt instruction to sanity-check the summary for logical consistency before displaying. To Do",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Priority Summary",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "High Priority (trust-breaking or flow-breaking):",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Home Profile bleeding into non-home categories",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Redundant questions ignoring query context",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Language fallback mid-flow",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Hallucinated review counts in MEs",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Name formatting bug",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Medium Priority (quality & polish):",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Unrealistic sqft options",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Confusing \"known vs. unknown\" question",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Single-select vs. multi-select logic",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Thin-profile pro elevation",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Address change not propagating",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Summary reflecting bad assumptions",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Lower Priority (edge cases & learning tests):",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Irrelevant ownership question",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Missing answer options",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Off-topic query handling",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Property type pre-fill",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Address confirmation weight (learning test)",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Skip button styling (design)",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— Photo skip affordance",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "low",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "— LMM scroll (M3 revert)",
+            "details": "",
+            "date": "2026-04-09",
+            "author": "",
+            "status": "open"
+          }
+        ],
         "signoffState": {
           "0": {
             "initials": "sm",
