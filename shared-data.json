@@ -403,26 +403,6 @@
             "severity": "low",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "These issues relate to the prompt not leveraging available context or generating irrelevant/overwhelming answer choices.",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "#IssueReported ByPotential FixStatus1.1Home Profile data bleeding into non-home categories — Birthday party DQs assumed \"large group in an apartment\" because Home Profile data (apartment type) was applied to a non-home category.Ewa ChangAdd a prompt rule: only inject Home Profile data for known home-service categories. For non-home categories, ask about location before making assumptions. To Do1.2Unrealistic answer options for square footage — Powder room wallpapering offered 6 size options up to 2,000 sqft when only one was plausible. Subtext (\"most rooms under 250 sqft\") was smart, but the options weren't.Angeline VuInstruct the prompt to constrain answer ranges based on category context (e.g., half-bath ≠ 2,000 sqft). Add size proxies (\"about the size of a small bedroom\") to help users estimate. To Do1.3Redundant questions that ignore query intent — Spanish-language AC repair query: system acknowledged it was for AC, then still asked \"what appliance type?\" and followed up with \"what type of AC?\" after skip.Valerie PeppersStrengthen inference-from-query rules in the prompt — if the query already specifies appliance type, skip or pre-fill that DQ. The redundancy handling exists but isn't catching inferences from the initial query. To Do1.4\"Known vs. unknown\" leak question is confusing — Asks customers to assess their own certainty about leak location rather than describe observable symptoms. Inherited from RF questions.Valerie PeppersRewrite prompt guidance for plumbing/leak DQs to ask descriptive questions (\"Where do you see water?\") instead of abstract certainty questions. Coordinate with CatMan who owns RF questions. To Do1.5Irrelevant ownership question — \"Are you the renter, owner, or property manager?\" asked during a wallpaper job for a powder room — feels unnecessary and odd for the context.Angeline VuEvaluate whether ownership DQ is needed per-category; suppress it for cosmetic/decorative projects or move it later in the flow. To Do1.6Single-select vs. multi-select misclassification — Carpet cleaning stain types presented as single-select; user wanted to pick both \"pet hair\" and \"stains.\"Valerie PeppersRefine questionType rules in the prompt with more examples of co-occurring answers that should trigger MULTI_SELECT. (Sarah noted this is being added.) To Do1.7Missing answer options — No \"pen/marker stains\" option for couch cleaning; no \"other\" write-in.Valerie PeppersConsider adding an \"Other (please describe)\" option for stain-type DQs, or instruct the prompt to generate more comprehensive answer sets for cleaning categories. To Do1.8Oddball/off-topic query handling — \"How to grow my allowance\" was not caught as a non-serviceable query.Waqas SheikhAdd prompt guardrails for non-service queries — detect and gracefully redirect when the input doesn't map to a Thumbtack category. To Do",
-            "details": "",
-            "date": "2026-04-09",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "low",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "Language & Localization",
             "details": "",
             "date": "2026-04-09",
