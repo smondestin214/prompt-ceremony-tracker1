@@ -11,7 +11,9 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {
+          "4": "quick strategy"
+        }
       },
       "crit": {
         "status": "not-started",
