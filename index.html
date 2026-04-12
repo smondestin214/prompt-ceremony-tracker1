@@ -1434,7 +1434,7 @@
                 ${(p.versions || []).length === 0
                   ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
                   : (p.versions || []).map((v, vi) => `
-                    <div class="version-entry ${vi === 0 ? 'latest' : ''}">
+                    <div class="version-entry ${vi === 0 ? 'latest' : ''}" id="ventry-${i}-${vi}">
                       <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
                       <div class="version-meta">
                         ${v._editing
@@ -1913,8 +1913,18 @@
     }
 
     function toggleEditVersion(pi, vi) {
-      projects[pi].versions[vi]._editing = !projects[pi].versions[vi]._editing;
-      render();
+      const v = projects[pi].versions[vi];
+      if (v._editing) {
+        // Flush textarea values before tearing down the DOM
+        const summTA = document.getElementById(`vedit-summ-${pi}-${vi}`);
+        const promptTA = document.getElementById(`vedit-prompt-${pi}-${vi}`);
+        const labelEl = document.querySelector(`#ventry-${pi}-${vi} .version-edit-summary`);
+        if (summTA) v.summary = summTA.value;
+        if (promptTA) v.prompt = promptTA.value;
+        if (labelEl) v.label = labelEl.value;
+      }
+      v._editing = !v._editing;
+      save();
     }
 
     function updateVersion(pi, vi, field, value) {
