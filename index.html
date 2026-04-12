@@ -189,13 +189,16 @@
     }
 
     .project-header-left {
-      display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0;
+      display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 0;
+    }
+    .project-header-meta {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
 
     .project-name-input {
-      font-size: 16px; font-weight: 600; background: transparent;
+      font-size: 17px; font-weight: 700; background: transparent;
       border: none; border-bottom: 1px solid transparent; color: var(--text);
-      padding: 0 2px; min-width: 80px; flex: 1; max-width: 420px;
+      padding: 0 2px; width: 100%;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .project-name-input:hover, .project-name-input:focus {
@@ -1180,21 +1183,23 @@
         <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}">
           <div class="project-header" onclick="toggleProject(${i})">
             <div class="project-header-left">
-              <div class="progress-bar-mini">
-                ${CEREMONIES.map(c => {
-                  const s = p.ceremonies[c.key]?.status || 'not-started';
-                  return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
-                }).join('')}
-              </div>
               <input class="project-name-input" value="${esc(p.name)}"
                 onclick="event.stopPropagation()"
                 onchange="updateProjectField(${i},'name',this.value)"
                 placeholder="Project name">
-              <input class="project-owner-input" value="${esc(p.owner || '')}"
-                onclick="event.stopPropagation()"
-                onchange="updateProjectField(${i},'owner',this.value)"
-                placeholder="Owner">
-              ${p.targetDate ? `<span class="project-meta">&middot; Launch ${p.targetDate}</span>` : ''}
+              <div class="project-header-meta">
+                <div class="progress-bar-mini">
+                  ${CEREMONIES.map(c => {
+                    const s = p.ceremonies[c.key]?.status || 'not-started';
+                    return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
+                  }).join('')}
+                </div>
+                <input class="project-owner-input" value="${esc(p.owner || '')}"
+                  onclick="event.stopPropagation()"
+                  onchange="updateProjectField(${i},'owner',this.value)"
+                  placeholder="Owner">
+                ${p.targetDate ? `<span class="project-meta">&middot; Launch ${p.targetDate}</span>` : ''}
+              </div>
             </div>
             <div class="project-header-right">
               <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
