@@ -1187,13 +1187,15 @@
     function renderStats() {
       const total = projects.length;
       const totalCeremonies = total * CEREMONIES.length;
-      let done = 0, inProgress = 0, totalFindings = 0;
+      let done = 0, inProgress = 0, totalBugs = 0, fixedBugs = 0;
       projects.forEach(p => {
         CEREMONIES.forEach(c => {
           const status = p.ceremonies[c.key]?.status || 'not-started';
           if (status === 'done') done++;
           else if (status === 'in-progress') inProgress++;
-          totalFindings += (p.ceremonies[c.key]?.findings || []).length;
+          const findings = p.ceremonies[c.key]?.findings || [];
+          totalBugs += findings.length;
+          fixedBugs += findings.filter(f => f.status === 'fixed').length;
         });
       });
 
@@ -1205,7 +1207,7 @@
         <div class="stat-card"><div class="label">Active projects</div><div class="value">${total}</div></div>
         <div class="stat-card"><div class="label">Ceremonies done</div><div class="value">${done}/${totalCeremonies}</div></div>
         <div class="stat-card"><div class="label">In progress</div><div class="value">${inProgress}</div></div>
-        <div class="stat-card"><div class="label">Total findings</div><div class="value">${totalFindings}</div></div>
+        <div class="stat-card"><div class="label">Bugs fixed</div><div class="value">${fixedBugs}/${totalBugs}</div></div>
       `;
     }
 
