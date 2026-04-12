@@ -112,216 +112,6 @@
     "createdAt": "2026-04-01T15:08:12.191Z"
   },
   {
-    "name": "DQ guardrails",
-    "owner": "sarah m / ben",
-    "targetDate": "2026-04-20",
-    "ceremonies": {
-      "strategy": {
-        "status": "done",
-        "date": "2026-03-30",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {
-          "0": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "1": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "2": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "3": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "4": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "5": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          }
-        },
-        "notesState": {},
-        "docs": []
-      },
-      "crit": {
-        "status": "not-started",
-        "date": "2026-04-06",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "swarm": {
-        "status": "not-started",
-        "date": "2026-04-10",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "bug": {
-        "status": "not-started",
-        "date": "2026-04-13",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "test": {
-        "status": "not-started",
-        "date": "2026-04-16",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "eval": {
-        "status": "not-started",
-        "date": "2026-04-19",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "postlaunch": {
-        "status": "not-started",
-        "date": "2026-05-04",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      }
-    },
-    "versions": [],
-    "docs": [],
-    "createdAt": "2026-04-09T04:04:07.661Z"
-  },
-  {
-    "name": "DQ guardrails mini prompt",
-    "owner": "sarah m / ben",
-    "targetDate": "2026-04-29",
-    "ceremonies": {
-      "strategy": {
-        "status": "done",
-        "date": "2026-04-08",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {
-          "0": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "1": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "2": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "3": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "4": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "5": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          }
-        },
-        "notesState": {},
-        "docs": []
-      },
-      "crit": {
-        "status": "not-started",
-        "date": "2026-04-15",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "swarm": {
-        "status": "not-started",
-        "date": "2026-04-19",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "bug": {
-        "status": "not-started",
-        "date": "2026-04-22",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "test": {
-        "status": "not-started",
-        "date": "2026-04-25",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "eval": {
-        "status": "not-started",
-        "date": "2026-04-28",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "postlaunch": {
-        "status": "not-started",
-        "date": "2026-05-13",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      }
-    },
-    "versions": [],
-    "docs": [],
-    "createdAt": "2026-04-09T04:17:01.303Z"
-  },
-  {
     "name": "Dynamic Questions (AEM) Prompt",
     "owner": "sarah m. / jesse",
     "targetDate": "2026-03-20",
@@ -543,5 +333,215 @@
       }
     ],
     "createdAt": "2026-04-01T14:45:01.943Z"
+  },
+  {
+    "name": "DQ guardrails",
+    "owner": "sarah m / ben",
+    "targetDate": "2026-04-20",
+    "ceremonies": {
+      "strategy": {
+        "status": "done",
+        "date": "2026-03-30",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          }
+        },
+        "notesState": {},
+        "docs": []
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-06",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-10",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-13",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-16",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-19",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-04",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      }
+    },
+    "versions": [],
+    "docs": [],
+    "createdAt": "2026-04-09T04:04:07.661Z"
+  },
+  {
+    "name": "DQ guardrails mini prompt",
+    "owner": "sarah m / ben",
+    "targetDate": "2026-04-29",
+    "ceremonies": {
+      "strategy": {
+        "status": "done",
+        "date": "2026-04-08",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          }
+        },
+        "notesState": {},
+        "docs": []
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-15",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-19",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-22",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-25",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-28",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-13",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      }
+    },
+    "versions": [],
+    "docs": [],
+    "createdAt": "2026-04-09T04:17:01.303Z"
   }
 ]
