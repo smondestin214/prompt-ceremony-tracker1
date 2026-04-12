@@ -6,7 +6,7 @@
     "ceremonies": {
       "strategy": {
         "status": "done",
-        "date": "2026-02-27",
+        "date": "2026-04-12",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -41,7 +41,7 @@
       },
       "crit": {
         "status": "done",
-        "date": "2026-03-06",
+        "date": "2026-04-12",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -72,7 +72,7 @@
       },
       "swarm": {
         "status": "done",
-        "date": "2026-03-10",
+        "date": "2026-04-12",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -103,7 +103,7 @@
       },
       "bug": {
         "status": "done",
-        "date": "2026-03-13",
+        "date": "2026-04-13",
         "notes": "",
         "checklistState": {},
         "findings": [
@@ -355,7 +355,7 @@
       },
       "test": {
         "status": "done",
-        "date": "2026-03-16",
+        "date": "2026-04-16",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -386,7 +386,7 @@
       },
       "eval": {
         "status": "done",
-        "date": "2026-03-19",
+        "date": "2026-04-19",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -417,7 +417,7 @@
       },
       "postlaunch": {
         "status": "in-progress",
-        "date": "2026-04-03",
+        "date": "2026-05-04",
         "notes": "",
         "checklistState": {},
         "findings": [],
