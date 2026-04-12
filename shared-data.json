@@ -1,6 +1,6 @@
 [
   {
-    "name": "DQ guardrails",
+    "name": "DQ guardrails (ghostbusting and other odd things) - Express",
     "owner": "sarah m / ben",
     "targetDate": "2026-04-20",
     "ceremonies": {
@@ -103,6 +103,111 @@
     "versions": [],
     "docs": [],
     "createdAt": "2026-04-09T04:04:07.661Z"
+  },
+  {
+    "name": "DQ guardrails mini prompt",
+    "owner": "sarah m / ben",
+    "targetDate": "2026-04-29",
+    "ceremonies": {
+      "strategy": {
+        "status": "done",
+        "date": "2026-04-08",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          }
+        },
+        "notesState": {},
+        "docs": []
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-15",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-19",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-22",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-25",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-28",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-13",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      }
+    },
+    "versions": [],
+    "docs": [],
+    "createdAt": "2026-04-09T04:17:01.303Z"
   },
   {
     "name": "Predictive Text Prompt - Express",
