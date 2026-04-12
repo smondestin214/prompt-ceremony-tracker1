@@ -613,6 +613,27 @@
     }
     .add-doc-form input:focus { outline: none; border-color: var(--accent); }
 
+    /* Ceremony-level docs */
+    .ceremony-docs-section {
+      padding: 8px 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+    }
+    .ceremony-docs-list { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+
+    /* Quick-nav bar */
+    .ceremony-quicknav {
+      display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 12px;
+      border-bottom: 1px solid var(--border); margin-bottom: 4px;
+    }
+    .quicknav-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--border); background: var(--surface-hover);
+      color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+    }
+    .quicknav-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,92,252,0.08); }
+    .quicknav-btn.status-dot-done { border-color: rgba(16,185,129,0.4); color: #10b981; background: rgba(16,185,129,0.08); }
+    .quicknav-btn.status-dot-in-progress { border-color: rgba(59,130,246,0.4); color: #60a5fa; background: rgba(59,130,246,0.08); }
+
     @media (max-width: 768px) {
       .ceremony-fields { flex-direction: column; align-items: flex-start; }
       .notes-input { width: 100%; }
@@ -822,6 +843,7 @@
           if (!p.ceremonies[c.key].findings) p.ceremonies[c.key].findings = [];
           if (!p.ceremonies[c.key].signoffState) p.ceremonies[c.key].signoffState = {};
           if (!p.ceremonies[c.key].notesState) p.ceremonies[c.key].notesState = {};
+          if (!p.ceremonies[c.key].docs) p.ceremonies[c.key].docs = [];
         });
         if (!p.versions) p.versions = [];
         if (!p.docs) p.docs = [];
@@ -1304,6 +1326,14 @@
               </div>
             </div>
 
+            <!-- Quick-nav -->
+            <div class="ceremony-quicknav">
+              ${CEREMONIES.map(c => {
+                const s = p.ceremonies[c.key]?.status || 'not-started';
+                return `<button class="quicknav-btn status-dot-${s}" onclick="jumpToCeremony(${i},'${c.key}')">${c.icon} ${c.name}</button>`;
+              }).join('')}
+            </div>
+
             <div class="ceremonies">
               ${CEREMONIES.map((c, ci) => {
                 const cd = p.ceremonies[c.key] || {};
@@ -1317,7 +1347,7 @@
                 const checkedCount = Object.keys(signoffState).length;
 
                 return `
-                  <div class="ceremony-section ${isOpen ? 'open' : ''}">
+                  <div class="ceremony-section ${isOpen ? 'open' : ''}" id="ceremony-${i}-${c.key}">
                     <div class="ceremony-row" onclick="toggleCeremonyDetail(${i}, '${c.key}')">
                       <div class="ceremony-badge ${c.key}">${c.icon}</div>
                       <div class="ceremony-info">
@@ -1349,6 +1379,22 @@
                     </div>
 
                     <div class="ceremony-detail">
+                      <!-- Ceremony docs -->
+                      ${(() => {
+                        const cdocs = cd.docs || [];
+                        return `<div class="ceremony-docs-section">
+                          ${cdocs.length > 0 ? `<div class="ceremony-docs-list">${cdocs.map((d, di) => `
+                            <a href="${esc(d.url)}" target="_blank" rel="noopener" class="doc-link">
+                              &#128279; ${esc(d.label || d.url)}
+                              <button class="doc-remove" onclick="event.preventDefault(); event.stopPropagation(); removeCeremonyDoc(${i},'${c.key}',${di})" title="Remove">&#215;</button>
+                            </a>`).join('')}</div>` : ''}
+                          <div class="add-doc-form" style="margin-top:${cdocs.length > 0 ? '6px' : '0'};">
+                            <input type="text" id="cdocurl-${i}-${c.key}" placeholder="Paste a link..." style="flex:1; min-width:140px;">
+                            <input type="text" id="cdoclabel-${i}-${c.key}" placeholder="Label (optional)" style="max-width:110px;">
+                            <button class="btn btn-sm" onclick="addCeremonyDoc(${i},'${c.key}')">Add link</button>
+                          </div>
+                        </div>`;
+                      })()}
                       <div class="detail-tabs">
                         <button class="detail-tab ${activeTab === 'checklist' ? 'active' : ''}"
                           onclick="switchTab(${i}, '${c.key}', 'checklist')">Checklist (${checkedCount}/${c.checklist.length})</button>
@@ -1968,6 +2014,35 @@
     function removeDoc(pi, di) {
       projects[pi].docs.splice(di, 1);
       save();
+    }
+
+    function addCeremonyDoc(pi, ckey) {
+      const urlEl = document.getElementById(`cdocurl-${pi}-${ckey}`);
+      const labelEl = document.getElementById(`cdoclabel-${pi}-${ckey}`);
+      const url = urlEl.value.trim();
+      if (!url) return;
+      if (!projects[pi].ceremonies[ckey].docs) projects[pi].ceremonies[ckey].docs = [];
+      projects[pi].ceremonies[ckey].docs.push({ url, label: labelEl.value.trim() });
+      urlEl.value = '';
+      labelEl.value = '';
+      save();
+    }
+
+    function removeCeremonyDoc(pi, ckey, di) {
+      projects[pi].ceremonies[ckey].docs.splice(di, 1);
+      save();
+    }
+
+    function jumpToCeremony(pi, ckey) {
+      const cd = projects[pi].ceremonies[ckey];
+      if (!cd._open) {
+        cd._open = true;
+        render();
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`ceremony-${pi}-${ckey}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     }
 
     function syncStatusFromSignoffs(pi, ckey) {
