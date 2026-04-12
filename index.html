@@ -144,7 +144,33 @@
       font-size: 13px;
       font-weight: 600;
       white-space: nowrap;
+      cursor: pointer;
+      transition: filter 0.15s, transform 0.1s;
     }
+    .pipeline-stage:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .pipeline-stage.active-info { outline: 2px solid currentColor; outline-offset: 2px; }
+
+    .stage-popover {
+      position: relative; z-index: 10;
+      margin: -18px 0 12px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .stage-popover-title {
+      font-weight: 700; font-size: 14px; margin-bottom: 6px;
+    }
+    .stage-popover-desc { color: var(--text-muted); line-height: 1.55; margin-bottom: 10px; }
+    .stage-popover-checks { display: flex; flex-direction: column; gap: 4px; }
+    .stage-popover-check {
+      font-size: 12px; color: var(--text-muted);
+      display: flex; align-items: flex-start; gap: 6px;
+    }
+    .stage-popover-check::before { content: '✓'; color: var(--accent-light); flex-shrink: 0; }
 
     .pipeline-stage .num {
       width: 22px; height: 22px; border-radius: 50%;
@@ -681,21 +707,22 @@
       </div>
     </header>
 
-    <div class="pipeline-flow">
-      <div class="pipeline-stage stage-strategy"><span class="num">1</span> Prompt strategy</div>
+    <div class="pipeline-flow" id="pipeline-flow">
+      <div class="pipeline-stage stage-strategy" onclick="showStageInfo(this,'strategy')"><span class="num">1</span> Prompt strategy</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-crit"><span class="num">2</span> Prompt crit</div>
+      <div class="pipeline-stage stage-crit" onclick="showStageInfo(this,'crit')"><span class="num">2</span> Prompt crit</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-swarm"><span class="num">3</span> Swarming</div>
+      <div class="pipeline-stage stage-swarm" onclick="showStageInfo(this,'swarm')"><span class="num">3</span> Swarming</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-bug"><span class="num">4</span> Bug bash</div>
+      <div class="pipeline-stage stage-bug" onclick="showStageInfo(this,'bug')"><span class="num">4</span> Bug bash</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-test"><span class="num">5</span> Testing</div>
+      <div class="pipeline-stage stage-test" onclick="showStageInfo(this,'test')"><span class="num">5</span> Testing</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-eval"><span class="num">6</span> Evals</div>
+      <div class="pipeline-stage stage-eval" onclick="showStageInfo(this,'eval')"><span class="num">6</span> Evals</div>
       <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-postlaunch"><span class="num">7</span> Post-launch eval</div>
+      <div class="pipeline-stage stage-postlaunch" onclick="showStageInfo(this,'postlaunch')"><span class="num">7</span> Post-launch eval</div>
     </div>
+    <div id="stage-popover" class="stage-popover" style="display:none;" onclick="this.style.display='none'"></div>
 
     <div class="stats-bar" id="stats-bar"></div>
 
@@ -1209,6 +1236,39 @@
     }
 
     let dragSrcIdx = null;
+
+    function showStageInfo(el, key) {
+      const popover = document.getElementById('stage-popover');
+      const ceremony = CEREMONIES.find(c => c.key === key);
+      if (!ceremony) return;
+      // Toggle off if already open for this stage
+      if (popover.dataset.key === key && popover.style.display !== 'none') {
+        popover.style.display = 'none';
+        document.querySelectorAll('.pipeline-stage').forEach(s => s.classList.remove('active-info'));
+        return;
+      }
+      document.querySelectorAll('.pipeline-stage').forEach(s => s.classList.remove('active-info'));
+      el.classList.add('active-info');
+      popover.dataset.key = key;
+      popover.innerHTML = `
+        <div class="stage-popover-title">${ceremony.icon} ${ceremony.name}</div>
+        <div class="stage-popover-desc">${ceremony.desc}</div>
+        <div class="stage-popover-checks">
+          ${ceremony.checklist.map(item => `<div class="stage-popover-check">${esc(item)}</div>`).join('')}
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:10px;">Click to close</div>
+      `;
+      popover.style.display = 'block';
+    }
+
+    document.addEventListener('click', e => {
+      const popover = document.getElementById('stage-popover');
+      if (!popover) return;
+      if (!e.target.closest('.pipeline-stage') && !e.target.closest('.stage-popover')) {
+        popover.style.display = 'none';
+        document.querySelectorAll('.pipeline-stage').forEach(s => s.classList.remove('active-info'));
+      }
+    });
 
     function dragStart(e, idx) {
       dragSrcIdx = idx;
