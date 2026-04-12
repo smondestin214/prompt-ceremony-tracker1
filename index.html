@@ -180,6 +180,13 @@
       transition: border-color 0.15s;
     }
     .project-card:hover { border-color: var(--card-hover-border); }
+    .project-card.drag-over { outline: 2px dashed var(--accent); outline-offset: 2px; opacity: 0.85; }
+    .project-card.dragging { opacity: 0.4; }
+    .drag-handle {
+      cursor: grab; font-size: 13px; color: var(--text-muted); letter-spacing: -2px;
+      padding: 0 2px; line-height: 1; user-select: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
 
     .project-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -1201,6 +1208,37 @@
       render();
     }
 
+    let dragSrcIdx = null;
+
+    function dragStart(e, idx) {
+      dragSrcIdx = idx;
+      e.currentTarget.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function dragOver(e, idx) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      document.querySelectorAll('.project-card').forEach(el => el.classList.remove('drag-over'));
+      if (idx !== dragSrcIdx) e.currentTarget.classList.add('drag-over');
+    }
+    function dragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+    function dragDrop(e, idx) {
+      e.preventDefault();
+      if (dragSrcIdx === null || dragSrcIdx === idx) return;
+      const moved = projects.splice(dragSrcIdx, 1)[0];
+      projects.splice(idx, 0, moved);
+      dragSrcIdx = null;
+      save();
+    }
+    function dragEnd(e) {
+      dragSrcIdx = null;
+      document.querySelectorAll('.project-card').forEach(el => {
+        el.classList.remove('dragging', 'drag-over');
+      });
+    }
+
     function renderProjects() {
       const container = document.getElementById('projects-container');
 
@@ -1216,7 +1254,13 @@
       container.innerHTML = projects.map((p, i) => {
         const cardColor = ownerColor(p.owner);
         return `
-        <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}" style="border-left: 4px solid ${cardColor};">
+        <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}" style="border-left: 4px solid ${cardColor};"
+          draggable="true"
+          ondragstart="dragStart(event,${i})"
+          ondragover="dragOver(event,${i})"
+          ondrop="dragDrop(event,${i})"
+          ondragend="dragEnd(event)"
+          ondragleave="dragLeave(event)">
           <div class="project-header" onclick="toggleProject(${i})" style="border-bottom-color: ${cardColor};">
             <div class="project-header-left">
               <input class="project-name-input" value="${esc(p.name)}"
@@ -1243,6 +1287,7 @@
               </div>
             </div>
             <div class="project-header-right">
+              <span class="drag-handle" title="Drag to reorder" onclick="event.stopPropagation()">&#8942;&#8942;</span>
               <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
               <span class="expand-icon">&#9660;</span>
             </div>
