@@ -1391,8 +1391,27 @@
                   <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._allBugsOpen ? '\u25B2' : '\u25BC'}</span>
                 </div>
                 <div class="versions-body ${p._allBugsOpen ? 'open' : ''}">
+                  <!-- Project-level bulk import -->
+                  <div style="padding:10px 12px 4px;">
+                    <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap;">
+                      <textarea id="allbugs-text-${i}" placeholder="Paste a list of bugs, one per line…" style="flex:1; min-width:200px; min-height:80px; font-size:12px; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text); resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                      <select id="allbugs-ceremony-${i}" style="font-size:12px; padding:5px 8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                        ${CEREMONIES.map(c => `<option value="${c.key}"${c.key==='bug'?' selected':''}>${c.name}</option>`).join('')}
+                      </select>
+                      <select id="allbugs-sev-${i}" style="font-size:12px; padding:5px 8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="blocking">Blocking</option>
+                      </select>
+                      <button class="btn btn-sm btn-primary" onclick="importAllBugs(${i})">Add bugs</button>
+                      <span id="allbugs-result-${i}" style="font-size:12px; color:var(--stage-eval);"></span>
+                    </div>
+                  </div>
                   ${allBugs.length === 0
-                    ? '<div class="no-findings" style="padding:16px;">No bugs logged yet.</div>'
+                    ? '<div class="no-findings" style="padding:8px 16px 16px;">No bugs logged yet.</div>'
                     : `<div class="findings-list" style="padding:8px 0;">${allBugs.map(({f, fi, ceremonyName, ckey}) => `
                         <div class="finding-item status-${f.status || 'open'}">
                           <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
@@ -1768,6 +1787,39 @@
         bugs.push({ title, author: reporter, status });
       }
       return bugs;
+    }
+
+    function importAllBugs(pi) {
+      const textEl = document.getElementById(`allbugs-text-${pi}`);
+      const sevEl = document.getElementById(`allbugs-sev-${pi}`);
+      const ceremonyEl = document.getElementById(`allbugs-ceremony-${pi}`);
+      const resultEl = document.getElementById(`allbugs-result-${pi}`);
+      if (!textEl) return;
+
+      const bugs = parseBulkBugs(textEl.value);
+      if (!bugs.length) {
+        if (resultEl) { resultEl.textContent = 'No bugs found — check format.'; resultEl.style.color = '#ef4444'; }
+        return;
+      }
+
+      const ckey = ceremonyEl ? ceremonyEl.value : 'bug';
+      if (!projects[pi].ceremonies[ckey]) projects[pi].ceremonies[ckey] = { findings: [] };
+      if (!projects[pi].ceremonies[ckey].findings) projects[pi].ceremonies[ckey].findings = [];
+
+      const today = new Date().toISOString().slice(0, 10);
+      bugs.forEach(b => {
+        projects[pi].ceremonies[ckey].findings.push({
+          severity: sevEl ? sevEl.value : 'medium',
+          type: 'prompt-fixable', typeCustom: '',
+          title: b.title, details: '', date: today,
+          author: b.author, status: b.status,
+        });
+      });
+
+      textEl.value = '';
+      if (resultEl) { resultEl.textContent = `Added ${bugs.length} bug${bugs.length !== 1 ? 's' : ''}`; resultEl.style.color = 'var(--stage-eval)'; setTimeout(() => { resultEl.textContent = ''; }, 3000); }
+      projects[pi]._allBugsOpen = true;
+      save();
     }
 
     function importBulkBugs(pi, ckey) {
