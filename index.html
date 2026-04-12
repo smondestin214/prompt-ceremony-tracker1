@@ -1249,11 +1249,14 @@
               <div class="versions-header" onclick="toggleVersions(${i})">
                 <h3>
                   Prompt versions
-                  <span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>
+                  ${(p.versions || []).length === 0
+                    ? '<span class="version-count" style="color:var(--accent);">&#8595; Paste your prompt here</span>'
+                    : `<span class="version-count">${(p.versions || []).length} version${(p.versions || []).length !== 1 ? 's' : ''}</span>`
+                  }
                 </h3>
                 <span class="expand-icon" style="font-size:10px; color:var(--text-muted);">${p._versionsOpen ? '\u25B2' : '\u25BC'}</span>
               </div>
-              <div class="versions-body ${p._versionsOpen ? 'open' : ''}">
+              <div class="versions-body ${(p._versionsOpen || (p.versions || []).length === 0) ? 'open' : ''}">
                 ${(p.versions || []).length === 0
                   ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
                   : (p.versions || []).map((v, vi) => `
@@ -1801,6 +1804,7 @@
         versions: [],
         docs: [],
         expanded: true,
+        _versionsOpen: true,
         createdAt: new Date().toISOString(),
       });
       closeModal();
