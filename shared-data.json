@@ -232,7 +232,9 @@
             "date": "2026-04-07"
           }
         },
-        "notesState": {}
+        "notesState": {
+          "0": "meet w/design, eng, CMD, PM to narrow down scope"
+        }
       },
       "crit": {
         "status": "not-started",
