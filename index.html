@@ -248,6 +248,23 @@
 
     .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
+    .reporter-filter-bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+      padding: 8px 12px 4px; border-bottom: 1px solid var(--border);
+    }
+    .reporter-filter-label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .reporter-pill {
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      border: 1px solid var(--border); background: var(--surface-hover);
+      color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+    }
+    .reporter-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .reporter-pill.active { background: rgba(124,92,252,0.15); border-color: var(--accent); color: var(--accent-light); }
+    .reporter-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; color: var(--accent-light); margin-top: 2px;
+    }
+
     .owner-color-swatch {
       width: 12px; height: 12px; border-radius: 50%; cursor: pointer;
       display: inline-block; flex-shrink: 0; position: relative;
@@ -904,6 +921,7 @@
       delete clean.expanded;
       delete clean._versionsOpen;
       delete clean._allBugsOpen;
+      delete clean._bugReporterFilter;
       if (clean.versions) clean.versions.forEach(v => delete v._editing);
       CEREMONIES.forEach(c => {
         if (clean.ceremonies[c.key]) {
@@ -1410,9 +1428,19 @@
                       <span id="allbugs-result-${i}" style="font-size:12px; color:var(--stage-eval);"></span>
                     </div>
                   </div>
-                  ${allBugs.length === 0
-                    ? '<div class="no-findings" style="padding:8px 16px 16px;">No bugs logged yet.</div>'
-                    : `<div class="findings-list" style="padding:8px 0;">${allBugs.map(({f, fi, ceremonyName, ckey}) => `
+                  ${(() => {
+                    if (allBugs.length === 0) return '<div class="no-findings" style="padding:8px 16px 16px;">No bugs logged yet.</div>';
+                    // Build reporter list
+                    const reporters = [...new Set(allBugs.map(({f}) => f.author).filter(Boolean))];
+                    const activeReporter = p._bugReporterFilter || '';
+                    const filtered = activeReporter ? allBugs.filter(({f}) => f.author === activeReporter) : allBugs;
+                    const reporterBar = reporters.length > 0 ? `
+                      <div class="reporter-filter-bar">
+                        <span class="reporter-filter-label">Reporters:</span>
+                        <button class="reporter-pill ${!activeReporter ? 'active' : ''}" onclick="setBugReporterFilter(${i}, '')">All</button>
+                        ${reporters.map(r => `<button class="reporter-pill ${activeReporter === r ? 'active' : ''}" onclick="setBugReporterFilter(${i}, '${esc(r)}')">${esc(r)}</button>`).join('')}
+                      </div>` : '';
+                    return reporterBar + `<div class="findings-list" style="padding:8px 0;">${filtered.map(({f, fi, ceremonyName, ckey}) => `
                         <div class="finding-item status-${f.status || 'open'}">
                           <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                             <span class="finding-severity" style="background:rgba(124,92,252,0.15);color:var(--accent);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;">${esc(ceremonyName)}</span>
@@ -1428,11 +1456,12 @@
                           <div class="finding-content">
                             <div class="finding-title">${esc(f.title || f.text)}</div>
                             ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
-                            <div class="finding-meta">${f.author ? esc(f.author) + ' &middot; ' : ''}${f.date || ''}</div>
+                            ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
+                            <div class="finding-meta">${f.date || ''}</div>
                           </div>
                         </div>`).join('')}
-                      </div>`
-                  }
+                      </div>`;
+                  })()}
                 </div>
               </div>`;
             })()}
@@ -1946,6 +1975,11 @@
 
     function toggleAllBugs(pi) {
       projects[pi]._allBugsOpen = !projects[pi]._allBugsOpen;
+      render();
+    }
+
+    function setBugReporterFilter(pi, reporter) {
+      projects[pi]._bugReporterFilter = reporter;
       render();
     }
 
