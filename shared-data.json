@@ -1,6 +1,6 @@
 [
   {
-    "name": "👻 DQ guardrails (ghostbusters) - Express",
+    "name": "DQ guardrails",
     "owner": "sarah m / ben",
     "targetDate": "2026-04-20",
     "ceremonies": {
@@ -105,7 +105,7 @@
     "createdAt": "2026-04-09T04:04:07.661Z"
   },
   {
-    "name": "Predictive Text (tell me what you want)  - Express",
+    "name": "Predictive Text Prompt - Express",
     "owner": "sarah m. / prashanth",
     "targetDate": "2026-04-17",
     "ceremonies": {
@@ -217,7 +217,7 @@
     "createdAt": "2026-04-01T15:08:12.191Z"
   },
   {
-    "name": "Dynamic Questions (AEM + RF friendly) - Express",
+    "name": "Dynamic Questions (AEM) Prompt",
     "owner": "sarah m. / jesse",
     "targetDate": "2026-03-20",
     "ceremonies": {
