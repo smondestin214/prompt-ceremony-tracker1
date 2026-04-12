@@ -264,6 +264,7 @@
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 11px; font-weight: 600; color: var(--accent-light); margin-top: 2px;
     }
+    .reporter-badge:hover { text-decoration: underline; }
 
     .owner-color-swatch {
       width: 12px; height: 12px; border-radius: 50%; cursor: pointer;
@@ -1456,7 +1457,7 @@
                           <div class="finding-content">
                             <div class="finding-title">${esc(f.title || f.text)}</div>
                             ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
-                            ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
+                            ${f.author ? `<div class="reporter-badge" onclick="setBugReporterFilter(${i},'${esc(f.author)}')" title="Filter by ${esc(f.author)}" style="cursor:pointer;">&#128100; ${esc(f.author)}</div>` : ''}
                             <div class="finding-meta">${f.date || ''}</div>
                           </div>
                         </div>`).join('')}
