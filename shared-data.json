@@ -1,222 +1,5 @@
 [
   {
-    "name": "👻 DQ guardrails (ghostbusting and other odd things) - Express",
-    "owner": "sarah m / ben",
-    "targetDate": "2026-04-20",
-    "ceremonies": {
-      "strategy": {
-        "status": "done",
-        "date": "2026-03-30",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {
-          "0": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "1": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "2": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "3": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "4": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          },
-          "5": {
-            "initials": "sm",
-            "date": "2026-04-09"
-          }
-        },
-        "notesState": {},
-        "docs": []
-      },
-      "crit": {
-        "status": "not-started",
-        "date": "2026-04-06",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "swarm": {
-        "status": "not-started",
-        "date": "2026-04-10",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "bug": {
-        "status": "not-started",
-        "date": "2026-04-13",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "test": {
-        "status": "not-started",
-        "date": "2026-04-16",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "eval": {
-        "status": "not-started",
-        "date": "2026-04-19",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "postlaunch": {
-        "status": "not-started",
-        "date": "2026-05-04",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      }
-    },
-    "versions": [],
-    "docs": [],
-    "createdAt": "2026-04-09T04:04:07.661Z"
-  },
-  {
-    "name": "💬 Predictive Text Prompt (finish their sentence) - Express",
-    "owner": "sarah m. / prashanth",
-    "targetDate": "2026-04-17",
-    "ceremonies": {
-      "strategy": {
-        "status": "done",
-        "date": "2026-03-27",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {
-          "0": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          },
-          "1": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          },
-          "2": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          },
-          "3": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          },
-          "4": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          },
-          "5": {
-            "initials": "sm",
-            "date": "2026-04-07"
-          }
-        },
-        "notesState": {
-          "0": "meet w/design, eng, CMD, PM to narrow down scope"
-        },
-        "docs": []
-      },
-      "crit": {
-        "status": "not-started",
-        "date": "2026-04-03",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "swarm": {
-        "status": "not-started",
-        "date": "2026-04-07",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "bug": {
-        "status": "not-started",
-        "date": "2026-04-10",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "test": {
-        "status": "not-started",
-        "date": "2026-04-13",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "eval": {
-        "status": "not-started",
-        "date": "2026-04-16",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      },
-      "postlaunch": {
-        "status": "not-started",
-        "date": "2026-05-01",
-        "notes": "",
-        "checklistState": {},
-        "findings": [],
-        "signoffState": {},
-        "notesState": {},
-        "docs": []
-      }
-    },
-    "versions": [],
-    "docs": [
-      {
-        "url": "https://docs.google.com/document/d/1zGRhHq1u3wF3Beu27uUjZO5k4hElbo_ta4XfptLseaU/edit?tab=t.9wqzqv5gzenh",
-        "label": "prompt versions on Gdocs"
-      }
-    ],
-    "createdAt": "2026-04-01T15:08:12.191Z"
-  },
-  {
     "name": "⭐️ Dynamic Questions (AEM and RF friendly) - Express",
     "owner": "sarah m. / jesse",
     "targetDate": "2026-03-20",
@@ -442,5 +225,222 @@
       }
     ],
     "createdAt": "2026-04-01T14:45:01.943Z"
+  },
+  {
+    "name": "👻 DQ guardrails (ghostbusting and other odd things) - Express",
+    "owner": "sarah m / ben",
+    "targetDate": "2026-04-20",
+    "ceremonies": {
+      "strategy": {
+        "status": "done",
+        "date": "2026-03-30",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-09"
+          }
+        },
+        "notesState": {},
+        "docs": []
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-06",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-10",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-13",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-16",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-19",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-04",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      }
+    },
+    "versions": [],
+    "docs": [],
+    "createdAt": "2026-04-09T04:04:07.661Z"
+  },
+  {
+    "name": "💬 Predictive Text Prompt (finish their sentence) - Express",
+    "owner": "sarah m. / prashanth",
+    "targetDate": "2026-04-17",
+    "ceremonies": {
+      "strategy": {
+        "status": "done",
+        "date": "2026-03-27",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          },
+          "5": {
+            "initials": "sm",
+            "date": "2026-04-07"
+          }
+        },
+        "notesState": {
+          "0": "meet w/design, eng, CMD, PM to narrow down scope"
+        },
+        "docs": []
+      },
+      "crit": {
+        "status": "not-started",
+        "date": "2026-04-03",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "swarm": {
+        "status": "not-started",
+        "date": "2026-04-07",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "bug": {
+        "status": "not-started",
+        "date": "2026-04-10",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "test": {
+        "status": "not-started",
+        "date": "2026-04-13",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "eval": {
+        "status": "not-started",
+        "date": "2026-04-16",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      },
+      "postlaunch": {
+        "status": "not-started",
+        "date": "2026-05-01",
+        "notes": "",
+        "checklistState": {},
+        "findings": [],
+        "signoffState": {},
+        "notesState": {},
+        "docs": []
+      }
+    },
+    "versions": [],
+    "docs": [
+      {
+        "url": "https://docs.google.com/document/d/1zGRhHq1u3wF3Beu27uUjZO5k4hElbo_ta4XfptLseaU/edit?tab=t.9wqzqv5gzenh",
+        "label": "prompt versions on Gdocs"
+      }
+    ],
+    "createdAt": "2026-04-01T15:08:12.191Z"
   }
 ]
