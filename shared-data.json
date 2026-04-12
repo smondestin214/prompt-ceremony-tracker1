@@ -106,7 +106,228 @@
         "date": "2026-03-13",
         "notes": "",
         "checklistState": {},
-        "findings": [],
+        "findings": [
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Questions include answer choice wording in questionText",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "\"Other (please describe)\" appearing as answer choice",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Query scope bleeding into unrelated questions",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Skip handling loops instead of moving on",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "\"Please describe\" appearing in answer choices",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Explanation copy repeating concepts from questionText",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "\"What are you moving\" question has mismatched, non-parallel answer choices and assumes home type",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "RF terminology not translated into customer-friendly language",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Answer choices using wrong person pronouns (e.g. \"Yes, the student has an instrument\")",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Explainer text using question phrasing, creating double questions",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Bathroom/bedroom count not prefilling from home profile",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Explanation and answer choices out of sync (e.g. mentions half bathrooms but no half bathroom answer choices)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Non-home category events assuming service happens at customer's home (birthday party decorations — Ewa Chang)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Redundancy rule not catching explicit query details — model re-asks what was already stated (e.g. \"low water pressure in my shower\" — Erin Hogan)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Square footage answer choices not anchored to real-world proxies — customers can't answer without measuring (wallpaper — Angeline Vu)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Answer choices missing common combinations customers actually need (e.g. pet hair + stains for carpet cleaning — Valerie Peppers)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Language switching mid-flow — query started in Spanish, DQs reverted to English",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "Valerie Peppers",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Model re-asking appliance type after customer already stated it in query, then re-asking after skip",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "Valerie Peppers",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Property type not prefilling from home profile or confirmed address",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "Valerie Peppers",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "RF data quality issue: \"Leaking (problem area known)\" vs \"Leaking (problem area unknown)\" too similar for customers to distinguish — needs consolidation at RF level",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "Valerie Peppers",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Photo upload question needs a skip option (Anais Ziae-Mohseni)",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "High-traffic project query examples need dedicated DQ review pass",
+            "details": "",
+            "date": "2026-04-12",
+            "author": "Erin Hogan",
+            "status": "open"
+          }
+        ],
         "signoffState": {
           "0": {
             "initials": "sm",
