@@ -1756,9 +1756,10 @@
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
 
       for (const line of lines) {
-        // Extract reporter — "reporter: Name" or "Reported By: Name"
+        // Extract reporter — "reporter: Name", "Reported By: Name", or trailing "(Name)"
         const reporterMatch = line.match(/(?:reporter|reported by)\s*[:\-]\s*([^—\-|,\n]+)/i);
-        const reporter = reporterMatch ? reporterMatch[1].trim() : '';
+        const trailingParenMatch = !reporterMatch && line.match(/\(([A-Z][a-z]+(?: [A-Z][a-z]+)?)\)\s*$/);
+        const reporter = reporterMatch ? reporterMatch[1].trim() : (trailingParenMatch ? trailingParenMatch[1].trim() : '');
 
         // Extract status — "status: fixed" / "☐ To Do" / "☑ Done" / "☒ Won't fix" etc.
         let status = 'open';
@@ -1778,6 +1779,7 @@
           .replace(/(?:reporter|reported by)\s*[:\-]\s*[^—\-|\n,]+/gi, '')
           .replace(/status\s*[:\-]\s*\w[\w\s]*/gi, '')
           .replace(/[☐☑☒✅]/g, '')
+          .replace(/\([A-Z][a-z]+(?: [A-Z][a-z]+)?\)\s*$/, '') // trailing (Name)
           .replace(/\s{2,}/g, ' ')
           .replace(/[—\-]+\s*$/, '')
           .trim();
