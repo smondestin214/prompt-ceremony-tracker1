@@ -1785,10 +1785,16 @@
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
 
       for (const line of lines) {
-        // Extract reporter — "reporter: Name", "Reported By: Name", or trailing "(Name)"
-        const reporterMatch = line.match(/(?:reporter|reported by)\s*[:\-]\s*([^—\-|,\n]+)/i);
-        const trailingParenMatch = !reporterMatch && line.match(/\(([A-Z][a-z]+(?: [A-Z][a-z]+)?)\)\s*$/);
-        const reporter = reporterMatch ? reporterMatch[1].trim() : (trailingParenMatch ? trailingParenMatch[1].trim() : '');
+        // Name pattern: "Firstname Lastname" or "Firstname Hyphen-Last" (2+ words, caps, hyphens ok)
+        const NAME_PAT = '[A-Z][a-z]+(?:[-\\s][A-Z][a-z\\-]+)+';
+        // Extract reporter: "reporter: Name", "Reported By: Name",
+        //   trailing "(Name)", or trailing "(any text — Name)"
+        const reporterMatch = line.match(new RegExp('(?:reporter|reported by)\\s*[:\\-]\\s*([^—\\-|,\\n]+)', 'i'));
+        const trailingParenMatch = !reporterMatch && line.match(new RegExp('\\((?:.*?—\\s*)?(' + NAME_PAT + ')\\)\\s*$'));
+        const trailingDashMatch = !reporterMatch && !trailingParenMatch && line.match(new RegExp('[—\\-]\\s*(' + NAME_PAT + ')\\s*$'));
+        const reporter = reporterMatch ? reporterMatch[1].trim()
+          : trailingParenMatch ? trailingParenMatch[1].trim()
+          : trailingDashMatch ? trailingDashMatch[1].trim() : '';
 
         // Extract status — "status: fixed" / "☐ To Do" / "☑ Done" / "☒ Won't fix" etc.
         let status = 'open';
@@ -1804,13 +1810,14 @@
 
         // Strip metadata tokens from title
         let title = line
-          .replace(/^[\d]+[\.\)]\d*\s*/,'')           // leading numbering like "1.1 "
+          .replace(/^[\d]+[\.\)]\d*\s*/,'')
           .replace(/(?:reporter|reported by)\s*[:\-]\s*[^—\-|\n,]+/gi, '')
           .replace(/status\s*[:\-]\s*\w[\w\s]*/gi, '')
           .replace(/[☐☑☒✅]/g, '')
-          .replace(/\([A-Z][a-z]+(?: [A-Z][a-z]+)?\)\s*$/, '') // trailing (Name)
+          .replace(new RegExp('\\s*\\([^)]*—\\s*' + NAME_PAT + '\\)\\s*$'), '')  // (text — Name)
+          .replace(new RegExp('\\s*\\(' + NAME_PAT + '\\)\\s*$'), '')             // (Name)
+          .replace(new RegExp('\\s*[—\\-]\\s*' + NAME_PAT + '\\s*$'), '')         // — Name at end
           .replace(/\s{2,}/g, ' ')
-          .replace(/[—\-]+\s*$/, '')
           .trim();
 
         if (title.length < 3) continue; // skip near-empty lines
