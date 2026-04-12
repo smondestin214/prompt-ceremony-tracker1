@@ -251,15 +251,15 @@
     .ceremony-section.open { border-color: var(--border); background: rgba(255,255,255,0.01); }
 
     .ceremony-row {
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: flex-start; gap: 12px;
       padding: 12px 16px; cursor: pointer;
       background: rgba(255,255,255,0.02); border-radius: 8px;
     }
 
     .ceremony-badge {
-      width: 32px; height: 32px; border-radius: 8px;
+      width: 36px; height: 36px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
+      font-size: 16px; flex-shrink: 0; margin-top: 2px;
     }
     .ceremony-badge.crit { background: rgba(245,158,11,0.15); }
     .ceremony-badge.swarm { background: rgba(59,130,246,0.15); }
@@ -270,8 +270,11 @@
     .ceremony-badge.postlaunch { background: rgba(168,85,247,0.15); }
 
     .ceremony-info { flex: 1; min-width: 0; }
-    .ceremony-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .ceremony-desc { font-size: 12px; color: var(--text-muted); }
+    .ceremony-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .ceremony-meta { font-weight: 400; font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+    .ceremony-controls {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px;
+    }
 
     .ceremony-fields { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -635,7 +638,7 @@
     .quicknav-btn.status-dot-in-progress { border-color: rgba(59,130,246,0.4); color: #60a5fa; background: rgba(59,130,246,0.08); }
 
     @media (max-width: 768px) {
-      .ceremony-fields { flex-direction: column; align-items: flex-start; }
+      .ceremony-fields, .ceremony-controls { flex-direction: column; align-items: flex-start; }
       .notes-input { width: 100%; }
       .pipeline-flow { padding: 12px; }
       .ceremony-detail { padding-left: 16px; }
@@ -1352,28 +1355,27 @@
                       <div class="ceremony-badge ${c.key}">${c.icon}</div>
                       <div class="ceremony-info">
                         <div class="ceremony-name">${c.name}
-                          <span style="font-weight:400; font-size:11px; color:var(--text-muted); margin-left:8px;">
+                          <span class="ceremony-meta">
                             ${checkedCount}/${c.checklist.length} checks
                             ${findings.length ? ' &middot; ' + findings.length + ' finding' + (findings.length > 1 ? 's' : '') : ''}
                             ${Object.keys(signoffState).length > 0 ? ' &middot; <span style="color:var(--stage-eval)">&#10003; ' + Object.keys(signoffState).length + '/' + c.checklist.length + ' signed</span>' : ''}
                           </span>
                         </div>
-                        <div class="ceremony-desc">${c.desc}</div>
-                      </div>
-                      <div class="ceremony-fields" onclick="event.stopPropagation()">
-                        <select class="status-select ${status}" onchange="updateCeremony(${i}, '${c.key}', 'status', this.value)">
-                          <option value="not-started" ${status === 'not-started' ? 'selected' : ''}>Not started</option>
-                          <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In progress</option>
-                          <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
-                        </select>
-                        <label style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted);">
-                          Target date
-                          <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)">
-                        </label>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                          <input class="item-signoff-input" id="sig-all-${i}-${c.key}" placeholder="Init." maxlength="6"
-                            onkeydown="if(event.key==='Enter')signAllItems(${i},'${c.key}')" title="Enter initials and click Sign all">
-                          <button class="item-signoff-btn" onclick="signAllItems(${i},'${c.key}')">Sign all</button>
+                        <div class="ceremony-controls" onclick="event.stopPropagation()">
+                          <select class="status-select ${status}" onchange="updateCeremony(${i}, '${c.key}', 'status', this.value)">
+                            <option value="not-started" ${status === 'not-started' ? 'selected' : ''}>Not started</option>
+                            <option value="in-progress" ${status === 'in-progress' ? 'selected' : ''}>In progress</option>
+                            <option value="done" ${status === 'done' ? 'selected' : ''}>Done</option>
+                          </select>
+                          <label style="display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted);">
+                            Target date
+                            <input type="date" class="date-input" value="${cd.date || ''}" onchange="updateCeremony(${i}, '${c.key}', 'date', this.value)">
+                          </label>
+                          <div style="display:flex; align-items:center; gap:4px;">
+                            <input class="item-signoff-input" id="sig-all-${i}-${c.key}" placeholder="Init." maxlength="6"
+                              onkeydown="if(event.key==='Enter')signAllItems(${i},'${c.key}')" title="Enter initials and click Sign all">
+                            <button class="item-signoff-btn" onclick="signAllItems(${i},'${c.key}')">Sign all</button>
+                          </div>
                         </div>
                       </div>
                     </div>
