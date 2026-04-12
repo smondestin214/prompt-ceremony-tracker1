@@ -215,6 +215,14 @@
 
     .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
+    .owner-color-swatch {
+      width: 12px; height: 12px; border-radius: 50%; cursor: pointer;
+      display: inline-block; flex-shrink: 0; position: relative;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.15s;
+    }
+    .owner-color-swatch:hover { transform: scale(1.4); }
+
     .progress-bar-mini { display: flex; gap: 3px; align-items: center; }
 
     .progress-dot {
@@ -1167,6 +1175,32 @@
       `;
     }
 
+    const OWNER_PALETTE = [
+      '#7c3aed','#06b6d4','#f59e0b','#ec4899','#10b981',
+      '#3b82f6','#ef4444','#f97316','#a855f7','#14b8a6'
+    ];
+    // Persisted name → color map; seed with known assignments
+    let ownerColorMap = JSON.parse(localStorage.getItem('pe-owner-colors') || '{}');
+    if (!ownerColorMap['grace']) ownerColorMap['grace'] = '#eab308';
+    localStorage.setItem('pe-owner-colors', JSON.stringify(ownerColorMap));
+
+    function ownerColor(owner) {
+      const name = (owner || '').split(/[\s\/,]+/)[0].toLowerCase().trim();
+      if (!name) return '#6b7280';
+      if (ownerColorMap[name]) return ownerColorMap[name];
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+      return OWNER_PALETTE[hash % OWNER_PALETTE.length];
+    }
+
+    function setOwnerColor(owner, color) {
+      const name = (owner || '').split(/[\s\/,]+/)[0].toLowerCase().trim();
+      if (!name) return;
+      ownerColorMap[name] = color;
+      localStorage.setItem('pe-owner-colors', JSON.stringify(ownerColorMap));
+      render();
+    }
+
     function renderProjects() {
       const container = document.getElementById('projects-container');
 
@@ -1179,9 +1213,11 @@
         return;
       }
 
-      container.innerHTML = projects.map((p, i) => `
-        <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}">
-          <div class="project-header" onclick="toggleProject(${i})">
+      container.innerHTML = projects.map((p, i) => {
+        const cardColor = ownerColor(p.owner);
+        return `
+        <div class="project-card ${p.expanded ? 'expanded' : ''}" data-index="${i}" style="border-left: 4px solid ${cardColor};">
+          <div class="project-header" onclick="toggleProject(${i})" style="border-bottom-color: ${cardColor};">
             <div class="project-header-left">
               <input class="project-name-input" value="${esc(p.name)}"
                 onclick="event.stopPropagation()"
@@ -1194,6 +1230,11 @@
                     return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
                   }).join('')}
                 </div>
+                <span class="owner-color-swatch" style="background:${cardColor};" title="Click to change owner color"
+                  onclick="event.stopPropagation(); document.getElementById('oc-${i}').click()">
+                  <input type="color" id="oc-${i}" value="${cardColor}" style="opacity:0;position:absolute;width:0;height:0;"
+                    onchange="setOwnerColor('${esc(p.owner)}',this.value)">
+                </span>
                 <input class="project-owner-input" value="${esc(p.owner || '')}"
                   onclick="event.stopPropagation()"
                   onchange="updateProjectField(${i},'owner',this.value)"
@@ -1512,7 +1553,8 @@
 
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function toggleProject(index) {
