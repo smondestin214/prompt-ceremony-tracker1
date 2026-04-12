@@ -2,7 +2,7 @@
   {
     "name": "⭐️ Dynamic Questions (AEM and RF friendly) - Express",
     "owner": "sarah m. / jesse",
-    "targetDate": "2026-03-20",
+    "targetDate": "2026-01-20",
     "ceremonies": {
       "strategy": {
         "status": "done",
@@ -231,40 +231,40 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Non-home category events assuming service happens at customer's home (birthday party decorations — Ewa Chang)",
+            "title": "Non-home category events assuming service happens at customer's home",
             "details": "",
             "date": "2026-04-12",
-            "author": "",
+            "author": "Ewa Chang",
             "status": "open"
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Redundancy rule not catching explicit query details — model re-asks what was already stated (e.g. \"low water pressure in my shower\" — Erin Hogan)",
+            "title": "Redundancy rule not catching explicit query details — model re-asks what was already stated",
             "details": "",
             "date": "2026-04-12",
-            "author": "",
+            "author": "Erin Hogan",
             "status": "open"
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Square footage answer choices not anchored to real-world proxies — customers can't answer without measuring (wallpaper — Angeline Vu)",
+            "title": "Square footage answer choices not anchored to real-world proxies — customers can't answer without measuring",
             "details": "",
             "date": "2026-04-12",
-            "author": "",
+            "author": "Angeline Vu",
             "status": "open"
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Answer choices missing common combinations customers actually need (e.g. pet hair + stains for carpet cleaning — Valerie Peppers)",
+            "title": "Answer choices missing common combinations customers actually need",
             "details": "",
             "date": "2026-04-12",
-            "author": "",
+            "author": "Valerie Peppers",
             "status": "open"
           },
           {
@@ -311,10 +311,10 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Photo upload question needs a skip option (Anais Ziae-Mohseni)",
+            "title": "Photo upload question needs a skip option",
             "details": "",
             "date": "2026-04-12",
-            "author": "",
+            "author": "Anais Ziae-Mohseni",
             "status": "open"
           },
           {
