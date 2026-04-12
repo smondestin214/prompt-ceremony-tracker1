@@ -902,6 +902,18 @@
     let lastWriteTime = 0; // timestamp of last successful write — skip pull for a few seconds after
 
     function migrateProjects(list) {
+      const NAME = '[A-Z][a-z]+(?:[-\\s][A-Z][a-z\\-]+)+';
+      const stripName = title => title
+        .replace(new RegExp('\\s*\\([^)]*—\\s*' + NAME + '\\)\\s*$'), '')
+        .replace(new RegExp('\\s*\\(' + NAME + '\\)\\s*$'), '')
+        .replace(new RegExp('\\s*—\\s*' + NAME + '\\s*$'), '')
+        .trim();
+      const extractName = title => {
+        let m = title.match(new RegExp('\\((?:.*?—\\s*)?(' + NAME + ')\\)\\s*$'));
+        if (!m) m = title.match(new RegExp('—\\s*(' + NAME + ')\\s*$'));
+        return m ? m[1] : null;
+      };
+
       list.forEach(p => {
         CEREMONIES.forEach(c => {
           if (!p.ceremonies[c.key]) p.ceremonies[c.key] = {};
@@ -910,6 +922,15 @@
           if (!p.ceremonies[c.key].signoffState) p.ceremonies[c.key].signoffState = {};
           if (!p.ceremonies[c.key].notesState) p.ceremonies[c.key].notesState = {};
           if (!p.ceremonies[c.key].docs) p.ceremonies[c.key].docs = [];
+          // Clean reporter names out of existing bug titles
+          p.ceremonies[c.key].findings.forEach(f => {
+            if (!f.title) return;
+            const name = extractName(f.title);
+            if (name) {
+              if (!f.author) f.author = name;
+              f.title = stripName(f.title);
+            }
+          });
         });
         if (!p.versions) p.versions = [];
         if (!p.docs) p.docs = [];
