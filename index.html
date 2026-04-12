@@ -1253,10 +1253,6 @@
       popover.innerHTML = `
         <div class="stage-popover-title">${ceremony.icon} ${ceremony.name}</div>
         <div class="stage-popover-desc">${ceremony.desc}</div>
-        <div class="stage-popover-checks">
-          ${ceremony.checklist.map(item => `<div class="stage-popover-check">${esc(item)}</div>`).join('')}
-        </div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:10px;">Click to close</div>
       `;
       popover.style.display = 'block';
     }
