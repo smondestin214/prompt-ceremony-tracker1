@@ -430,7 +430,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775594387862419",
                 "label": "dogfooding slack msg"
               }
-            ]
+            ],
+            "summary": "6a. Single-select used for questions where multiple answers can be true at the same time — the MULTI_SELECT trigger list doesn't explicitly include co-occurring damage types or conditions, so the model defaults to single-select.\n6b. Common answer combinations (e.g. pet hair + stains) missing from answer choice sets — the prompt instructs the model to avoid overly specific answers but doesn't instruct it to include common real-world combinations customers actually experience."
           },
           {
             "severity": "medium",
