@@ -411,6 +411,11 @@
                 "text": "Status: Open — no reply in thread. This is a UX design + prompt change @Erin",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Prompt treats photo DQs the same as other questions. No instruction to mark them as optional or surface a clear skip affordance.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
