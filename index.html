@@ -549,13 +549,13 @@
     }
 
     .bug-screenshots-grid {
-      display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px;
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
     }
     .bug-screenshot-item {
-      position: relative;
+      position: relative; flex: 1 1 240px; max-width: 100%;
     }
     .bug-screenshot-thumb {
-      width: 100%; max-width: 100%; height: auto; border-radius: 6px;
+      width: 100%; height: auto; border-radius: 6px;
       border: 1px solid var(--border); display: block;
     }
     .bug-screenshot-name {
@@ -2172,24 +2172,6 @@
           </div>
         </div>
         <div class="bug-detail-section">
-          <div class="bug-detail-section-title">Links</div>
-          ${links.length > 0 ? `
-            <div class="bug-links-list">
-              ${links.map((l, li) => `
-                <div class="bug-link-item">
-                  <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
-                  <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-          <div class="bug-link-form">
-            <input id="blink-url-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Paste a URL..." style="flex:2; min-width:160px;">
-            <input id="blink-label-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Label (optional)" style="flex:1; min-width:100px;">
-            <button class="btn btn-sm" onclick="addBugLink(${pi},'${ckey}',${fi})">Add link</button>
-          </div>
-        </div>
-        <div class="bug-detail-section">
           <div class="bug-detail-section-title">Notes</div>
           ${notes.length > 0 ? `
             <div class="bug-notes-list">
@@ -2208,6 +2190,24 @@
               <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name">
               <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
             </div>
+          </div>
+        </div>
+        <div class="bug-detail-section">
+          <div class="bug-detail-section-title">Links</div>
+          ${links.length > 0 ? `
+            <div class="bug-links-list">
+              ${links.map((l, li) => `
+                <div class="bug-link-item">
+                  <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
+                  <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="bug-link-form">
+            <input id="blink-url-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Paste a URL..." style="flex:2; min-width:160px;">
+            <input id="blink-label-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Label (optional)" style="flex:1; min-width:100px;">
+            <button class="btn btn-sm" onclick="addBugLink(${pi},'${ckey}',${fi})">Add link</button>
           </div>
         </div>
       </div>`;
