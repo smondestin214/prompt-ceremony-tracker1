@@ -1820,7 +1820,7 @@
                                 <span class="bug-number">#${globalIdx + 1}</span>
                                 <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)" style="flex:1;">${esc(f.title || f.text || '')}</textarea>
                               </div>
-                              ${f.details ? `<div class="finding-details">${esc(f.details.split('\n')[0].trim())}</div>` : ''}
+                              ${(() => { const s = (f.details || (f.notes&&f.notes[0]&&f.notes[0].text) || '').split('\n')[0].trim(); return s ? `<div class="finding-details">${esc(s)}</div>` : ''; })()}
                               ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
