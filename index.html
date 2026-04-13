@@ -552,11 +552,11 @@
       display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
     }
     .bug-screenshot-item {
-      position: relative; flex: 1 1 240px; max-width: 100%;
+      position: relative; flex: 0 0 auto; width: 200px;
     }
     .bug-screenshot-thumb {
-      width: 100%; height: auto; border-radius: 6px;
-      border: 1px solid var(--border); display: block;
+      width: 200px; height: 150px; object-fit: cover; border-radius: 6px;
+      border: 1px solid var(--border); display: block; cursor: pointer;
     }
     .bug-screenshot-name {
       font-size: 10px; color: var(--text-muted); margin-top: 3px;
