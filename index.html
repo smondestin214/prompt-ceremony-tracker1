@@ -914,6 +914,28 @@
   </div>
 
   <!-- GitHub Setup Modal -->
+  <div class="modal-overlay" id="team-overlay" onclick="closeTeamModal(event)">
+    <div class="modal" onclick="event.stopPropagation()" style="width:480px;">
+      <h2>Team settings</h2>
+      <div class="form-group">
+        <label>Team members <span style="color:var(--text-muted);">(one per line)</span></label>
+        <textarea id="team-members-input" style="width:100%;min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px;font-family:inherit;font-size:13px;resize:vertical;" placeholder="Sarah&#10;Jesse&#10;Waqas&#10;Katie"></textarea>
+      </div>
+      <div class="form-group" style="margin-top:14px;">
+        <label>Slack Incoming Webhook URL <span style="color:var(--text-muted);">(optional)</span></label>
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">
+          Go to <strong>api.slack.com/apps</strong> → Your App → Incoming Webhooks → Add New Webhook. Paste the URL below to send a Slack message whenever someone is @mentioned in a note.
+        </p>
+        <input type="text" id="team-slack-webhook" placeholder="https://hooks.slack.com/services/…" style="width:100%;">
+      </div>
+      <div id="team-status" style="font-size:12px;margin-top:8px;min-height:18px;"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeTeamModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveTeamSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="setup-overlay" onclick="closeSetup(event)">
     <div class="modal" onclick="event.stopPropagation()" style="width:480px;">
       <h2>Team sync setup</h2>
@@ -2038,14 +2060,44 @@
       el.focus();
     }
 
-    function openTeamManager() {
+    function openTeamModal() {
       const members = getTeamMembers();
-      const current = members.join(', ');
-      const input = prompt('Team members (comma-separated):', current);
-      if (input === null) return;
-      const list = input.split(',').map(s => s.trim()).filter(Boolean);
+      document.getElementById('team-members-input').value = members.join('\n');
+      document.getElementById('team-slack-webhook').value = localStorage.getItem('pe-slack-webhook') || '';
+      document.getElementById('team-status').textContent = '';
+      document.getElementById('team-overlay').classList.add('active');
+    }
+
+    function closeTeamModal(e) {
+      if (e && e.target !== document.getElementById('team-overlay')) return;
+      document.getElementById('team-overlay').classList.remove('active');
+    }
+
+    function saveTeamSettings() {
+      const raw = document.getElementById('team-members-input').value;
+      const list = raw.split('\n').map(s => s.trim()).filter(Boolean);
       saveTeamMembers(list);
+      const webhook = document.getElementById('team-slack-webhook').value.trim();
+      if (webhook) localStorage.setItem('pe-slack-webhook', webhook);
+      else localStorage.removeItem('pe-slack-webhook');
+      document.getElementById('team-overlay').classList.remove('active');
       render();
+    }
+
+    async function notifySlack(mentionedNames, noteText, authorName, bugTitle, projectName) {
+      const webhook = localStorage.getItem('pe-slack-webhook');
+      if (!webhook || !mentionedNames.length) return;
+      const tags = mentionedNames.map(n => `*@${n}*`).join(', ');
+      const body = {
+        text: `${tags} — you were mentioned in a bug note`,
+        blocks: [
+          { type: 'section', text: { type: 'mrkdwn', text: `${tags} you were mentioned in a bug note on *${projectName}*` } },
+          { type: 'section', text: { type: 'mrkdwn', text: `*Bug:* ${bugTitle}\n*Note:* "${noteText}"\n*By:* ${authorName || 'someone'}` } }
+        ]
+      };
+      try {
+        await fetch(webhook, { method: 'POST', body: JSON.stringify(body) });
+      } catch(e) { console.warn('Slack notification failed', e); }
     }
 
     function highlightMentions(text) {
@@ -2075,7 +2127,7 @@
       render();
     }
 
-    function addBugNote(pi, ckey, fi) {
+    async function addBugNote(pi, ckey, fi) {
       const textEl = document.getElementById(`bnote-text-${pi}-${ckey}-${fi}`);
       const authorEl = document.getElementById(`bnote-author-${pi}-${ckey}-${fi}`);
       const text = textEl ? textEl.value.trim() : '';
@@ -2087,6 +2139,11 @@
       f.notes.push({ text, author, date: new Date().toISOString().slice(0, 10) });
       f._detailOpen = true;
       save();
+      // Notify @mentioned team members via Slack
+      const mentioned = (text.match(/@([\w.]+)/g) || []).map(t => t.slice(1));
+      if (mentioned.length) {
+        notifySlack(mentioned, text, author, f.title || '', projects[pi].name || '');
+      }
     }
 
     function saveQuiet() {
@@ -2270,7 +2327,7 @@
               <div style="display:flex; gap:6px; margin-top:5px; align-items:center;">
                 <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name" value="${esc(localStorage.getItem('pe-note-author') || '')}">
                 <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
-                <button class="btn btn-sm" onclick="openTeamManager()" title="Manage team members" style="padding:3px 8px;">&#9881; Team</button>
+                <button class="btn btn-sm" onclick="openTeamModal()" title="Manage team members" style="padding:3px 8px;">&#9881; Team</button>
               </div>
             </div>
           </div>
@@ -2750,7 +2807,7 @@
       if (e.key === 'Enter' && document.getElementById('modal-overlay').classList.contains('active')) {
         saveProject();
       }
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') { closeModal(); closeTeamModal(); }
     });
 
     init();
