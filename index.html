@@ -501,6 +501,14 @@
     .add-finding-form input:focus,
     .add-finding-form textarea:focus { outline: none; border-color: var(--accent); }
     .finding-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .finding-title-edit {
+      font-size: 13px; font-weight: 600; margin-bottom: 3px;
+      width: 100%; background: transparent; border: none; color: var(--text);
+      font-family: inherit; resize: none; padding: 0; outline: none;
+      overflow: hidden; field-sizing: content;
+    }
+    .finding-title-edit:hover { background: var(--surface-hover); border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+    .finding-title-edit:focus { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; margin: -4px -6px; }
     .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: pre-wrap; }
     .bug-detail-summary { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
@@ -1614,7 +1622,7 @@
                               </select>
                             </div>
                             <div class="finding-content">
-                              <div class="finding-title">${esc(f.title || f.text)}</div>
+                              <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)">${esc(f.title || f.text || '')}</textarea>
                               ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
                               ${f.author ? `<div class="reporter-badge" onclick="setBugReporterFilter(${i},'${esc(f.author)}')" title="Filter by ${esc(f.author)}" style="cursor:pointer;">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
@@ -2029,6 +2037,11 @@
           }
         }, 800);
       }
+    }
+
+    function updateFindingTitle(pi, ckey, fi, value) {
+      projects[pi].ceremonies[ckey].findings[fi].title = value;
+      saveQuiet();
     }
 
     function updateBugNote(pi, ckey, fi, ni, value) {
