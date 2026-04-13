@@ -371,6 +371,11 @@
                 "text": "Root cause: Question type set to SINGLE_SELECT when answers can co-occur. Also a gap in RF answer options — pet hair isn't surfaced even though it's a common scenario.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "@Megan - check on RF fix",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
