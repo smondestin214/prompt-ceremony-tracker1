@@ -236,6 +236,11 @@
                 "text": "Root cause: The prompt passes home profile data (including property type) into all categories, not just home service categories. The model then applies it as context regardless of relevance.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "added this to the prompt: Home profile data (e.g. property type, number of bedrooms, address) should only be applied when the service is taking place at the customer's home. For non-home categories — such as events, lessons, personal services, or anything that may take place at a venue, school, park, or other external location — do not use home profile data to infer location, property type, or space details. For these categories, ask about the event or service location before making any assumptions. Do not reference the customer's home type in the updatedSummary or confirmation screen for non-home categories.\n\nWaiting on confirmation from @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
