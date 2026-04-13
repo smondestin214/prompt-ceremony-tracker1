@@ -211,7 +211,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775668441272129",
                 "label": "dogfooding slack"
               }
-            ]
+            ],
+            "summary": "Property type isn't prefilled or confirmed after the customer provides their address — confirmed address data isn't being threaded into the DQ prompt, so the model treats it as unknown and asks anyway."
           },
           {
             "severity": "high",
