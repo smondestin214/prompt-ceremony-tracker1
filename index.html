@@ -548,6 +548,17 @@
     }
     .bug-link-anchor:hover { text-decoration: underline; }
     .bug-link-form { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+    .bug-fix-section {
+      padding: 12px 14px; border-top: 1px solid var(--border);
+      background: rgba(124,92,252,0.04);
+    }
+    .bug-fix-text {
+      font-size: 13px; color: var(--text); white-space: pre-wrap; line-height: 1.6;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 12px;
+    }
+    .bug-fix-loading { font-size: 13px; color: var(--text-muted); font-style: italic; }
+    .btn-link { background: none; border: none; color: var(--accent-light); cursor: pointer; font-size: inherit; padding: 0; text-decoration: underline; }
 
     .bug-detail-section { flex: 1; min-width: 200px; }
     .bug-detail-section-title {
@@ -921,6 +932,11 @@
         <label>Team members <span style="color:var(--text-muted);">(one per line)</span></label>
         <textarea id="team-members-input" style="width:100%;min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px;font-family:inherit;font-size:13px;resize:vertical;" placeholder="Sarah&#10;Jesse&#10;Waqas&#10;Katie"></textarea>
       </div>
+      <div class="form-group" style="margin-top:14px;">
+        <label>Anthropic API key <span style="color:var(--text-muted);">(for AI-suggested fixes)</span></label>
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Get one at <strong>console.anthropic.com</strong>. Stored only in your browser.</p>
+        <input type="password" id="team-anthropic-key" placeholder="sk-ant-…" style="width:100%;">
+      </div>
       <div class="modal-actions">
         <button class="btn" onclick="closeTeamModal()">Cancel</button>
         <button class="btn btn-primary" onclick="saveTeamSettings()">Save</button>
@@ -1107,7 +1123,7 @@
           delete clean.ceremonies[c.key]._signoffOpenIdx;
           delete clean.ceremonies[c.key]._bulkOpen;
           if (clean.ceremonies[c.key].findings) {
-            clean.ceremonies[c.key].findings.forEach(f => delete f._detailOpen);
+            clean.ceremonies[c.key].findings.forEach(f => { delete f._detailOpen; delete f._fixLoading; });
           }
         }
       });
@@ -2055,8 +2071,7 @@
     function openTeamModal() {
       const members = getTeamMembers();
       document.getElementById('team-members-input').value = members.join('\n');
-      document.getElementById('team-slack-webhook').value = localStorage.getItem('pe-slack-webhook') || '';
-      document.getElementById('team-status').textContent = '';
+      document.getElementById('team-anthropic-key').value = localStorage.getItem('pe-anthropic-key') || '';
       document.getElementById('team-overlay').classList.add('active');
     }
 
@@ -2069,6 +2084,9 @@
       const raw = document.getElementById('team-members-input').value;
       const list = raw.split('\n').map(s => s.trim()).filter(Boolean);
       saveTeamMembers(list);
+      const key = document.getElementById('team-anthropic-key').value.trim();
+      if (key) localStorage.setItem('pe-anthropic-key', key);
+      else localStorage.removeItem('pe-anthropic-key');
       document.getElementById('team-overlay').classList.remove('active');
       render();
     }
@@ -2076,6 +2094,48 @@
 
     function highlightMentions(text) {
       return esc(text).replace(/@([\w.]+)/g, '<span class="note-mention">@$1</span>');
+    }
+
+    async function generateFix(pi, ckey, fi) {
+      const apiKey = localStorage.getItem('pe-anthropic-key');
+      if (!apiKey) { openTeamModal(); return; }
+      const f = projects[pi].ceremonies[ckey].findings[fi];
+      f._fixLoading = true;
+      f._detailOpen = true;
+      render();
+      const notes = (f.notes || []).map(n => n.text).join('\n');
+      const prompt = `You are helping a product team fix an AI prompt for a feature called Dynamic Questions (DQ) — a conversational intake flow that asks customers questions to scope a job request.
+
+Bug title: ${f.title || ''}
+Severity: ${f.severity || ''}
+Type: ${f.type || ''}
+Notes: ${notes || '(none)'}
+
+Write a short, specific prompt instruction (2–5 sentences or bullets) that could be added directly to the DQ system prompt to prevent this bug. Be concrete — reference the specific behavior to avoid and what the model should do instead. Do not explain the bug; just provide the fix.`;
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json',
+            'anthropic-dangerous-allow-browser': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 512,
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        f.suggestedFix = data.content[0].text.trim();
+      } catch(e) {
+        f.suggestedFix = 'Error generating fix: ' + e.message;
+      }
+      f._fixLoading = false;
+      save();
     }
 
     function updateFindingSeverity(pi, ckey, fi, value) {
@@ -2352,6 +2412,20 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="bug-fix-section">
+        <div class="bug-detail-section-title" style="margin-bottom:8px;">✨ Suggested prompt fix</div>
+        ${f._fixLoading ? `<div class="bug-fix-loading">Claude is thinking…</div>` :
+          f.suggestedFix ? `
+            <div class="bug-fix-text">${esc(f.suggestedFix)}</div>
+            <button class="btn btn-sm" style="margin-top:8px;" onclick="generateFix(${pi},'${ckey}',${fi})">Regenerate</button>
+          ` : `
+            ${localStorage.getItem('pe-anthropic-key')
+              ? `<button class="btn btn-sm btn-primary" onclick="generateFix(${pi},'${ckey}',${fi})">✨ Generate fix</button>`
+              : `<span style="font-size:12px;color:var(--text-muted);">Add an Anthropic API key in <button class="btn-link" onclick="openTeamModal()">Team settings</button> to enable this.</span>`
+            }
+          `
+        }
       </div>`;
     }
 
