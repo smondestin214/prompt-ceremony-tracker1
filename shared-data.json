@@ -642,7 +642,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775865324228229",
                 "label": "dogfooding slack msg2"
               }
-            ]
+            ],
+            "summary": "Out-of-scope queries (e.g. \"fix my car\") aren't caught before the DQ flow starts — the appropriateness guard prompt is too narrowly scoped and doesn't gracefully redirect non-serviceable queries before inference fires."
           }
         ],
         "signoffState": {
