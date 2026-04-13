@@ -2014,9 +2014,11 @@
       const authorEl = document.getElementById(`bnote-author-${pi}-${ckey}-${fi}`);
       const text = textEl ? textEl.value.trim() : '';
       if (!text) return;
+      const author = authorEl ? authorEl.value.trim() : '';
+      if (author) localStorage.setItem('pe-note-author', author);
       const f = projects[pi].ceremonies[ckey].findings[fi];
       if (!f.notes) f.notes = [];
-      f.notes.push({ text, author: authorEl ? authorEl.value.trim() : '', date: new Date().toISOString().slice(0, 10) });
+      f.notes.push({ text, author, date: new Date().toISOString().slice(0, 10) });
       f._detailOpen = true;
       save();
     }
@@ -2190,7 +2192,7 @@
             <div class="bug-note-form">
               <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note..."></textarea>
               <div style="display:flex; gap:6px; margin-top:5px;">
-                <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name">
+                <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name" value="${esc(localStorage.getItem('pe-note-author') || '')}">
                 <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
               </div>
             </div>
