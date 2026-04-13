@@ -203,7 +203,7 @@
             "status": "in-progress",
             "notes": [
               {
-                "text": "Birthday-party decorations search. Only asked indoor/outdoor; confirmation said “you’ll have a large group in an apartment.” Jesse’s read: Home Profile passes in “apartment” so the LLM assumes indoor = inside apartment. Also a related edge case: if user is moving, their HP address may not apply to future-home-category projects either.\n\nStatus: Fix identified — Sarah/Jesse: add a rule so the model doesn’t apply Home Profile data to non-home categories and asks about location before making assumptions. Will re-check after fix ships.",
+                "text": "Birthday-party decorations search. Only asked indoor/outdoor; confirmation said “you’ll have a large group in an apartment.” Jesse’s read: Home Profile passes in “apartment” so the LLM assumes indoor = inside apartment. Also a related edge case: if user is moving, their HP address may not apply to future-home-category projects either.",
                 "author": "Ewa Chang",
                 "date": "2026-04-08"
               }
