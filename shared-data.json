@@ -451,6 +451,11 @@
                 "text": "Status: In-flight — part of Katie’s address-prefill test (see #2); payoff to user not yet clear. UX design decision @Erin",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Address confirmation is a separate UX step that sits inside the DQ flow without being integrated into the question cadence.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
