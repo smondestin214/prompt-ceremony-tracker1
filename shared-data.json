@@ -479,7 +479,7 @@
           },
           {
             "severity": "low",
-            "type": "design",
+            "type": "prompt-fixable",
             "typeCustom": "UX/flow",
             "title": "Address-collection step feels like an interruption to the DQ flow",
             "details": "",
