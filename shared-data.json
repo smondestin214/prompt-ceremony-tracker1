@@ -556,6 +556,11 @@
                 "text": "Root cause: Not a prompt content issue. Sits on the DQ prompt path but is an infrastructure problem.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "confirm that eng will address this, then mark as \"done\" from a content perspective. (It's worth noting for whoever owns the bug list that this should be tracked separately from prompt issues. The owner is the eng team working on the Fireworks rollout, not the prompt.) @Jesse @Prashanth",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
