@@ -286,6 +286,11 @@
                 "text": "Category disambiguation questions came back in Spanish, but DQs were in English. Jesse: likely because we pass English RF questions/answers in. Separately, DQ re-asked for appliance type after the query already said AC, then “what type of AC” after she skipped — redundancy handling not catching inferences from the query itself.\n\n",
                 "author": "Valerie Peppers",
                 "date": "2026-04-07"
+              },
+              {
+                "text": "Status: In-flight — Sarah compiling into changes doc. Proposed: (a) instruct prompt to maintain the customer’s language; (b) give LLM explicit instruction to translate RF questions; (c) strengthen redundancy rules to catch query-level inferences, not just prior answers.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [],
