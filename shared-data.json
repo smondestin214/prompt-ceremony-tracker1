@@ -1,6 +1,6 @@
 [
   {
-    "name": "⭐️ Dynamic Questions (AEM and RF friendly) - Express",
+    "name": "Dynamic Questions (AEM and RF friendly) - Express",
     "owner": "sarah m. / jesse",
     "targetDate": "2026-03-20",
     "ceremonies": {
@@ -267,7 +267,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Redundancy rule not catching explicit query details — model re-asks what was already stated",
+            "title": "Redundancy rule not catching explicit query details â model re-asks what was already stated",
             "details": "",
             "date": "2026-04-12",
             "author": "Erin Hogan",
@@ -279,7 +279,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Square footage answer choices not anchored to real-world proxies — customers can't answer without measuring",
+            "title": "Square footage answer choices not anchored to real-world proxies â customers can't answer without measuring",
             "details": "",
             "date": "2026-04-12",
             "author": "Angeline Vu",
@@ -303,7 +303,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Language switching mid-flow — query started in Spanish, DQs reverted to English",
+            "title": "Language switching mid-flow â query started in Spanish, DQs reverted to English",
             "details": "",
             "date": "2026-04-12",
             "author": "Valerie Peppers",
@@ -339,7 +339,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "RF data quality issue: \"Leaking (problem area known)\" vs \"Leaking (problem area unknown)\" too similar for customers to distinguish — needs consolidation at RF level",
+            "title": "RF data quality issue: \"Leaking (problem area known)\" vs \"Leaking (problem area unknown)\" too similar for customers to distinguish â needs consolidation at RF level",
             "details": "",
             "date": "2026-04-12",
             "author": "Valerie Peppers",
@@ -521,7 +521,7 @@
     "createdAt": "2026-04-01T14:45:01.943Z"
   },
   {
-    "name": "👻 DQ guardrails (ghostbusting and other odd things) - Express",
+    "name": "ð» DQ guardrails (ghostbusting and other odd things) - Express",
     "owner": "sarah m / ben",
     "targetDate": "2026-04-20",
     "ceremonies": {
@@ -626,7 +626,7 @@
     "createdAt": "2026-04-09T04:04:07.661Z"
   },
   {
-    "name": "💬 Predictive Text Prompt (finish their sentence) - Express",
+    "name": "ð¬ Predictive Text Prompt (finish their sentence) - Express",
     "owner": "sarah m. / prashanth",
     "targetDate": "2026-04-17",
     "ceremonies": {
