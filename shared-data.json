@@ -181,6 +181,11 @@
                 "text": "check with @Prashanth re: address collection prompt implementation. Do I need to bring this into the main DQ prompt? Is this even running?",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Address context isn't being threaded into the DQ prompt. Home profile data and confirmed address data are treated separately and neither is suppressing the property type question.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
