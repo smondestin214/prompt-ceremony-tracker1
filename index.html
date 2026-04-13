@@ -575,6 +575,14 @@
       padding: 7px 10px; position: relative;
     }
     .bug-note-body { font-size: 12px; white-space: pre-wrap; margin-bottom: 3px; }
+    .bug-note-body-edit {
+      font-size: 12px; white-space: pre-wrap; margin-bottom: 3px;
+      width: 100%; background: transparent; border: none; color: var(--text);
+      font-family: inherit; resize: none; padding: 0; outline: none;
+      overflow: hidden; field-sizing: content;
+    }
+    .bug-note-body-edit:hover { background: var(--surface-hover); border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+    .bug-note-body-edit:focus { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; margin: -4px -6px; }
     .bug-note-meta { font-size: 11px; color: var(--text-muted); }
     .bug-note-delete {
       position: absolute; top: 5px; right: 6px; background: none;
@@ -1989,6 +1997,11 @@
       save();
     }
 
+    function updateBugNote(pi, ckey, fi, ni, value) {
+      projects[pi].ceremonies[ckey].findings[fi].notes[ni].text = value;
+      save();
+    }
+
     function deleteBugNote(pi, ckey, fi, ni) {
       projects[pi].ceremonies[ckey].findings[fi].notes.splice(ni, 1);
       save();
@@ -2088,7 +2101,7 @@
             <div class="bug-notes-list">
               ${notes.map((n, ni) => `
                 <div class="bug-note-item">
-                  <div class="bug-note-body">${esc(n.text)}</div>
+                  <textarea class="bug-note-body-edit" onblur="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
                   <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
                   <button class="bug-note-delete" onclick="deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
                 </div>
