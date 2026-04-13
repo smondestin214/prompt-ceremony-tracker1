@@ -286,6 +286,11 @@
                 "text": "Root cause: These answer choices are pulled directly from an RF-0 question without consolidation. The prompt's 5-answer cap and parallelism rules aren't catching inherited RF options.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Added this to the prompt: When an RF question includes two or more answer choices that describe the same symptom with a distinction the customer cannot reliably make themselves — such as \"Leaking (problem area known)\" vs \"Leaking (problem area unknown)\" — consolidate them into a single observable answer choice (e.g. \"Leaking\") and use a photo request to capture the uncertainty instead. Never ask the customer to assess their own level of certainty as an answer choice.\n\nWaiting on confirmation from @Jesse and @Megan",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
