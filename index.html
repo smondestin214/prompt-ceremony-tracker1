@@ -541,27 +541,27 @@
     }
 
     .bug-screenshots-grid {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
+      display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px;
     }
     .bug-screenshot-item {
-      position: relative; width: 80px;
+      position: relative;
     }
     .bug-screenshot-thumb {
-      width: 80px; height: 60px; object-fit: cover; border-radius: 5px;
-      border: 1px solid var(--border); cursor: pointer;
+      width: 100%; max-width: 100%; height: auto; border-radius: 6px;
+      border: 1px solid var(--border); display: block;
     }
-    .bug-screenshot-thumb:hover { opacity: 0.85; }
     .bug-screenshot-name {
-      font-size: 10px; color: var(--text-muted); white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis; max-width: 80px; margin-top: 2px;
+      font-size: 10px; color: var(--text-muted); margin-top: 3px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .bug-screenshot-delete {
-      position: absolute; top: 2px; right: 2px;
-      background: rgba(0,0,0,0.6); border: none; color: #fff;
-      border-radius: 50%; width: 16px; height: 16px; font-size: 11px;
+      position: absolute; top: 6px; right: 6px;
+      background: rgba(0,0,0,0.55); border: none; color: #fff;
+      border-radius: 50%; width: 20px; height: 20px; font-size: 13px;
       cursor: pointer; line-height: 1; padding: 0; display: flex;
       align-items: center; justify-content: center;
     }
+    .bug-screenshot-delete:hover { background: rgba(239,68,68,0.85); }
     .bug-screenshot-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
     .bug-paste-zone {
       font-size: 11px; color: var(--accent-light); cursor: pointer;
