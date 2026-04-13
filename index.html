@@ -1026,6 +1026,7 @@
       delete clean._versionsOpen;
       delete clean._allBugsOpen;
       delete clean._bugReporterFilter;
+      delete clean._docFormOpen;
       if (clean.versions) clean.versions.forEach(v => delete v._editing);
       CEREMONIES.forEach(c => {
         if (clean.ceremonies[c.key]) {
@@ -1497,7 +1498,10 @@
                 </label>
                 ${p.targetDate ? `<button class="btn-ghost" style="font-size:11px;" onclick="recalcDeadlines(${i})" title="Recalculate all ceremony target dates from launch date">&#8635; Recalculate target dates</button>` : ''}
               </div>
-              <div class="docs-header">&#128206; Documents</div>
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="docs-header">&#128206; Documents</span>
+                <button class="btn-ghost" style="font-size:11px; padding:2px 8px;" onclick="toggleDocForm(${i})">+ Add link</button>
+              </div>
               ${(p.docs || []).length > 0 ? `
                 <div class="docs-list">
                   ${(p.docs || []).map((d, di) => `
@@ -1508,10 +1512,10 @@
                   `).join('')}
                 </div>
               ` : ''}
-              <div class="add-doc-form">
+              <div class="add-doc-form" id="doc-form-${i}" style="display:${p._docFormOpen ? 'flex' : 'none'};">
                 <input type="text" id="docurl-${i}" placeholder="Paste a link..." style="flex:1; min-width:180px;">
                 <input type="text" id="doclabel-${i}" placeholder="Label (optional)" style="max-width:140px;">
-                <button class="btn btn-sm" onclick="addDoc(${i})">Add link</button>
+                <button class="btn btn-sm" onclick="addDoc(${i})">Add</button>
               </div>
             </div>
 
@@ -2416,6 +2420,11 @@
       save();
     }
 
+    function toggleDocForm(pi) {
+      projects[pi]._docFormOpen = !projects[pi]._docFormOpen;
+      render();
+    }
+
     function addDoc(pi) {
       const urlEl = document.getElementById(`docurl-${pi}`);
       const labelEl = document.getElementById(`doclabel-${pi}`);
@@ -2423,8 +2432,7 @@
       if (!url) return;
       if (!projects[pi].docs) projects[pi].docs = [];
       projects[pi].docs.push({ url, label: labelEl.value.trim() });
-      urlEl.value = '';
-      labelEl.value = '';
+      projects[pi]._docFormOpen = false;
       save();
     }
 
