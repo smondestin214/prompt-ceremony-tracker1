@@ -336,6 +336,11 @@
                 "text": "Root cause: Two separate issues — (a) prompt doesn't instruct the model to maintain the customer's language or translate RF content, and (b) redundancy rule only catches prior DQ answers, not inferences from the original query.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Respond in the same language the customer used in their query. If the query is in Spanish, all questionText, answerChoices, and questionExplanation must be in Spanish. Maintain that language for the entire conversation — do not switch to English mid-flow. If the RF questions are written in English, translate them into the customer's language before surfacing them.\n\nWaiting for confirm from @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
