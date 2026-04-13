@@ -266,6 +266,11 @@
                 "text": "Status: In-flight — Sarah exploring alternatives for overwhelming RF Qs; needs cross-team conversation with CatMan - Megan K (owns RF updates) and CHX Match (owns RF service).",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: These answer choices are pulled directly from an RF-0 question without consolidation. The prompt's 5-answer cap and parallelism rules aren't catching inherited RF options.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
