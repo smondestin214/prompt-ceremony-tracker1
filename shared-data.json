@@ -341,6 +341,11 @@
                 "text": "Respond in the same language the customer used in their query. If the query is in Spanish, all questionText, answerChoices, and questionExplanation must be in Spanish. Maintain that language for the entire conversation — do not switch to English mid-flow. If the RF questions are written in English, translate them into the customer's language before surfacing them.\n\nWaiting for confirm from @Jesse",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "added this (to address BUG 5b) to prompt: This includes information that can be clearly inferred from the customer's original query. For example, if the query says \"low water pressure in my shower,\" do not ask what the problem is or where it's located — treat both as already known. If the query says \"fix my AC,\" do not ask what type of appliance needs work. Apply the redundancy rule to the query itself, not just to prior DQ answers.\n\nwaiting for confirmation from @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
