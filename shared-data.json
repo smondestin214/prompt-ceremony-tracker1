@@ -496,6 +496,11 @@
                 "text": "",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Not a prompt content issue. Sits on the DQ prompt path but is an infrastructure problem.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
