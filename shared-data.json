@@ -160,7 +160,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719",
                 "label": "slack dogfooding msg"
               }
-            ]
+            ],
+            "summary": "Square footage answer choices show implausible ranges for the room type — the prompt converts RF ranges into proxies but doesn't filter them against what's realistic for the specific category or room the customer mentioned."
           },
           {
             "severity": "medium",
