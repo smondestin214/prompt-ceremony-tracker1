@@ -556,6 +556,13 @@
       word-break: break-all; flex: 1;
     }
     .bug-link-anchor:hover { text-decoration: underline; }
+    .bug-link-copy {
+      flex-shrink: 0; background: none; border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text-muted); font-size: 11px; padding: 2px 6px; cursor: pointer;
+      transition: all 0.15s; line-height: 1.4;
+    }
+    .bug-link-copy:hover { border-color: var(--accent); color: var(--accent-light); }
+    .bug-link-copy.copied { border-color: #10b981; color: #10b981; }
     .bug-link-form { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
     .bug-fix-section {
       padding: 12px 14px; border-top: 1px solid var(--border);
@@ -1947,6 +1954,26 @@
       save();
     }
 
+    function copyBugLink(url, btnId) {
+      const copy = text => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      };
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(copy).catch(() => {
+          document.execCommand('copy'); copy();
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta); copy();
+      }
+    }
+
     function toggleBulkImport(pi, ckey) {
       const cd = projects[pi].ceremonies[ckey];
       cd._bulkOpen = !cd._bulkOpen;
@@ -2424,6 +2451,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
                 ${links.map((l, li) => `
                   <div class="bug-link-item">
                     <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
+                    <button class="bug-link-copy" id="blcopy-${pi}-${ckey}-${fi}-${li}" onclick="copyBugLink('${esc(l.url)}','blcopy-${pi}-${ckey}-${fi}-${li}')" title="Copy link">Copy</button>
                     <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
                   </div>
                 `).join('')}
