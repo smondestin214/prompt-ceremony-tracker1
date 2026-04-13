@@ -532,7 +532,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596125810959",
                 "label": "dogfooding slack msg."
               }
-            ]
+            ],
+            "summary": "Address confirmation step interrupts the DQ flow and feels heavy for most customers — this is a UX/product issue, not a prompt issue; the address confirmation step is surfaced as a separate interruption rather than being integrated into the flow."
           },
           {
             "severity": "high",
