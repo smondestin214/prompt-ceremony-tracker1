@@ -476,6 +476,11 @@
     .bug-status-in-progress { background: rgba(59,130,246,0.15); color: #3b82f6; border-color: rgba(59,130,246,0.3); }
     .bug-status-fixed  { background: rgba(16,185,129,0.15); color: #10b981; border-color: rgba(16,185,129,0.3); }
     .bug-status-wontfix { background: rgba(139,141,151,0.12); color: var(--text-muted); border-color: var(--border); }
+    .bug-severity-low      { background: rgba(234,179,8,0.2);   color: #eab308; border-color: rgba(234,179,8,0.3); }
+    .bug-severity-medium   { background: rgba(34,197,94,0.2);   color: #22c55e; border-color: rgba(34,197,94,0.3); }
+    .bug-severity-high     { background: rgba(236,72,153,0.2);  color: #ec4899; border-color: rgba(236,72,153,0.3); }
+    .bug-severity-blocking { background: rgba(239,68,68,0.2);   color: #ef4444; border-color: rgba(239,68,68,0.3); }
+    .bug-type-select { background: rgba(124,92,252,0.1); color: var(--accent-light); border-color: rgba(124,92,252,0.2); }
     .finding-item.status-fixed  { opacity: 0.55; }
     .finding-item.status-wontfix { opacity: 0.45; }
 
@@ -1614,8 +1619,17 @@
                           <div class="finding-item status-${f.status || 'open'}">
                             <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
                               <span class="finding-severity" style="background:rgba(124,92,252,0.15);color:var(--accent);font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600;">${esc(ceremonyName)}</span>
-                              <span class="finding-severity severity-${f.severity}">${f.severity}</span>
-                              ${f.type ? `<span class="bug-type bug-type-${f.type}">${esc(f.typeCustom || f.type)}</span>` : ''}
+                              <select class="bug-status-select bug-severity-${f.severity || 'medium'}" onchange="updateFindingSeverity(${i},'${ckey}',${fi},this.value)">
+                                <option value="low" ${f.severity==='low'?'selected':''}>Low</option>
+                                <option value="medium" ${(!f.severity||f.severity==='medium')?'selected':''}>Medium</option>
+                                <option value="high" ${f.severity==='high'?'selected':''}>High</option>
+                                <option value="blocking" ${f.severity==='blocking'?'selected':''}>Blocking</option>
+                              </select>
+                              <select class="bug-status-select bug-type-select" onchange="updateFindingType(${i},'${ckey}',${fi},this.value)">
+                                <option value="prompt-fixable" ${f.type==='prompt-fixable'?'selected':''}>Prompt fix</option>
+                                <option value="engineering" ${f.type==='engineering'?'selected':''}>Engineering</option>
+                                <option value="other" ${f.type==='other'?'selected':''}>Other</option>
+                              </select>
                               <select class="bug-status-select bug-status-${f.status || 'open'}" onchange="updateFindingStatus(${i},'${ckey}',${fi},this.value)">
                                 <option value="open" ${(!f.status||f.status==='open')?'selected':''}>Open</option>
                                 <option value="in-progress" ${f.status==='in-progress'?'selected':''}>In progress</option>
@@ -1993,6 +2007,16 @@
       textEl.value = '';
       resultEl.style.color = 'var(--stage-eval)';
       resultEl.textContent = `✓ Imported ${bugs.length} bug${bugs.length !== 1 ? 's' : ''}`;
+      save();
+    }
+
+    function updateFindingSeverity(pi, ckey, fi, value) {
+      projects[pi].ceremonies[ckey].findings[fi].severity = value;
+      save();
+    }
+
+    function updateFindingType(pi, ckey, fi, value) {
+      projects[pi].ceremonies[ckey].findings[fi].type = value;
       save();
     }
 
