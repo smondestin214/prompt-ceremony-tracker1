@@ -313,7 +313,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775599830756449",
                 "label": "dogfooding slack msg"
               }
-            ]
+            ],
+            "summary": "Leak DQ forces customers to self-assess certainty instead of describing what they see — the model renders RF answer choices as-is, including \"known vs. unknown\" options that require self-diagnosis rather than observable description."
           },
           {
             "severity": "high",
