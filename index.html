@@ -248,18 +248,24 @@
 
     .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
-    .reporter-filter-bar {
+    .bug-filter-bar {
       display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
       padding: 8px 12px 4px; border-bottom: 1px solid var(--border);
     }
-    .reporter-filter-label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
-    .reporter-pill {
+    .bug-filter-label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .bug-filter-pill {
       font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
       border: 1px solid var(--border); background: var(--surface-hover);
       color: var(--text-muted); cursor: pointer; transition: all 0.15s;
     }
-    .reporter-pill:hover { border-color: var(--accent); color: var(--accent); }
-    .reporter-pill.active { background: rgba(124,92,252,0.15); border-color: var(--accent); color: var(--accent-light); }
+    .bug-filter-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .bug-filter-pill.active { background: rgba(124,92,252,0.15); border-color: var(--accent); color: var(--accent-light); }
+    .bug-number {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      background: var(--surface-hover); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 5px; flex-shrink: 0; align-self: flex-start;
+      margin-top: 2px; letter-spacing: 0.02em;
+    }
     .reporter-badge {
       display: inline-flex; align-items: center; gap: 4px;
       font-size: 11px; font-weight: 600; color: var(--accent-light); margin-top: 2px;
@@ -1113,7 +1119,7 @@
       delete clean.expanded;
       delete clean._versionsOpen;
       delete clean._allBugsOpen;
-      delete clean._bugReporterFilter;
+      delete clean._bugFilter;
       delete clean._docFormOpen;
       if (clean.versions) clean.versions.forEach(v => { delete v._editing; delete v._changelogOpen; });
       CEREMONIES.forEach(c => {
@@ -1270,7 +1276,7 @@
           expanded: p.expanded,
           _versionsOpen: p._versionsOpen,
           _allBugsOpen: p._allBugsOpen,
-          _bugReporterFilter: p._bugReporterFilter,
+          _bugFilter: p._bugFilter,
           ceremonyUI,
         };
       });
@@ -1284,7 +1290,7 @@
           p.expanded = saved.expanded;
           p._versionsOpen = saved._versionsOpen;
           p._allBugsOpen = saved._allBugsOpen;
-          p._bugReporterFilter = saved._bugReporterFilter;
+          p._bugFilter = saved._bugFilter;
           CEREMONIES.forEach(c => {
             if (saved.ceremonyUI[c.key]) {
               p.ceremonies[c.key]._open = saved.ceremonyUI[c.key]._open;
@@ -1639,17 +1645,26 @@
                   </div>
                   ${(() => {
                     if (allBugs.length === 0) return '<div class="no-findings" style="padding:8px 16px 16px;">No bugs logged yet.</div>';
-                    // Build reporter list
-                    const reporters = [...new Set(allBugs.map(({f}) => f.author).filter(Boolean))];
-                    const activeReporter = p._bugReporterFilter || '';
-                    const filtered = activeReporter ? allBugs.filter(({f}) => f.author === activeReporter) : allBugs;
-                    const reporterBar = reporters.length > 0 ? `
-                      <div class="reporter-filter-bar">
-                        <span class="reporter-filter-label">Reporters:</span>
-                        <button class="reporter-pill ${!activeReporter ? 'active' : ''}" onclick="setBugReporterFilter(${i}, '')">All</button>
-                        ${reporters.map(r => `<button class="reporter-pill ${activeReporter === r ? 'active' : ''}" onclick="setBugReporterFilter(${i}, '${esc(r)}')">${esc(r)}</button>`).join('')}
-                      </div>` : '';
-                    return reporterBar + `<div class="findings-list" style="padding:8px 0;">${filtered.map(({f, fi, ceremonyName, ckey}) => `
+                    // Status/priority filters
+                    const activeFilter = p._bugFilter || '';
+                    const filterOptions = [
+                      { value: '', label: 'All' },
+                      { value: 'open', label: 'Open' },
+                      { value: 'in-progress', label: 'In progress' },
+                      { value: 'fixed', label: 'Fixed' },
+                      { value: 'wontfix', label: "Won't fix" },
+                      { value: 'high', label: '🔴 High' },
+                      { value: 'blocking', label: '🚨 Blocking' },
+                    ];
+                    const filtered = activeFilter
+                      ? allBugs.filter(({f}) => f.status === activeFilter || f.severity === activeFilter)
+                      : allBugs;
+                    const filterBar = `
+                      <div class="bug-filter-bar">
+                        <span class="bug-filter-label">Filter:</span>
+                        ${filterOptions.map(opt => `<button class="bug-filter-pill ${activeFilter === opt.value ? 'active' : ''}" onclick="setBugFilter(${i}, '${opt.value}')">${opt.label}</button>`).join('')}
+                      </div>`;
+                    return filterBar + `<div class="findings-list" style="padding:8px 0;">${filtered.map(({f, fi, ceremonyName, ckey}, globalIdx) => `
                         <div class="finding-wrapper">
                           <div class="finding-item status-${f.status || 'open'}">
                             <div style="display:flex; flex-direction:column; gap:3px; flex-shrink:0;">
@@ -1673,9 +1688,12 @@
                               </select>
                             </div>
                             <div class="finding-content">
-                              <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)">${esc(f.title || f.text || '')}</textarea>
+                              <div style="display:flex; align-items:flex-start; gap:6px; margin-bottom:3px;">
+                                <span class="bug-number">#${globalIdx + 1}</span>
+                                <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)" style="flex:1;">${esc(f.title || f.text || '')}</textarea>
+                              </div>
                               ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
-                              ${f.author ? `<div class="reporter-badge" onclick="setBugReporterFilter(${i},'${esc(f.author)}')" title="Filter by ${esc(f.author)}" style="cursor:pointer;">&#128100; ${esc(f.author)}</div>` : ''}
+                              ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
                                 ${f._detailOpen ? '▲ Hide details' : '▼ Details' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length) + ')' : '')}
@@ -2516,8 +2534,8 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       render();
     }
 
-    function setBugReporterFilter(pi, reporter) {
-      projects[pi]._bugReporterFilter = reporter;
+    function setBugFilter(pi, value) {
+      projects[pi]._bugFilter = value;
       render();
     }
 
