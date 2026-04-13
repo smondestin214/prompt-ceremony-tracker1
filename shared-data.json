@@ -118,7 +118,7 @@
             "status": "open",
             "notes": [
               {
-                "text": "Wallpapering a powder room. DQ subtext said “most rooms are under 250 sq ft” (smart) but only 1 of 6 options was plausible — one option went up to 2000 sq ft for a powder room. Also flagged the renter/owner/property-manager question as odd. DQ option generation should anchor to category + prior context (powder room).\n\nStatus: Open — no fix scoped yet. Likely overlaps with RF-era inherited options (CatMan owns RF).\n\nScreenshots: IMG_1900.PNG, IMG_1901.PNG\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719",
+                "text": "Wallpapering a powder room. DQ subtext said “most rooms are under 250 sq ft” (smart) but only 1 of 6 options was plausible — one option went up to 2000 sq ft for a powder room. Also flagged the renter/owner/property-manager question as odd. DQ option generation should anchor to category + prior context (powder room).\n\nStatus: Open — no fix scoped yet. Likely overlaps with RF-era inherited options (CatMan owns RF).\n\nScreenshots: IMG_1900.PNG, IMG_1901.PNG\nPermalink: ",
                 "author": "Angeline Vu",
                 "date": "2026-04-08"
               }
