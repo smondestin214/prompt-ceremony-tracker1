@@ -597,6 +597,11 @@
       border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; line-height: 1;
     }
     .bug-note-delete:hover { color: #ef4444; }
+    .bug-link-delete {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 14px; line-height: 1; flex-shrink: 0; padding: 0 2px;
+    }
+    .bug-link-delete:hover { color: #ef4444; }
     .bug-note-textarea {
       width: 100%; min-height: 54px; resize: vertical; font-size: 12px;
       padding: 7px 9px; border-radius: 6px; border: 1px solid var(--border);
@@ -2160,7 +2165,7 @@
               ${links.map((l, li) => `
                 <div class="bug-link-item">
                   <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
-                  <button class="bug-note-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
+                  <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
                 </div>
               `).join('')}
             </div>
