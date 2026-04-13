@@ -527,7 +527,12 @@
         "date": "2026-04-13"
       }
     ],
-    "docs": [],
+    "docs": [
+      {
+        "url": "https://docs.google.com/document/d/1iiOhYa8mY4bgmY2GZEIJqqVRVwWfWca6aZNSAW-a9-0/edit?tab=t.cgmxl534ekqy",
+        "label": "DQ prompt on Google Docs"
+      }
+    ],
     "createdAt": "2026-04-01T14:45:01.943Z"
   },
   {
