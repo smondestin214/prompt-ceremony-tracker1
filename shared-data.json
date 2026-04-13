@@ -406,6 +406,11 @@
                 "text": "@Megan - check on RF fix",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Added these to the prompt: \n\nBUG 6a: types of damage, stains, or conditions that can exist simultaneously (e.g. a carpet can have both pet hair and food stains — never force a single choice when multiple conditions are likely true at the same time)\n\nBUG 6b: When generating answer choices for damage, stain, or condition questions, include the most common real-world combinations customers experience. For example, a carpet cleaning question should include \"Pet hair\" as a standalone option alongside stain types — do not force customers to choose only one when they likely have multiple.\n\nwaiting for review @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
