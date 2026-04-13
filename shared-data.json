@@ -262,7 +262,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775657089415039",
                 "label": "dogfooding slack msg"
               }
-            ]
+            ],
+            "summary": "Home profile data (e.g. \"apartment\") bleeds into non-home categories like events — the prompt passes home profile attributes into all categories without checking whether the service is actually taking place at the customer's home."
           },
           {
             "severity": "medium",
