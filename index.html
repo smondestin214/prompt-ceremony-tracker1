@@ -2410,6 +2410,46 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       saveQuiet();
     }
 
+    async function generateBugSummary(pi, ckey, fi) {
+      const apiKey = localStorage.getItem('pe-anthropic-key');
+      if (!apiKey) { openTeamModal(); return; }
+      const f = projects[pi].ceremonies[ckey].findings[fi];
+      const notes = (f.notes || []).map(n => n.text).filter(Boolean).join('\n\n');
+      if (!notes) {
+        const ta = document.getElementById(`bsummary-${pi}-${ckey}-${fi}`);
+        if (ta) { ta.placeholder = 'No notes yet — add some notes first.'; }
+        return;
+      }
+      const btn = document.getElementById(`bsumgen-${pi}-${ckey}-${fi}`);
+      const ta = document.getElementById(`bsummary-${pi}-${ckey}-${fi}`);
+      if (btn) { btn.textContent = 'Generating…'; btn.disabled = true; }
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json',
+            'anthropic-dangerous-allow-browser': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 80,
+            messages: [{ role: 'user', content: `Bug title: ${f.title || '(untitled)'}\n\nNotes from testers:\n${notes}\n\nWrite ONE concise sentence (max 20 words) summarizing what the bug is. No preamble, just the sentence.` }]
+          })
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error.message);
+        const summary = data.content[0].text.trim();
+        f.summary = summary;
+        if (ta) ta.value = summary;
+        saveQuiet();
+      } catch(e) {
+        if (ta) ta.placeholder = 'Error: ' + e.message;
+      }
+      if (btn) { btn.textContent = '✨ Generate from notes'; btn.disabled = false; }
+    }
+
     function updateBugNote(pi, ckey, fi, ni, value) {
       projects[pi].ceremonies[ckey].findings[fi].notes[ni].text = value;
       saveQuiet();
@@ -2539,9 +2579,12 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
         </div>
         <div class="bug-detail-col-right">
           <div class="bug-detail-section">
-            <div class="bug-detail-section-title">Bug summary</div>
+            <div class="bug-detail-section-title" style="display:flex; align-items:center; justify-content:space-between;">
+              Bug summary
+              <button class="btn btn-sm" id="bsumgen-${pi}-${ckey}-${fi}" onclick="generateBugSummary(${pi},'${ckey}',${fi})" style="font-size:10px; padding:2px 8px;">✨ Generate from notes</button>
+            </div>
             <textarea class="bug-summary-input" id="bsummary-${pi}-${ckey}-${fi}"
-              placeholder="One-line summary of the bug…"
+              placeholder="One-line summary of the bug… or click ✨ Generate from notes"
               oninput="updateBugSummary(${pi},'${ckey}',${fi},this.value)"
             >${esc(f.summary || '')}</textarea>
           </div>
