@@ -311,6 +311,11 @@
                 "text": "Status: In-flight — Sarah compiling into changes doc. Proposed: (a) instruct prompt to maintain the customer’s language; (b) give LLM explicit instruction to translate RF questions; (c) strengthen redundancy rules to catch query-level inferences, not just prior answers.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Two separate issues — (a) prompt doesn't instruct the model to maintain the customer's language or translate RF content, and (b) redundancy rule only catches prior DQ answers, not inferences from the original query.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
