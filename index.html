@@ -518,6 +518,22 @@
       border-top: none; border-radius: 0 0 8px 8px;
       padding: 12px 14px; display: flex; gap: 20px; flex-wrap: wrap;
     }
+    .bug-delete-btn {
+      background: none; border: none; color: var(--text-muted); font-size: 16px;
+      cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1;
+      flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+    }
+    .bug-delete-btn:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+
+    .bug-links-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .bug-link-item { display: flex; align-items: center; gap: 6px; }
+    .bug-link-anchor {
+      font-size: 12px; color: var(--accent-light); text-decoration: none;
+      word-break: break-all; flex: 1;
+    }
+    .bug-link-anchor:hover { text-decoration: underline; }
+    .bug-link-form { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+
     .bug-detail-section { flex: 1; min-width: 200px; }
     .bug-detail-section-title {
       font-size: 11px; font-weight: 700; text-transform: uppercase;
@@ -1581,9 +1597,10 @@
                               ${f.author ? `<div class="reporter-badge" onclick="setBugReporterFilter(${i},'${esc(f.author)}')" title="Filter by ${esc(f.author)}" style="cursor:pointer;">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
-                                ${f._detailOpen ? '▲ Hide notes & screenshots' : '▼ Notes & screenshots' + ((f.notes||[]).length + (f.screenshots||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length) + ')' : '')}
+                                ${f._detailOpen ? '▲ Hide details' : '▼ Details' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length) + ')' : '')}
                               </button>
                             </div>
+                            <button class="bug-delete-btn" onclick="if(confirm('Delete this bug?'))deleteFinding(${i},'${ckey}',${fi})" title="Delete bug">&times;</button>
                           </div>
                           ${f._detailOpen ? renderBugDetail(i, ckey, fi, f) : ''}
                         </div>`).join('')}
@@ -1809,6 +1826,22 @@
       save();
     }
 
+    function addBugLink(pi, ckey, fi) {
+      const urlEl = document.getElementById(`blink-url-${pi}-${ckey}-${fi}`);
+      const labelEl = document.getElementById(`blink-label-${pi}-${ckey}-${fi}`);
+      const url = urlEl ? urlEl.value.trim() : '';
+      if (!url) return;
+      const f = projects[pi].ceremonies[ckey].findings[fi];
+      if (!f.links) f.links = [];
+      f.links.push({ url, label: labelEl ? labelEl.value.trim() : '' });
+      save();
+    }
+
+    function deleteBugLink(pi, ckey, fi, li) {
+      projects[pi].ceremonies[ckey].findings[fi].links.splice(li, 1);
+      save();
+    }
+
     function toggleBulkImport(pi, ckey) {
       const cd = projects[pi].ceremonies[ckey];
       cd._bulkOpen = !cd._bulkOpen;
@@ -2010,6 +2043,7 @@
     function renderBugDetail(pi, ckey, fi, f) {
       const notes = f.notes || [];
       const screenshots = f.screenshots || [];
+      const links = f.links || [];
       return `<div class="bug-detail-panel">
         <div class="bug-detail-section">
           <div class="bug-detail-section-title">Screenshots</div>
@@ -2029,6 +2063,24 @@
             + Add screenshot
             <input type="file" accept="image/*" style="display:none;" onchange="addBugScreenshot(${pi},'${ckey}',${fi},this)">
           </label>
+        </div>
+        <div class="bug-detail-section">
+          <div class="bug-detail-section-title">Links</div>
+          ${links.length > 0 ? `
+            <div class="bug-links-list">
+              ${links.map((l, li) => `
+                <div class="bug-link-item">
+                  <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
+                  <button class="bug-note-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          <div class="bug-link-form">
+            <input id="blink-url-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Paste a URL..." style="flex:2; min-width:160px;">
+            <input id="blink-label-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Label (optional)" style="flex:1; min-width:100px;">
+            <button class="btn btn-sm" onclick="addBugLink(${pi},'${ckey}',${fi})">Add link</button>
+          </div>
         </div>
         <div class="bug-detail-section">
           <div class="bug-detail-section-title">Notes</div>
