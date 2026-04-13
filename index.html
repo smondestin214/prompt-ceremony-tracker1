@@ -1001,6 +1001,7 @@
     let syncTimer = null;
     let saving = false;
     let pendingWrite = false;
+    let _quietSaveTimer = null;
     let ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
     let ghSha = null; // tracks the file SHA for GitHub API updates
     let lastWriteTime = 0; // timestamp of last successful write — skip pull for a few seconds after
@@ -1997,9 +1998,29 @@
       save();
     }
 
+    function saveQuiet() {
+      // Persist data without re-rendering (safe to call while user is typing)
+      localStorage.setItem('pe-ceremonies', JSON.stringify(projects));
+      if (backendMode !== 'local') {
+        pendingWrite = true;
+        if (_quietSaveTimer) clearTimeout(_quietSaveTimer);
+        _quietSaveTimer = setTimeout(async () => {
+          try {
+            const clean = projects.map(stripUIState);
+            if (backendMode === 'github') await ghWrite(clean);
+            else await serverWrite(clean);
+            pendingWrite = false;
+            updateSyncBadge('connected');
+          } catch (e) {
+            updateSyncBadge('disconnected');
+          }
+        }, 800);
+      }
+    }
+
     function updateBugNote(pi, ckey, fi, ni, value) {
       projects[pi].ceremonies[ckey].findings[fi].notes[ni].text = value;
-      save();
+      saveQuiet();
     }
 
     function deleteBugNote(pi, ckey, fi, ni) {
@@ -2101,7 +2122,7 @@
             <div class="bug-notes-list">
               ${notes.map((n, ni) => `
                 <div class="bug-note-item">
-                  <textarea class="bug-note-body-edit" onblur="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
+                  <textarea class="bug-note-body-edit" oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
                   <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
                   <button class="bug-note-delete" onclick="deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
                 </div>
