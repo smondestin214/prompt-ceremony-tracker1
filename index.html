@@ -1596,28 +1596,30 @@
               </div>
               <div class="versions-body ${(p._versionsOpen || (p.versions || []).length === 0) ? 'open' : ''}">
                 ${(p.versions || []).length === 0
-                  ? '<div class="no-findings" style="padding:16px;">No versions yet. Add the first version of your prompt below.</div>'
-                  : (p.versions || []).map((v, vi) => `
+                  ? ''
+                  : (p.versions || []).map((v, vi) => {
+                      const versionCount = (p.versions || []).length;
+                      const autoLabel = vi === versionCount - 1 ? 'Starter' : 'V' + (versionCount - 1 - vi);
+                      return `
                     <div class="version-entry ${vi === 0 ? 'latest' : ''}" id="ventry-${i}-${vi}">
                       <button class="version-delete-btn" onclick="deleteVersion(${i}, ${vi})" title="Delete version">&times;</button>
                       <div class="version-meta">
                         ${v._editing
-                          ? `<input class="version-edit-summary" style="max-width:80px; font-weight:700;" value="${esc(v.label || 'v' + ((p.versions || []).length - vi))}"
-                              onchange="updateVersion(${i},${vi},'label',this.value)" placeholder="v1">`
-                          : `<span class="version-tag ${vi === 0 ? 'latest' : ''}">${esc(v.label || 'v' + ((p.versions || []).length - vi))}</span>`
+                          ? `<input class="version-edit-summary" style="max-width:100px; font-weight:700;" value="${esc(v.label || autoLabel)}"
+                              onchange="updateVersion(${i},${vi},'label',this.value)" placeholder="Starter">`
+                          : `<span class="version-tag ${vi === 0 ? 'latest' : ''}">${esc(v.label || autoLabel)}</span>`
                         }
                         <span class="version-date">${v.date || ''}</span>
                         ${v.author ? '<span class="version-author">&middot; ' + esc(v.author) + '</span>' : ''}
                       </div>
                       ${v._editing ? `
-                        <textarea class="add-version-textarea" style="min-height:80px;" id="vedit-summ-${i}-${vi}"
-                          onchange="updateVersion(${i},${vi},'summary',this.value)"
-                          placeholder="What changed? Paste a bulleted list or plain text..."></textarea>
-                        <textarea class="add-version-textarea" style="margin-top:8px;" id="vedit-prompt-${i}-${vi}"
-                          onchange="updateVersion(${i},${vi},'prompt',this.value)"></textarea>
+                        <textarea class="add-version-textarea" style="min-height:60px;" id="vedit-summ-${i}-${vi}"
+                          placeholder="Notes about this version (optional)...">${esc(v.summary || '')}</textarea>
+                        <textarea class="add-version-textarea" style="margin-top:8px; min-height:160px;" id="vedit-prompt-${i}-${vi}"
+                          placeholder="Paste the full prompt text here...">${esc(v.prompt || '')}</textarea>
                         <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
                       ` : `
-                        <div class="version-change-summary">${formatChangelog(v.summary)}</div>
+                        ${v.summary ? `<div class="version-change-summary" style="color:var(--text-muted); font-size:12px; margin-bottom:4px;">${esc(v.summary)}</div>` : ''}
                         <div class="version-prompt-preview" id="vprev-${i}-${vi}"></div>
                         <div style="display:flex; gap:8px; margin-top:6px;">
                           <button class="version-toggle-btn" id="vshow-${i}-${vi}" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
@@ -1625,18 +1627,21 @@
                         </div>
                       `}
                     </div>
-                  `).join('')
+                  `}).join('')
                 }
 
                 <div class="add-version-section">
-                  <h4>${(p.versions || []).length === 0 ? 'Add initial prompt' : 'Add new version'}</h4>
-                  <div class="add-version-row">
-                    <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="What changed? Paste a bulleted list or plain text..." style="min-height:80px;"></textarea>
-                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:150px; align-self:flex-start;">
+                  <h4>${(p.versions || []).length === 0 ? '&#128196; Add your starter prompt' : '+ Add ' + 'V' + (p.versions || []).length}</h4>
+                  <div style="display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap; align-items:center;">
+                    <input type="text" id="vlabel-${i}" placeholder="${(p.versions || []).length === 0 ? 'Starter' : 'V' + (p.versions || []).length}"
+                      value="${(p.versions || []).length === 0 ? 'Starter' : 'V' + (p.versions || []).length}"
+                      style="max-width:90px; font-weight:600;">
+                    <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:140px;">
                   </div>
-                  <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..."></textarea>
-                  <button class="btn btn-sm btn-primary" onclick="addVersion(${i})">
-                    ${(p.versions || []).length === 0 ? 'Add prompt' : 'Save new version'}
+                  <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..." style="min-height:180px;"></textarea>
+                  <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="Notes about this version (optional)..." style="min-height:50px; margin-top:6px;"></textarea>
+                  <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="addVersion(${i})">
+                    ${(p.versions || []).length === 0 ? 'Save starter prompt' : 'Save V' + (p.versions || []).length}
                   </button>
                 </div>
               </div>
@@ -2091,22 +2096,26 @@
     }
 
     function addVersion(pi) {
+      const labelEl = document.getElementById(`vlabel-${pi}`);
       const summEl = document.getElementById(`vsumm-${pi}`);
       const authEl = document.getElementById(`vauth-${pi}`);
       const promptEl = document.getElementById(`vprompt-${pi}`);
       const prompt = promptEl.value.trim();
-      if (!prompt) return;
+      if (!prompt) { promptEl.focus(); return; }
 
       if (!projects[pi].versions) projects[pi].versions = [];
 
+      const versionCount = projects[pi].versions.length;
+      const autoLabel = versionCount === 0 ? 'Starter' : 'V' + versionCount;
+
       projects[pi].versions.unshift({
+        label: (labelEl ? labelEl.value.trim() : '') || autoLabel,
         prompt,
-        summary: summEl.value.trim() || (projects[pi].versions.length === 0 ? 'Initial version' : 'Updated prompt'),
-        author: authEl.value.trim(),
+        summary: summEl ? summEl.value.trim() : '',
+        author: authEl ? authEl.value.trim() : '',
         date: new Date().toISOString().slice(0, 10),
       });
 
-      // Auto-open versions panel
       projects[pi]._versionsOpen = true;
       save();
     }
