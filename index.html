@@ -545,7 +545,7 @@
     }
     .finding-title-edit:hover { background: var(--surface-hover); border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
     .finding-title-edit:focus { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; margin: -4px -6px; }
-    .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: pre-wrap; }
+    .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
     .bug-detail-summary { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
     .finding-wrapper { display: flex; flex-direction: column; }
@@ -970,7 +970,7 @@
           <label class="track-option">
             <input type="radio" name="project-track" value="fast">
             <div class="track-option-card">
-              <div class="track-option-title">⚡ Fast track</div>
+              <div class="track-option-title">⚡ Fast Track</div>
               <div class="track-option-desc">Condensed checklists. Wrap up in a few days to 2 weeks.</div>
             </div>
           </label>
@@ -1687,7 +1687,7 @@
                     return `<div class="progress-dot ${s}" title="${c.name}: ${s}"></div>`;
                   }).join('')}
                 </div>
-                <span class="track-badge ${p.track === 'fast' ? 'fast' : ''}" onclick="event.stopPropagation(); switchTrack(${i})" title="Switch track">${p.track === 'fast' ? '⚡ Fast track' : 'Standard'}</span>
+                <span class="track-badge ${p.track === 'fast' ? 'fast' : ''}" onclick="event.stopPropagation(); switchTrack(${i})" title="Switch track">${p.track === 'fast' ? '⚡ Fast Track' : 'Standard'}</span>
                 <span class="owner-color-swatch" style="background:${cardColor};" title="Click to change owner color"
                   onclick="event.stopPropagation(); document.getElementById('oc-${i}').click()">
                   <input type="color" id="oc-${i}" value="${cardColor}" style="opacity:0;position:absolute;width:0;height:0;"
@@ -1716,7 +1716,7 @@
                 </label>
                 ${p.targetDate ? `<button class="btn-ghost" style="font-size:11px;" onclick="recalcDeadlines(${i})" title="Recalculate all ceremony target dates from launch date">&#8635; Recalculate target dates</button>` : ''}
                 <button class="btn-ghost ${p.track === 'fast' ? 'track-switch-active' : ''}" style="font-size:11px;" onclick="switchTrack(${i})" title="Switch between Standard and Fast Track">
-                  ${p.track === 'fast' ? '⚡ Fast track — switch to Standard' : '⚡ Switch to Fast track'}
+                  ${p.track === 'fast' ? '⚡ Fast Track — switch to Standard' : '⚡ Switch to Fast Track'}
                 </button>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
@@ -1824,7 +1824,7 @@
                               ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
-                                ${f._detailOpen ? '▲ Hide details' : '▼ Details' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length) + ')' : '')}
+                                ${f._detailOpen ? '▼ Hide details' : '▶ Details' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length) + ')' : '')}
                               </button>
                             </div>
                             <button class="bug-delete-btn" onclick="if(confirm('Delete this bug?'))deleteFinding(${i},'${ckey}',${fi})" title="Delete bug">&times;</button>
@@ -2686,7 +2686,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
     function switchTrack(pi) {
       const p = projects[pi];
       const newTrack = p.track === 'fast' ? 'standard' : 'fast';
-      if (!confirm(`Switch "${p.name}" to ${newTrack === 'fast' ? '⚡ Fast track' : 'Standard track'}? Ceremony checklists will change but your progress and signoffs are preserved.`)) return;
+      if (!confirm(`Switch "${p.name}" to ${newTrack === 'fast' ? '⚡ Fast Track' : 'standard track'}? Ceremony checklists will change but your progress and signoffs are preserved.`)) return;
       p.track = newTrack;
       // Recalc dates if launch date is set
       if (p.targetDate) {
