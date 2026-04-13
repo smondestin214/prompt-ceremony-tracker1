@@ -191,6 +191,11 @@
                 "text": "Root cause: Address context isn't being threaded into the DQ prompt. Home profile data and confirmed address data are treated separately and neither is suppressing the property type question.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Added this to prompt: Also exception: do NOT skip the property type question based on home profile or address data alone. Property type from the home profile or a confirmed address is a reasonable starting point but should be prefilled and confirmed — not assumed. Frame it as: \"It looks like you have a [property type]. Is that right?\" Waiting on confirmation from @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
