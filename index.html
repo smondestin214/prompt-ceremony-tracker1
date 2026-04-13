@@ -1027,7 +1027,7 @@
       delete clean._allBugsOpen;
       delete clean._bugReporterFilter;
       delete clean._docFormOpen;
-      if (clean.versions) clean.versions.forEach(v => delete v._editing);
+      if (clean.versions) clean.versions.forEach(v => { delete v._editing; delete v._changelogOpen; });
       CEREMONIES.forEach(c => {
         if (clean.ceremonies[c.key]) {
           delete clean.ceremonies[c.key]._open;
@@ -1623,7 +1623,7 @@
                       </div>
                       ${v._editing ? `
                         <textarea class="add-version-textarea" style="min-height:60px;" id="vedit-summ-${i}-${vi}"
-                          placeholder="Notes about this version (optional)...">${esc(v.summary || '')}</textarea>
+                          placeholder="Changelog (one bullet per line, optional)...">${esc(v.summary || '')}</textarea>
                         <textarea class="add-version-textarea" style="margin-top:8px; min-height:160px;" id="vedit-prompt-${i}-${vi}"
                           placeholder="Paste the full prompt text here...">${esc(v.prompt || '')}</textarea>
                         <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
@@ -1631,9 +1631,10 @@
                         <div style="display:flex; gap:8px; margin-bottom:6px;">
                           <button class="version-toggle-btn" id="vshow-${i}-${vi}" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
                           <button class="version-toggle-btn" onclick="toggleEditVersion(${i},${vi})">Edit</button>
+                          ${v.summary ? `<button class="version-toggle-btn" onclick="toggleVersionChangelog(${i},${vi})" style="color:var(--text-muted);">${v._changelogOpen ? '▼' : '▶'} Changelog</button>` : ''}
                         </div>
                         <div class="version-prompt-preview" id="vprev-${i}-${vi}"></div>
-                        ${v.summary ? `<div class="version-change-summary" style="color:var(--text-muted); font-size:12px; margin-top:4px;">${esc(v.summary)}</div>` : ''}
+                        ${v.summary && v._changelogOpen ? `<div class="version-change-summary"><ul>${v.summary.split('\n').filter(l=>l.trim()).map(l=>`<li>${esc(l.replace(/^[\s\-\*\u2022]+/,''))}</li>`).join('')}</ul></div>` : ''}
                       `}
                     </div>
                   `}).join('')
@@ -1648,7 +1649,7 @@
                     <input type="text" id="vauth-${i}" placeholder="Your name" style="max-width:140px;">
                   </div>
                   <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..." style="min-height:180px;"></textarea>
-                  <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="Notes about this version (optional)..." style="min-height:50px; margin-top:6px;"></textarea>
+                  <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="Changelog (one bullet per line, optional)..." style="min-height:50px; margin-top:6px;"></textarea>
                   <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="addVersion(${i})">Save new version</button>
                 </div>
               </div>
@@ -2180,6 +2181,12 @@
     function updateVersion(pi, vi, field, value) {
       projects[pi].versions[vi][field] = value;
       save();
+    }
+
+    function toggleVersionChangelog(pi, vi) {
+      const v = projects[pi].versions[vi];
+      v._changelogOpen = !v._changelogOpen;
+      render();
     }
 
     function deleteVersion(pi, vi) {
