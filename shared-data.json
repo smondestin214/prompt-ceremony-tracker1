@@ -208,7 +208,7 @@
                 "date": "2026-04-08"
               },
               {
-                "text": "Status: Fix identified — Sarah/Jesse: add a rule so the model doesn’t apply Home Profile data to non-home categories and asks about location before making assumptions. Will re-check after fix ships.",
+                "text": "Status: Fix identified — Sarah/Jesse: add a rule so the model doesn’t apply Home Profile data to non-home categories and asks about location before making assumptions. ",
                 "author": "sarah m",
                 "date": "2026-04-13"
               }
