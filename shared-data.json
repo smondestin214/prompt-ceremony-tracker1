@@ -1286,7 +1286,7 @@
       },
       "crit": {
         "status": "not-started",
-        "date": "2026-04-13",
+        "date": "2026-04-15",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -1296,7 +1296,7 @@
       },
       "swarm": {
         "status": "not-started",
-        "date": "2026-04-13",
+        "date": "2026-04-16",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -1306,7 +1306,7 @@
       },
       "bug": {
         "status": "not-started",
-        "date": "2026-04-13",
+        "date": "2026-04-17",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -1316,7 +1316,7 @@
       },
       "test": {
         "status": "not-started",
-        "date": "2026-04-16",
+        "date": "2026-04-18",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -1336,7 +1336,7 @@
       },
       "postlaunch": {
         "status": "not-started",
-        "date": "2026-05-04",
+        "date": "2026-04-27",
         "notes": "",
         "checklistState": {},
         "findings": [],
@@ -1356,6 +1356,6 @@
     ],
     "docs": [],
     "createdAt": "2026-04-09T04:04:07.661Z",
-    "track": "standard"
+    "track": "fast"
   }
 ]
