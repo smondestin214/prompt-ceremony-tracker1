@@ -545,6 +545,11 @@
                 "text": "Status: Open — flagged by Waqas as a gap, no owner/fix scoped yet.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: The appropriateness guard prompt is too narrowly scoped to home services and doesn't cover all bookable categories or catch clearly out-of-scope queries before inference fires.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
