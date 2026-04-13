@@ -1160,17 +1160,22 @@
     function captureUIState() {
       const uiState = {};
       projects.forEach(p => {
+        const ceremonyUI = {};
+        CEREMONIES.forEach(c => {
+          const findings = p.ceremonies[c.key]?.findings || [];
+          ceremonyUI[c.key] = {
+            _open: p.ceremonies[c.key]?._open,
+            _activeTab: p.ceremonies[c.key]?._activeTab,
+            findingDetail: findings.map(f => f._detailOpen || false),
+          };
+        });
         uiState[p.name + p.createdAt] = {
           expanded: p.expanded,
           _versionsOpen: p._versionsOpen,
-          ceremonyUI: {}
+          _allBugsOpen: p._allBugsOpen,
+          _bugReporterFilter: p._bugReporterFilter,
+          ceremonyUI,
         };
-        CEREMONIES.forEach(c => {
-          uiState[p.name + p.createdAt].ceremonyUI[c.key] = {
-            _open: p.ceremonies[c.key]?._open,
-            _activeTab: p.ceremonies[c.key]?._activeTab,
-          };
-        });
       });
       return uiState;
     }
@@ -1181,10 +1186,16 @@
         if (saved) {
           p.expanded = saved.expanded;
           p._versionsOpen = saved._versionsOpen;
+          p._allBugsOpen = saved._allBugsOpen;
+          p._bugReporterFilter = saved._bugReporterFilter;
           CEREMONIES.forEach(c => {
             if (saved.ceremonyUI[c.key]) {
               p.ceremonies[c.key]._open = saved.ceremonyUI[c.key]._open;
               p.ceremonies[c.key]._activeTab = saved.ceremonyUI[c.key]._activeTab;
+              const findingDetail = saved.ceremonyUI[c.key].findingDetail || [];
+              (p.ceremonies[c.key].findings || []).forEach((f, fi) => {
+                if (findingDetail[fi]) f._detailOpen = true;
+              });
             }
           });
         }
