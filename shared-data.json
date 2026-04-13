@@ -359,7 +359,7 @@
           },
           {
             "severity": "medium",
-            "type": "other",
+            "type": "design",
             "typeCustom": "UX/prompt",
             "title": "No “Skip” affordance on DQ photo collection",
             "details": "",
