@@ -130,7 +130,6 @@
       padding: 16px 20px;
       background: var(--surface);
       border-radius: 12px;
-      margin-bottom: 28px;
       border: 1px solid var(--border);
       overflow-x: auto;
     }
@@ -150,15 +149,18 @@
     .pipeline-stage:hover { filter: brightness(1.2); transform: translateY(-1px); }
     .pipeline-stage.active-info { outline: 2px solid currentColor; outline-offset: 2px; }
 
+    .pipeline-wrapper {
+      position: relative;
+      margin-bottom: 28px;
+    }
     .stage-popover {
-      position: relative; z-index: 10;
-      margin: -18px 0 12px;
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 200;
       background: var(--surface);
       border: 1px solid var(--accent);
       border-radius: 10px;
       padding: 14px 16px;
       font-size: 13px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       cursor: pointer;
     }
     .stage-popover-title {
@@ -882,22 +884,24 @@
       </div>
     </header>
 
-    <div class="pipeline-flow" id="pipeline-flow">
-      <div class="pipeline-stage stage-strategy" onclick="showStageInfo(this,'strategy')"><span class="num">1</span> Prompt strategy</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-crit" onclick="showStageInfo(this,'crit')"><span class="num">2</span> Prompt crit</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-swarm" onclick="showStageInfo(this,'swarm')"><span class="num">3</span> Swarming</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-bug" onclick="showStageInfo(this,'bug')"><span class="num">4</span> Bug bash</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-test" onclick="showStageInfo(this,'test')"><span class="num">5</span> Testing</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-eval" onclick="showStageInfo(this,'eval')"><span class="num">6</span> Evals</div>
-      <span class="pipeline-arrow">&#8594;</span>
-      <div class="pipeline-stage stage-postlaunch" onclick="showStageInfo(this,'postlaunch')"><span class="num">7</span> Post-launch eval</div>
+    <div class="pipeline-wrapper">
+      <div class="pipeline-flow" id="pipeline-flow">
+        <div class="pipeline-stage stage-strategy" onclick="showStageInfo(this,'strategy')"><span class="num">1</span> Prompt strategy</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-crit" onclick="showStageInfo(this,'crit')"><span class="num">2</span> Prompt crit</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-swarm" onclick="showStageInfo(this,'swarm')"><span class="num">3</span> Swarming</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-bug" onclick="showStageInfo(this,'bug')"><span class="num">4</span> Bug bash</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-test" onclick="showStageInfo(this,'test')"><span class="num">5</span> Testing</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-eval" onclick="showStageInfo(this,'eval')"><span class="num">6</span> Evals</div>
+        <span class="pipeline-arrow">&#8594;</span>
+        <div class="pipeline-stage stage-postlaunch" onclick="showStageInfo(this,'postlaunch')"><span class="num">7</span> Post-launch eval</div>
+      </div>
+      <div id="stage-popover" class="stage-popover" style="display:none;" onclick="this.style.display='none'"></div>
     </div>
-    <div id="stage-popover" class="stage-popover" style="display:none;" onclick="this.style.display='none'"></div>
 
     <div class="stats-bar" id="stats-bar"></div>
 
