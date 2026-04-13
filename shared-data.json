@@ -338,7 +338,7 @@
             "status": "in-progress",
             "notes": [
               {
-                "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n\n",
+                "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n",
                 "author": "Valerie Peppers",
                 "date": "2026-04-07"
               }
