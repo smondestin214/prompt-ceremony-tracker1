@@ -408,7 +408,13 @@
                 "date": "2026-04-07"
               }
             ],
-            "screenshots": []
+            "screenshots": [],
+            "links": [
+              {
+                "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596125810959",
+                "label": "dogfooding slack msg."
+              }
+            ]
           },
           {
             "severity": "high",
