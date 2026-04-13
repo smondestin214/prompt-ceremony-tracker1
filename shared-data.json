@@ -785,7 +785,7 @@
         "docs": []
       },
       "crit": {
-        "status": "in-progress",
+        "status": "done",
         "date": "2026-04-03",
         "notes": "",
         "checklistState": {},
@@ -804,6 +804,10 @@
             "date": "2026-04-13"
           },
           "3": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          },
+          "4": {
             "initials": "sm",
             "date": "2026-04-13"
           }
