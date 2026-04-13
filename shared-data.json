@@ -610,6 +610,11 @@
                 "text": "Root cause: The appropriateness guard prompt is too narrowly scoped to home services and doesn't cover all bookable categories or catch clearly out-of-scope queries before inference fires.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Issue 10 is out-of-scope queries not being caught before the DQ flow starts — things like \"how to grow my allowance\" or \"fix my car\" making it through without being handled gracefully. This is addressed by the appropriateness guard prompt, not the DQ prompt itself.\nHowever, there is one thing the DQ prompt can do — add a fallback for when an out-of-scope query slips through the guard. Find this existing block at the top of #Task:\n\nYour job is to ask questions to help the customer clearly define their goals, scope, and constraints in order to find and hire the right pro. Do not ask about the customer's budget, timeline, or cost.\n\nKeep it as-is and add directly after (new sentences in bold):\n\nYour job is to ask questions to help the customer clearly define their goals, scope, and constraints in order to find and hire the right pro. Do not ask about the customer's budget, timeline, or cost.\nIf the customer's query does not map to a service a professional could perform — for example, if it describes something fictional, nonsensical, or entirely outside any bookable category — do not generate questions. Instead, set isEnoughInfo to false and set questionText to a friendly redirect, such as: \"We couldn't find a match for that. Try describing a home, lesson, or personal service project and we'll find the right pro.\"\n\nAdded to prompt. Awaiting review @Jesse",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
