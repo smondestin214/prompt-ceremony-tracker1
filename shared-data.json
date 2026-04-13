@@ -39,12 +39,33 @@
         "notesState": {}
       },
       "crit": {
-        "status": "not-started",
+        "status": "done",
         "date": "2026-04-12",
         "notes": "",
         "checklistState": {},
         "findings": [],
-        "signoffState": {},
+        "signoffState": {
+          "0": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          },
+          "1": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          },
+          "2": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          },
+          "3": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          },
+          "4": {
+            "initials": "sm",
+            "date": "2026-04-13"
+          }
+        },
         "notesState": {}
       },
       "swarm": {
