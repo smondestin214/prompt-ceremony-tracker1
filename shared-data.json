@@ -506,6 +506,11 @@
                 "text": "This was addressed by issue 2's add: \n\nAdded this to prompt: Also exception: do NOT skip the property type question based on home profile or address data alone. Property type from the home profile or a confirmed address is a reasonable starting point but should be prefilled and confirmed — not assumed. Frame it as: \"It looks like you have a [property type]. Is that right?\" Waiting on confirmation from @Jesse",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "this is primarily a UX/eng consideration",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
