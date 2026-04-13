@@ -406,6 +406,11 @@
                 "text": "Address confirmation breaks the rhythm of DQs; majority of customers hiring for 1 home — should be lighter-weight inline.\n\n",
                 "author": "Anaïs Ziae-Mohseni",
                 "date": "2026-04-07"
+              },
+              {
+                "text": "Status: In-flight — part of Katie’s address-prefill test (see #2); payoff to user not yet clear. UX design decision @Erin",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [],
