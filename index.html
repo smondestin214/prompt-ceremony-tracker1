@@ -1629,12 +1629,12 @@
                           placeholder="Paste the full prompt text here...">${esc(v.prompt || '')}</textarea>
                         <button class="version-toggle-btn" style="margin-top:6px; color:var(--accent);" onclick="toggleEditVersion(${i},${vi})">Done</button>
                       ` : `
-                        ${v.summary ? `<div class="version-change-summary" style="color:var(--text-muted); font-size:12px; margin-bottom:4px;">${esc(v.summary)}</div>` : ''}
-                        <div class="version-prompt-preview" id="vprev-${i}-${vi}"></div>
-                        <div style="display:flex; gap:8px; margin-top:6px;">
+                        <div style="display:flex; gap:8px; margin-bottom:6px;">
                           <button class="version-toggle-btn" id="vshow-${i}-${vi}" onclick="toggleVersionPreview(${i}, ${vi})">Show prompt</button>
                           <button class="version-toggle-btn" onclick="toggleEditVersion(${i},${vi})">Edit</button>
                         </div>
+                        <div class="version-prompt-preview" id="vprev-${i}-${vi}"></div>
+                        ${v.summary ? `<div class="version-change-summary" style="color:var(--text-muted); font-size:12px; margin-top:4px;">${esc(v.summary)}</div>` : ''}
                       `}
                     </div>
                   `}).join('')
