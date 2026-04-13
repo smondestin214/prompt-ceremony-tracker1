@@ -597,7 +597,12 @@
       background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
       padding: 7px 10px; position: relative;
     }
-    .bug-note-body { font-size: 12px; white-space: pre-wrap; margin-bottom: 3px; }
+    .bug-note-body { font-size: 12px; white-space: pre-wrap; margin-bottom: 3px; cursor: text; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+    .bug-note-body:hover { background: var(--surface-hover); }
+    .note-mention { color: var(--accent-light); font-weight: 600; }
+    .tag-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+    .tag-chip { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(124,92,252,0.3); background: rgba(124,92,252,0.1); color: var(--accent-light); cursor: pointer; }
+    .tag-chip:hover { background: rgba(124,92,252,0.2); }
     .bug-note-body-edit {
       font-size: 12px; white-space: pre-wrap; margin-bottom: 3px;
       width: 100%; background: transparent; border: none; color: var(--text);
@@ -2010,6 +2015,43 @@
       save();
     }
 
+    function getTeamMembers() {
+      return JSON.parse(localStorage.getItem('pe-team-members') || '[]');
+    }
+
+    function saveTeamMembers(list) {
+      localStorage.setItem('pe-team-members', JSON.stringify(list));
+    }
+
+    function insertTag(textareaId, name) {
+      const el = document.getElementById(textareaId);
+      if (!el) return;
+      const tag = '@' + name;
+      const start = el.selectionStart, end = el.selectionEnd;
+      const val = el.value;
+      const before = val.slice(0, start);
+      const after = val.slice(end);
+      const sep = before && !before.endsWith(' ') && !before.endsWith('\n') ? ' ' : '';
+      el.value = before + sep + tag + ' ' + after;
+      const pos = before.length + sep.length + tag.length + 1;
+      el.setSelectionRange(pos, pos);
+      el.focus();
+    }
+
+    function openTeamManager() {
+      const members = getTeamMembers();
+      const current = members.join(', ');
+      const input = prompt('Team members (comma-separated):', current);
+      if (input === null) return;
+      const list = input.split(',').map(s => s.trim()).filter(Boolean);
+      saveTeamMembers(list);
+      render();
+    }
+
+    function highlightMentions(text) {
+      return esc(text).replace(/@([\w.]+)/g, '<span class="note-mention">@$1</span>');
+    }
+
     function updateFindingSeverity(pi, ckey, fi, value) {
       projects[pi].ceremonies[ckey].findings[fi].severity = value;
       save();
@@ -2206,7 +2248,11 @@
               <div class="bug-notes-list">
                 ${notes.map((n, ni) => `
                   <div class="bug-note-item">
-                    <textarea class="bug-note-body-edit" oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
+                    <div class="bug-note-body" onclick="this.style.display='none';this.nextElementSibling.style.display='';this.nextElementSibling.focus();">${highlightMentions(n.text)}</div>
+                  <textarea class="bug-note-body-edit" style="display:none;"
+                    oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)"
+                    onblur="const d=this.previousElementSibling;d.innerHTML=highlightMentions(this.value);d.style.display='';this.style.display='none';"
+                  >${esc(n.text)}</textarea>
                     <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
                     <button class="bug-note-delete" onclick="if(confirm('Delete this note?'))deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
                   </div>
@@ -2214,10 +2260,17 @@
               </div>
             ` : ''}
             <div class="bug-note-form">
-              <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note..."></textarea>
-              <div style="display:flex; gap:6px; margin-top:5px;">
+              ${(() => {
+                const members = getTeamMembers();
+                return members.length > 0 ? `<div class="tag-chips">
+                  ${members.map(m => `<button class="tag-chip" onclick="insertTag('bnote-text-${pi}-${ckey}-${fi}','${esc(m)}')" type="button">@${esc(m)}</button>`).join('')}
+                </div>` : '';
+              })()}
+              <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note... (use @ chips above to tag teammates)"></textarea>
+              <div style="display:flex; gap:6px; margin-top:5px; align-items:center;">
                 <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name" value="${esc(localStorage.getItem('pe-note-author') || '')}">
                 <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
+                <button class="btn btn-sm" onclick="openTeamManager()" title="Manage team members" style="padding:3px 8px;">&#9881; Team</button>
               </div>
             </div>
           </div>
