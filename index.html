@@ -524,7 +524,7 @@
     .bug-detail-panel {
       background: var(--surface-hover); border: 1px solid var(--border);
       border-top: none; border-radius: 0 0 8px 8px;
-      padding: 12px 14px; display: flex; gap: 20px; flex-wrap: wrap;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 16px;
     }
     .bug-delete-btn {
       background: none; border: none; color: var(--text-muted); font-size: 16px;
@@ -552,10 +552,10 @@
       display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
     }
     .bug-screenshot-item {
-      position: relative; flex: 0 0 auto; width: 200px;
+      position: relative; flex: 1 1 300px; max-width: calc(50% - 5px);
     }
     .bug-screenshot-thumb {
-      width: 200px; height: 150px; object-fit: cover; border-radius: 6px;
+      width: 100%; height: auto; border-radius: 6px;
       border: 1px solid var(--border); display: block; cursor: pointer;
     }
     .bug-screenshot-name {
