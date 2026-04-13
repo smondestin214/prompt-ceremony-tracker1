@@ -481,7 +481,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775579335870389",
                 "label": "dogfooding slack msg"
               }
-            ]
+            ],
+            "summary": "No explicit skip affordance on photo collection DQs — the prompt doesn't mark photo questions as optional or instruct the model what to do when a customer can't provide one, leaving the path forward unclear."
           },
           {
             "severity": "low",
