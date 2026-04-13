@@ -1656,13 +1656,6 @@
             </div>
 
             <!-- Quick-nav -->
-            <div class="ceremony-quicknav">
-              ${CEREMONIES.map(c => {
-                const s = p.ceremonies[c.key]?.status || 'not-started';
-                return `<button class="quicknav-btn status-dot-${s}" onclick="jumpToCeremony(${i},'${c.key}')">${c.icon} ${c.name}</button>`;
-              }).join('')}
-            </div>
-
             <div class="ceremonies">
               ${CEREMONIES.map((c, ci) => {
                 const cd = p.ceremonies[c.key] || {};
