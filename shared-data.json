@@ -338,7 +338,7 @@
             "status": "in-progress",
             "notes": [
               {
-                "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n\nStatus: Partially fixed (multi-select in 2.5). Remaining: Sarah to refine questionType rules with more examples of when co-occurring answers should force MULTI_SELECT; decide on “Other” write-in for long-tail stains.\n\nScreenshots: IMG_2662.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775594387862419",
+                "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n\nStatus: Partially fixed (multi-select in 2.5). Remaining: Sarah to refine questionType rules with more examples of when co-occurring answers should force MULTI_SELECT; decide on “Other” write-in for long-tail stains.\n\nScreenshots: IMG_2662.png\nPermalink: ",
                 "author": "Valerie Peppers",
                 "date": "2026-04-07"
               }
