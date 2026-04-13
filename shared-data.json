@@ -482,7 +482,7 @@
             "status": "open",
             "notes": [
               {
-                "text": "Prompt doesn’t gracefully detect non-serviceable queries before kicking off DQs — currently relies on a human backstop. Examples: daughter’s “how to grow my allowance” query, Waqas’s “fix my car” dead-end.\n\nStatus: Open — flagged by Waqas as a gap, no owner/fix scoped yet.\n",
+                "text": "Prompt doesn’t gracefully detect non-serviceable queries before kicking off DQs — currently relies on a human backstop. Examples: daughter’s “how to grow my allowance” query, Waqas’s “fix my car” dead-end.\n\nStatus: Open — flagged by Waqas as a gap, no owner/fix scoped yet.",
                 "author": "Waqas Sheikh",
                 "date": "2026-04-07"
               }
