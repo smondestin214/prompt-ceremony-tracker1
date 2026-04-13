@@ -562,6 +562,14 @@
       cursor: pointer; line-height: 1; padding: 0; display: flex;
       align-items: center; justify-content: center;
     }
+    .bug-screenshot-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .bug-paste-zone {
+      font-size: 11px; color: var(--accent-light); cursor: pointer;
+      border: 1px dashed var(--border); border-radius: 6px;
+      padding: 5px 10px; line-height: 1.4; user-select: none;
+    }
+    .bug-paste-zone:hover { border-color: var(--accent); background: rgba(124,92,252,0.06); }
+    .bug-paste-zone:focus { outline: none; border-color: var(--accent); background: rgba(124,92,252,0.1); }
     .bug-screenshot-upload-btn {
       display: inline-block; font-size: 12px; color: var(--accent-light);
       cursor: pointer; padding: 4px 8px; border: 1px dashed var(--accent);
@@ -2051,6 +2059,45 @@
       });
     }
 
+    async function handleBugPaste(event, pi, ckey, fi) {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          event.preventDefault();
+          const blob = item.getAsFile();
+          const result = await resizeImageBlob(blob);
+          const f = projects[pi].ceremonies[ckey].findings[fi];
+          if (!f.screenshots) f.screenshots = [];
+          f.screenshots.push({ dataUrl: result.dataUrl, name: 'pasted-' + new Date().toISOString().slice(0,10) + '.png', date: new Date().toISOString().slice(0,10) });
+          f._detailOpen = true;
+          save();
+          return;
+        }
+      }
+    }
+
+    function resizeImageBlob(blob) {
+      return new Promise(resolve => {
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(url);
+          const MAX = 1200;
+          let w = img.width, h = img.height;
+          if (w > MAX || h > MAX) {
+            if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+            else { w = Math.round(w * MAX / h); h = MAX; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve({ dataUrl: canvas.toDataURL('image/jpeg', 0.82) });
+        };
+        img.src = url;
+      });
+    }
+
     async function addBugScreenshot(pi, ckey, fi, inputEl) {
       const file = inputEl.files[0];
       if (!file) return;
@@ -2093,10 +2140,18 @@
               `).join('')}
             </div>
           ` : ''}
-          <label class="bug-screenshot-upload-btn">
-            + Add screenshot
-            <input type="file" accept="image/*" style="display:none;" onchange="addBugScreenshot(${pi},'${ckey}',${fi},this)">
-          </label>
+          <div class="bug-screenshot-actions">
+            <label class="bug-screenshot-upload-btn">
+              + Add file
+              <input type="file" accept="image/*" style="display:none;" onchange="addBugScreenshot(${pi},'${ckey}',${fi},this)">
+            </label>
+            <div class="bug-paste-zone" tabindex="0"
+              onpaste="handleBugPaste(event,${pi},'${ckey}',${fi})"
+              onclick="this.focus()"
+              title="Click here, then paste a screenshot (⌘V / Ctrl+V)">
+              📋 Click &amp; paste
+            </div>
+          </div>
         </div>
         <div class="bug-detail-section">
           <div class="bug-detail-section-title">Links</div>
