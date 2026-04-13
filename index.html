@@ -469,6 +469,7 @@
     }
     .bug-type-prompt-fixable { background: rgba(16,185,129,0.15); color: #10b981; }
     .bug-type-engineering { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .bug-type-design { background: rgba(244,114,182,0.15); color: #f472b6; }
     .bug-type-other { background: rgba(156,163,175,0.15); color: #9ca3af; }
 
     .bug-status-select {
@@ -1678,6 +1679,7 @@
                               <select class="bug-status-select bug-type-select" onchange="updateFindingType(${i},'${ckey}',${fi},this.value)">
                                 <option value="prompt-fixable" ${f.type==='prompt-fixable'?'selected':''}>Prompt fix</option>
                                 <option value="engineering" ${f.type==='engineering'?'selected':''}>Engineering</option>
+                                <option value="design" ${f.type==='design'?'selected':''}>Design</option>
                                 <option value="other" ${f.type==='other'?'selected':''}>Other</option>
                               </select>
                               <select class="bug-status-select bug-status-${f.status || 'open'}" onchange="updateFindingStatus(${i},'${ckey}',${fi},this.value)">
