@@ -2179,7 +2179,7 @@
                 <div class="bug-note-item">
                   <textarea class="bug-note-body-edit" oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
                   <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
-                  <button class="bug-note-delete" onclick="deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
+                  <button class="bug-note-delete" onclick="if(confirm('Delete this note?'))deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
                 </div>
               `).join('')}
             </div>
