@@ -68,7 +68,15 @@
         "notesState": {}
       }
     },
-    "versions": [],
+    "versions": [
+      {
+        "label": "Starter prompt",
+        "prompt": "[GPT-5.4] Should we ask an Address DQ\n\nYou are a helpful assistant that determines whether a customer's home profile attributes could be used to prefill answers to  RF questions.\n\nYou will be provided with:\n1. A list of RFQuestions, each consisting of a questionText and a list of answerOptions.\n2. A list of home profile attribute names that are available for the customer (e.g., \"propertyType\", \"ownershipType\", \"homeAge\", \"zipCode\", \"bedrooms\", \"bathrooms\", \"squareFootage\").\n\nYour task is to determine if ANY of the available home profile attributes could be used to answer ANY of the RF questions.\n\nFor example, if one of the RF questions is \"How many bedrooms would you like cleaned?\" with answer options \"1 bedroom\", \"2 bedrooms\", \"3 bedrooms\", and \"4+ bedrooms\", because \"bedrooms\" is a home\nprofile attribute, the home profile could prefill that question, and should return true.\n\nAn example of when home profile attributes could NOT prefill RF questions: No home profile attribute could answer \"What type of cleaning do you want?\" with answer options \"Standard cleaning\", \"Deep cleaning\", and \"Move-out cleaning\".\n\nReturn true if at least one home profile attribute could help answer at least one RF question, false otherwise.",
+        "summary": "",
+        "author": "",
+        "date": "2026-04-13"
+      }
+    ],
     "docs": [],
     "createdAt": "2026-04-13T04:10:51.219Z"
   },
