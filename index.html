@@ -280,6 +280,7 @@
     }
     .track-badge:hover { border-color: var(--accent); color: var(--accent-light); }
     .track-badge.fast { background: rgba(234,179,8,0.12); border-color: rgba(234,179,8,0.4); color: #eab308; }
+    .track-switch-active { color: #eab308 !important; }
     .track-selector { display: flex; gap: 10px; }
     .track-option { flex: 1; cursor: pointer; }
     .track-option input[type="radio"] { display: none; }
@@ -1714,6 +1715,9 @@
                     onchange="updateLaunchDate(${i}, this.value)" style="font-size:12px;">
                 </label>
                 ${p.targetDate ? `<button class="btn-ghost" style="font-size:11px;" onclick="recalcDeadlines(${i})" title="Recalculate all ceremony target dates from launch date">&#8635; Recalculate target dates</button>` : ''}
+                <button class="btn-ghost ${p.track === 'fast' ? 'track-switch-active' : ''}" style="font-size:11px;" onclick="switchTrack(${i})" title="Switch between Standard and Fast Track">
+                  ${p.track === 'fast' ? '⚡ Fast track — switch to Standard' : '⚡ Switch to Fast track'}
+                </button>
               </div>
               <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                 <span class="docs-header">&#128206; Documents</span>
