@@ -1076,7 +1076,7 @@
           const raw = await fetch(data.download_url);
           text = await raw.text();
         } else {
-          text = atob(data.content.replace(/\s/g, ''));
+          text = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
         }
         const parsed = text ? JSON.parse(text) : null;
         // Only return parsed data if it's a non-empty array — never silently wipe local data
