@@ -384,7 +384,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596099145309",
                 "label": "dogfooding slack msg."
               }
-            ]
+            ],
+            "summary": "DQs revert to English mid-flow even when the customer's query was in another language — the prompt has no instruction to maintain the customer's language, and RF questions are passed in English without a translation step."
           },
           {
             "severity": "medium",
