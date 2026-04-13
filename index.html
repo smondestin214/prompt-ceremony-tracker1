@@ -1820,7 +1820,7 @@
                                 <span class="bug-number">#${globalIdx + 1}</span>
                                 <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)" style="flex:1;">${esc(f.title || f.text || '')}</textarea>
                               </div>
-                              ${f.details ? `<div class="finding-details">${esc(f.details)}</div>` : ''}
+                              ${f.details ? `<div class="finding-details">${esc(f.details.split('\n')[0].trim())}</div>` : ''}
                               ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
@@ -1894,7 +1894,7 @@
                   </div>
                   <textarea class="add-version-textarea" id="vprompt-${i}" placeholder="Paste the full prompt text here..." style="min-height:180px;"></textarea>
                   <textarea class="add-version-textarea" id="vsumm-${i}" placeholder="Changelog (one bullet per line, optional)..." style="min-height:50px; margin-top:6px;"></textarea>
-                  <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="addVersion(${i})">Save new version</button>
+                  <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="addVersion(${i})">Save version</button>
                 </div>
               </div>
             </div>
@@ -2551,7 +2551,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
                   ${members.map(m => `<button class="tag-chip" onclick="insertTag('bnote-text-${pi}-${ckey}-${fi}','${esc(m)}')" type="button">@${esc(m)}</button>`).join('')}
                 </div>` : '';
               })()}
-              <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note... (use @ chips above to tag teammates)"></textarea>
+              <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note… type @ to tag a teammate"></textarea>
               <div style="display:flex; gap:6px; margin-top:5px; align-items:center;">
                 <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name" value="${esc(localStorage.getItem('pe-note-author') || '')}">
                 <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
