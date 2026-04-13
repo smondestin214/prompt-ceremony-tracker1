@@ -921,14 +921,6 @@
         <label>Team members <span style="color:var(--text-muted);">(one per line)</span></label>
         <textarea id="team-members-input" style="width:100%;min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:8px;font-family:inherit;font-size:13px;resize:vertical;" placeholder="Sarah&#10;Jesse&#10;Waqas&#10;Katie"></textarea>
       </div>
-      <div class="form-group" style="margin-top:14px;">
-        <label>Slack Incoming Webhook URL <span style="color:var(--text-muted);">(optional)</span></label>
-        <p style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">
-          Go to <strong>api.slack.com/apps</strong> → Your App → Incoming Webhooks → Add New Webhook. Paste the URL below to send a Slack message whenever someone is @mentioned in a note.
-        </p>
-        <input type="text" id="team-slack-webhook" placeholder="https://hooks.slack.com/services/…" style="width:100%;">
-      </div>
-      <div id="team-status" style="font-size:12px;margin-top:8px;min-height:18px;"></div>
       <div class="modal-actions">
         <button class="btn" onclick="closeTeamModal()">Cancel</button>
         <button class="btn btn-primary" onclick="saveTeamSettings()">Save</button>
@@ -2077,60 +2069,10 @@
       const raw = document.getElementById('team-members-input').value;
       const list = raw.split('\n').map(s => s.trim()).filter(Boolean);
       saveTeamMembers(list);
-      const webhook = document.getElementById('team-slack-webhook').value.trim();
-      if (webhook) localStorage.setItem('pe-slack-webhook', webhook);
-      else localStorage.removeItem('pe-slack-webhook');
       document.getElementById('team-overlay').classList.remove('active');
       render();
     }
 
-    async function notifySlack(mentionedNames, noteText, authorName, bugTitle, projectName) {
-      if (!mentionedNames.length) return;
-      const tags = mentionedNames.map(n => `@${n}`).join(', ');
-      const message = `${tags} — mentioned in a bug note on *${projectName}*\n*Bug:* ${bugTitle}\n*Note:* "${noteText}"\n*By:* ${authorName || 'someone'}`;
-
-      const webhook = localStorage.getItem('pe-slack-webhook');
-      if (webhook) {
-        // Webhook configured — send automatically
-        try {
-          await fetch(webhook, {
-            method: 'POST',
-            body: JSON.stringify({ text: message })
-          });
-          showSlackToast(`Slack notified: ${tags}`, false);
-        } catch(e) {
-          showSlackToast('Webhook failed — message copied instead', true);
-          copyToClipboard(message);
-        }
-      } else {
-        // No webhook — copy to clipboard and prompt user to paste
-        copyToClipboard(message);
-        showSlackToast(`Slack message copied — paste into your channel`, true);
-      }
-    }
-
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).catch(() => {
-        const el = document.createElement('textarea');
-        el.value = text; document.body.appendChild(el);
-        el.select(); document.execCommand('copy');
-        document.body.removeChild(el);
-      });
-    }
-
-    function showSlackToast(msg, showCopy) {
-      let toast = document.getElementById('slack-toast');
-      if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'slack-toast';
-        toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;gap:10px;max-width:360px;';
-        document.body.appendChild(toast);
-      }
-      toast.innerHTML = `<span>💬 ${esc(msg)}</span>`;
-      toast.style.display = 'flex';
-      clearTimeout(toast._timer);
-      toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
-    }
 
     function highlightMentions(text) {
       return esc(text).replace(/@([\w.]+)/g, '<span class="note-mention">@$1</span>');
@@ -2171,11 +2113,6 @@
       f.notes.push({ text, author, date: new Date().toISOString().slice(0, 10) });
       f._detailOpen = true;
       save();
-      // Notify @mentioned team members via Slack
-      const mentioned = (text.match(/@([\w.]+)/g) || []).map(t => t.slice(1));
-      if (mentioned.length) {
-        notifySlack(mentioned, text, author, f.title || '', projects[pi].name || '');
-      }
     }
 
     function saveQuiet() {
