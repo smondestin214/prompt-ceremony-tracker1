@@ -366,6 +366,11 @@
                 "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n",
                 "author": "Valerie Peppers",
                 "date": "2026-04-07"
+              },
+              {
+                "text": "Root cause: Question type set to SINGLE_SELECT when answers can co-occur. Also a gap in RF answer options — pet hair isn't surfaced even though it's a common scenario.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
