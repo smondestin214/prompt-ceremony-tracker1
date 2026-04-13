@@ -524,8 +524,10 @@
     .bug-detail-panel {
       background: var(--surface-hover); border: 1px solid var(--border);
       border-top: none; border-radius: 0 0 8px 8px;
-      padding: 12px 14px; display: flex; flex-direction: column; gap: 16px;
+      padding: 12px 14px; display: flex; flex-direction: row; gap: 16px; align-items: flex-start;
     }
+    .bug-detail-col-left { flex: 0 0 auto; width: 45%; min-width: 0; }
+    .bug-detail-col-right { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
     .bug-delete-btn {
       background: none; border: none; color: var(--text-muted); font-size: 16px;
       cursor: pointer; padding: 2px 6px; border-radius: 4px; line-height: 1;
@@ -552,7 +554,7 @@
       display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;
     }
     .bug-screenshot-item {
-      position: relative; flex: 1 1 300px; max-width: calc(50% - 5px);
+      position: relative; flex: 1 1 calc(50% - 5px); max-width: calc(50% - 5px);
     }
     .bug-screenshot-thumb {
       width: 100%; height: auto; border-radius: 6px;
@@ -2144,7 +2146,7 @@
       const screenshots = f.screenshots || [];
       const links = f.links || [];
       return `<div class="bug-detail-panel">
-        <div class="bug-detail-section">
+        <div class="bug-detail-col-left">
           <div class="bug-detail-section-title">Screenshots</div>
           ${screenshots.length > 0 ? `
             <div class="bug-screenshots-grid">
@@ -2171,43 +2173,45 @@
             </div>
           </div>
         </div>
-        <div class="bug-detail-section">
-          <div class="bug-detail-section-title">Notes</div>
-          ${notes.length > 0 ? `
-            <div class="bug-notes-list">
-              ${notes.map((n, ni) => `
-                <div class="bug-note-item">
-                  <textarea class="bug-note-body-edit" oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
-                  <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
-                  <button class="bug-note-delete" onclick="if(confirm('Delete this note?'))deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-          <div class="bug-note-form">
-            <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note..."></textarea>
-            <div style="display:flex; gap:6px; margin-top:5px;">
-              <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name">
-              <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
+        <div class="bug-detail-col-right">
+          <div class="bug-detail-section">
+            <div class="bug-detail-section-title">Notes</div>
+            ${notes.length > 0 ? `
+              <div class="bug-notes-list">
+                ${notes.map((n, ni) => `
+                  <div class="bug-note-item">
+                    <textarea class="bug-note-body-edit" oninput="updateBugNote(${pi},'${ckey}',${fi},${ni},this.value)">${esc(n.text)}</textarea>
+                    <div class="bug-note-meta">${n.author ? `<strong>${esc(n.author)}</strong> &middot; ` : ''}${n.date || ''}</div>
+                    <button class="bug-note-delete" onclick="if(confirm('Delete this note?'))deleteBugNote(${pi},'${ckey}',${fi},${ni})" title="Remove">&times;</button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+            <div class="bug-note-form">
+              <textarea id="bnote-text-${pi}-${ckey}-${fi}" class="bug-note-textarea" placeholder="Add a note..."></textarea>
+              <div style="display:flex; gap:6px; margin-top:5px;">
+                <input id="bnote-author-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Your name">
+                <button class="btn btn-sm btn-primary" onclick="addBugNote(${pi},'${ckey}',${fi})">Add note</button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="bug-detail-section">
-          <div class="bug-detail-section-title">Links</div>
-          ${links.length > 0 ? `
-            <div class="bug-links-list">
-              ${links.map((l, li) => `
-                <div class="bug-link-item">
-                  <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
-                  <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
-                </div>
-              `).join('')}
+          <div class="bug-detail-section">
+            <div class="bug-detail-section-title">Links</div>
+            ${links.length > 0 ? `
+              <div class="bug-links-list">
+                ${links.map((l, li) => `
+                  <div class="bug-link-item">
+                    <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
+                    <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+            <div class="bug-link-form">
+              <input id="blink-url-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Paste a URL..." style="flex:2; min-width:160px;">
+              <input id="blink-label-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Label (optional)" style="flex:1; min-width:100px;">
+              <button class="btn btn-sm" onclick="addBugLink(${pi},'${ckey}',${fi})">Add link</button>
             </div>
-          ` : ''}
-          <div class="bug-link-form">
-            <input id="blink-url-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Paste a URL..." style="flex:2; min-width:160px;">
-            <input id="blink-label-${pi}-${ckey}-${fi}" class="bug-note-author-input" placeholder="Label (optional)" style="flex:1; min-width:100px;">
-            <button class="btn btn-sm" onclick="addBugLink(${pi},'${ckey}',${fi})">Add link</button>
           </div>
         </div>
       </div>`;
