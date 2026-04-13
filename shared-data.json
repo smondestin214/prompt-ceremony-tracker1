@@ -456,6 +456,11 @@
                 "text": "added to prompt: Photo questions are always optional. When asking for photos, the questionText should make clear the customer can move on without one. For example: \"Got any photos of the damage? They help but aren't required.\" Never block progress on a photo question. If the customer skips a photo question, treat it as skipped and move to the next uncovered RFQuestion.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "waiting for review from @Jesse and @Erin (potential UX consideration)",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
