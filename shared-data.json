@@ -116,7 +116,13 @@
             "date": "2026-04-08",
             "author": "Angeline Vu",
             "status": "open",
-            "notes": [{"text": "Wallpapering a powder room. DQ subtext said \u201cmost rooms are under 250 sq ft\u201d (smart) but only 1 of 6 options was plausible \u2014 one option went up to 2000 sq ft for a powder room. Also flagged the renter/owner/property-manager question as odd. DQ option generation should anchor to category + prior context (powder room).\n\nStatus: Open \u2014 no fix scoped yet. Likely overlaps with RF-era inherited options (CatMan owns RF).\n\nScreenshots: IMG_1900.PNG, IMG_1901.PNG\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719", "author": "Angeline Vu", "date": "2026-04-08"}],
+            "notes": [
+              {
+                "text": "Wallpapering a powder room. DQ subtext said “most rooms are under 250 sq ft” (smart) but only 1 of 6 options was plausible — one option went up to 2000 sq ft for a powder room. Also flagged the renter/owner/property-manager question as odd. DQ option generation should anchor to category + prior context (powder room).\n\nStatus: Open — no fix scoped yet. Likely overlaps with RF-era inherited options (CatMan owns RF).\n\nScreenshots: IMG_1900.PNG, IMG_1901.PNG\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719",
+                "author": "Angeline Vu",
+                "date": "2026-04-08"
+              }
+            ],
             "screenshots": []
           },
           {
@@ -128,7 +134,13 @@
             "date": "2026-04-08",
             "author": "Valerie Peppers",
             "status": "in-progress",
-            "notes": [{"text": "After confirming address, DQ still asks for property type \u2014 she expected it known/pre-selected. Address context not threaded into next DQ prompt.\n\nStatus: In-flight \u2014 per Waqas\u2019s digest, Katie\u2019s team is prefilling some DQ answers from address data; learning test being evaluated before M3.\n\nScreenshots: IMG_2698.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775668441272129", "author": "Valerie Peppers", "date": "2026-04-08"}],
+            "notes": [
+              {
+                "text": "After confirming address, DQ still asks for property type — she expected it known/pre-selected. Address context not threaded into next DQ prompt.\n\nStatus: In-flight — per Waqas’s digest, Katie’s team is prefilling some DQ answers from address data; learning test being evaluated before M3.\n\nScreenshots: IMG_2698.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775668441272129",
+                "author": "Valerie Peppers",
+                "date": "2026-04-08"
+              }
+            ],
             "screenshots": []
           },
           {
@@ -140,55 +152,85 @@
             "date": "2026-04-08",
             "author": "Ewa Chang",
             "status": "in-progress",
-            "notes": [{"text": "Birthday-party decorations search. Only asked indoor/outdoor; confirmation said \u201cyou\u2019ll have a large group in an apartment.\u201d Jesse\u2019s read: Home Profile passes in \u201capartment\u201d so the LLM assumes indoor = inside apartment. Also a related edge case: if user is moving, their HP address may not apply to future-home-category projects either.\n\nStatus: Fix identified \u2014 Sarah/Jesse: add a rule so the model doesn\u2019t apply Home Profile data to non-home categories and asks about location before making assumptions. Will re-check after fix ships.\n\nScreenshots: IMG_2376.PNG, IMG_2377.PNG\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775657089415039", "author": "Ewa Chang", "date": "2026-04-08"}],
+            "notes": [
+              {
+                "text": "Birthday-party decorations search. Only asked indoor/outdoor; confirmation said “you’ll have a large group in an apartment.” Jesse’s read: Home Profile passes in “apartment” so the LLM assumes indoor = inside apartment. Also a related edge case: if user is moving, their HP address may not apply to future-home-category projects either.\n\nStatus: Fix identified — Sarah/Jesse: add a rule so the model doesn’t apply Home Profile data to non-home categories and asks about location before making assumptions. Will re-check after fix ships.\n\nScreenshots: IMG_2376.PNG, IMG_2377.PNG\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775657089415039",
+                "author": "Ewa Chang",
+                "date": "2026-04-08"
+              }
+            ],
             "screenshots": []
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Leak DQ \u2014 RF-era overwhelming options, asks user to self-assess certainty",
+            "title": "Leak DQ — RF-era overwhelming options, asks user to self-assess certainty",
             "details": "",
             "date": "2026-04-07",
             "author": "Valerie Peppers",
             "status": "in-progress",
-            "notes": [{"text": "Too many options; \u201cknown vs. unknown\u201d forces self-assessment rather than description. Sarah: these answer choices are pulled directly from an RF-0 question.\n\nStatus: In-flight \u2014 Sarah exploring alternatives for overwhelming RF Qs; needs cross-team conversation with CatMan (owns RF updates) and CHX Match (owns RF service).\n\nScreenshots: IMG_2680.png, IMG_2682.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775599830756449", "author": "Valerie Peppers", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Too many options; “known vs. unknown” forces self-assessment rather than description. Sarah: these answer choices are pulled directly from an RF-0 question.\n\nStatus: In-flight — Sarah exploring alternatives for overwhelming RF Qs; needs cross-team conversation with CatMan (owns RF updates) and CHX Match (owns RF service).\n\nScreenshots: IMG_2680.png, IMG_2682.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775599830756449",
+                "author": "Valerie Peppers",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
             "severity": "high",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Spanish query \u2192 DQs revert to English; redundancy not inferred from query",
+            "title": "Spanish query → DQs revert to English; redundancy not inferred from query",
             "details": "",
             "date": "2026-04-07",
             "author": "Valerie Peppers",
             "status": "in-progress",
-            "notes": [{"text": "Category disambiguation questions came back in Spanish, but DQs were in English. Jesse: likely because we pass English RF questions/answers in. Separately, DQ re-asked for appliance type after the query already said AC, then \u201cwhat type of AC\u201d after she skipped \u2014 redundancy handling not catching inferences from the query itself.\n\nStatus: In-flight \u2014 Sarah compiling into changes doc. Proposed: (a) instruct prompt to maintain the customer\u2019s language; (b) give LLM explicit instruction to translate RF questions; (c) strengthen redundancy rules to catch query-level inferences, not just prior answers.\n\nScreenshots: IMG_2668\u2013IMG_2672.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596099145309", "author": "Valerie Peppers", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Category disambiguation questions came back in Spanish, but DQs were in English. Jesse: likely because we pass English RF questions/answers in. Separately, DQ re-asked for appliance type after the query already said AC, then “what type of AC” after she skipped — redundancy handling not catching inferences from the query itself.\n\nStatus: In-flight — Sarah compiling into changes doc. Proposed: (a) instruct prompt to maintain the customer’s language; (b) give LLM explicit instruction to translate RF questions; (c) strengthen redundancy rules to catch query-level inferences, not just prior answers.\n\nScreenshots: IMG_2668–IMG_2672.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596099145309",
+                "author": "Valerie Peppers",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Missing \u201cpet hair\u201d option + single-select where multi-select is correct",
+            "title": "Missing “pet hair” option + single-select where multi-select is correct",
             "details": "",
             "date": "2026-04-07",
             "author": "Valerie Peppers",
             "status": "in-progress",
-            "notes": [{"text": "Wanted \u201cpet hair AND stains\u201d but only single-select available, fell back to \u201cstains.\u201d Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an \u201cOther\u201d write-in.\n\nStatus: Partially fixed (multi-select in 2.5). Remaining: Sarah to refine questionType rules with more examples of when co-occurring answers should force MULTI_SELECT; decide on \u201cOther\u201d write-in for long-tail stains.\n\nScreenshots: IMG_2662.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775594387862419", "author": "Valerie Peppers", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Wanted “pet hair AND stains” but only single-select available, fell back to “stains.” Follow-up: 2.5 build is now multi-select (yay), but open question on whether pen/marker stains need their own option or an “Other” write-in.\n\nStatus: Partially fixed (multi-select in 2.5). Remaining: Sarah to refine questionType rules with more examples of when co-occurring answers should force MULTI_SELECT; decide on “Other” write-in for long-tail stains.\n\nScreenshots: IMG_2662.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775594387862419",
+                "author": "Valerie Peppers",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
             "severity": "medium",
             "type": "other",
             "typeCustom": "UX/prompt",
-            "title": "No \u201cSkip\u201d affordance on DQ photo collection",
+            "title": "No “Skip” affordance on DQ photo collection",
             "details": "",
             "date": "2026-04-07",
-            "author": "Ana\u00EFs Ziae-Mohseni",
+            "author": "Anaïs Ziae-Mohseni",
             "status": "open",
-            "notes": [{"text": "Wasn\u2019t able to step outside to take a photo; Next button was enabled so she could move forward, but no explicit skip. Prompt/UX should mark photo-collection DQs as optional with a clear skip.\n\nStatus: Open \u2014 no reply in thread.\n\nScreenshots: IMG_0921.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775579335870389", "author": "Ana\u00EFs Ziae-Mohseni", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Wasn’t able to step outside to take a photo; Next button was enabled so she could move forward, but no explicit skip. Prompt/UX should mark photo-collection DQs as optional with a clear skip.\n\nStatus: Open — no reply in thread.\n\nScreenshots: IMG_0921.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775579335870389",
+                "author": "Anaïs Ziae-Mohseni",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
@@ -198,9 +240,15 @@
             "title": "Address-collection step feels like an interruption to the DQ flow",
             "details": "",
             "date": "2026-04-07",
-            "author": "Ana\u00EFs Ziae-Mohseni",
+            "author": "Anaïs Ziae-Mohseni",
             "status": "in-progress",
-            "notes": [{"text": "Address confirmation breaks the rhythm of DQs; majority of customers hiring for 1 home \u2014 should be lighter-weight inline.\n\nStatus: In-flight \u2014 part of Katie\u2019s address-prefill test (see #2); payoff to user not yet clear.\n\nScreenshots: IMG_0933.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596125810959", "author": "Ana\u00EFs Ziae-Mohseni", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Address confirmation breaks the rhythm of DQs; majority of customers hiring for 1 home — should be lighter-weight inline.\n\nStatus: In-flight — part of Katie’s address-prefill test (see #2); payoff to user not yet clear.\n\nScreenshots: IMG_0933.png\nPermalink: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775596125810959",
+                "author": "Anaïs Ziae-Mohseni",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
@@ -212,19 +260,31 @@
             "date": "2026-04-07",
             "author": "Waqas Sheikh",
             "status": "in-progress",
-            "notes": [{"text": "Real-time AI at multiple points (query analysis, DQ generation, summary, ME). DQ generation is slow enough to hurt the \u201cbusy mom in the school pickup line\u201d use case. Not strictly a prompt content bug, but sits on the DQ prompt path.\n\nStatus: In-flight \u2014 Fireworks backend wired up in staging; feature-flag rollout planned for prod. Wade asked about DQE question quality vs. current backend (testing blocked on a staging app bug at the time).\n\nScreenshots: \u2014\nPermalinks: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775580007316819 \u00B7 https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775577811839639", "author": "Waqas Sheikh", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Real-time AI at multiple points (query analysis, DQ generation, summary, ME). DQ generation is slow enough to hurt the “busy mom in the school pickup line” use case. Not strictly a prompt content bug, but sits on the DQ prompt path.\n\nStatus: In-flight — Fireworks backend wired up in staging; feature-flag rollout planned for prod. Wade asked about DQE question quality vs. current backend (testing blocked on a staging app bug at the time).\n\nScreenshots: —\nPermalinks: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775580007316819 · https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775577811839639",
+                "author": "Waqas Sheikh",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           },
           {
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "\u201COddball\u201D queries \u2014 DQ/intake not catching out-of-scope inputs",
+            "title": "“Oddball” queries — DQ/intake not catching out-of-scope inputs",
             "details": "",
             "date": "2026-04-07",
             "author": "Waqas Sheikh",
             "status": "open",
-            "notes": [{"text": "Prompt doesn\u2019t gracefully detect non-serviceable queries before kicking off DQs \u2014 currently relies on a human backstop. Examples: daughter\u2019s \u201chow to grow my allowance\u201d query, Waqas\u2019s \u201cfix my car\u201d dead-end.\n\nStatus: Open \u2014 flagged by Waqas as a gap, no owner/fix scoped yet.\n\nScreenshots: IMG_1155.png\nPermalinks: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775580007316819 \u00B7 https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775865324228229", "author": "Waqas Sheikh", "date": "2026-04-07"}],
+            "notes": [
+              {
+                "text": "Prompt doesn’t gracefully detect non-serviceable queries before kicking off DQs — currently relies on a human backstop. Examples: daughter’s “how to grow my allowance” query, Waqas’s “fix my car” dead-end.\n\nStatus: Open — flagged by Waqas as a gap, no owner/fix scoped yet.\n\nScreenshots: IMG_1155.png\nPermalinks: https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775580007316819 · https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775865324228229",
+                "author": "Waqas Sheikh",
+                "date": "2026-04-07"
+              }
+            ],
             "screenshots": []
           }
         ],
@@ -396,7 +456,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "crit": {
         "status": "done",
@@ -426,7 +487,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "swarm": {
         "status": "done",
@@ -456,7 +518,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "bug": {
         "status": "done",
@@ -486,7 +549,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "test": {
         "status": "done",
@@ -516,7 +580,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "eval": {
         "status": "done",
@@ -546,7 +611,8 @@
             "date": "2026-04-13"
           }
         },
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "postlaunch": {
         "status": "not-started",
@@ -555,7 +621,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       }
     },
     "versions": [
@@ -582,7 +649,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "crit": {
         "status": "not-started",
@@ -591,7 +659,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "swarm": {
         "status": "not-started",
@@ -600,7 +669,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "bug": {
         "status": "not-started",
@@ -609,7 +679,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "test": {
         "status": "not-started",
@@ -618,7 +689,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "eval": {
         "status": "not-started",
@@ -627,7 +699,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       },
       "postlaunch": {
         "status": "not-started",
@@ -636,7 +709,8 @@
         "checklistState": {},
         "findings": [],
         "signoffState": {},
-        "notesState": {}
+        "notesState": {},
+        "docs": []
       }
     },
     "versions": [
