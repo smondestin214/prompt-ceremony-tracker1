@@ -481,6 +481,11 @@
                 "text": "Status: In-flight — Fireworks backend wired up in staging; feature-flag rollout planned for prod. Wade asked about DQE question quality vs. current backend (testing blocked on a staging app bug at the time).",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Root cause: Prompt treats photo DQs the same as other questions. No instruction to mark them as optional or surface a clear skip affordance.",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
