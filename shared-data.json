@@ -136,6 +136,11 @@
                 "text": "Check with @Megan on RF fix.",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Added this to prompt: When converting square footage ranges, anchor the options to what is realistic for the specific category and room type based on the customer's query. For example, if the customer mentions a powder room, bathroom, or other small space, do not include square footage options that exceed what is plausible for that space. Drop any RF range options that no customer in this context could reasonably select. \n\nWaiting for replies from @Jesse and @Megan",
+                "author": "sarah m",
+                "date": "2026-04-13"
               }
             ],
             "screenshots": [
