@@ -138,10 +138,6 @@
             "links": [
               {
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719",
-                "label": "slack message"
-              },
-              {
-                "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775666955503719",
                 "label": "slack dogfooding msg"
               }
             ]
