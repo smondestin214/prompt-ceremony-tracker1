@@ -438,7 +438,7 @@
             "status": "in-progress",
             "notes": [
               {
-                "text": "Real-time AI at multiple points (query analysis, DQ generation, summary, ME). DQ generation is slow enough to hurt the “busy mom in the school pickup line” use case. Not strictly a prompt content bug, but sits on the DQ prompt path.\n\nStatus: In-flight — Fireworks backend wired up in staging; feature-flag rollout planned for prod. Wade asked about DQE question quality vs. current backend (testing blocked on a staging app bug at the time).",
+                "text": "Real-time AI at multiple points (query analysis, DQ generation, summary, ME). DQ generation is slow enough to hurt the “busy mom in the school pickup line” use case. Not strictly a prompt content bug, but sits on the DQ prompt path.\n\n",
                 "author": "Waqas Sheikh",
                 "date": "2026-04-07"
               }
