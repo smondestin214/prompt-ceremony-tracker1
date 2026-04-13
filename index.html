@@ -2073,9 +2073,9 @@
       const copy = text => {
         const btn = document.getElementById(btnId);
         if (!btn) return;
-        btn.textContent = '✓ Copied';
+        btn.textContent = '✓';
         btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 2000);
       };
       if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(copy).catch(() => {
@@ -2566,7 +2566,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
                 ${links.map((l, li) => `
                   <div class="bug-link-item">
                     <a href="${esc(l.url)}" target="_blank" rel="noopener" class="bug-link-anchor">&#128279; ${esc(l.label || l.url)}</a>
-                    <button class="bug-link-copy" id="blcopy-${pi}-${ckey}-${fi}-${li}" onclick="copyBugLink('${esc(l.url)}','blcopy-${pi}-${ckey}-${fi}-${li}')" title="Copy link">Copy</button>
+                    <button class="bug-link-copy" id="blcopy-${pi}-${ckey}-${fi}-${li}" onclick="copyBugLink('${esc(l.url)}','blcopy-${pi}-${ckey}-${fi}-${li}')" title="Copy link">📋</button>
                     <button class="bug-link-delete" onclick="deleteBugLink(${pi},'${ckey}',${fi},${li})" title="Remove">&times;</button>
                   </div>
                 `).join('')}
