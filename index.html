@@ -2117,7 +2117,7 @@
       const mentioned = (text.match(/@[\w.]+/g) || []);
       if (mentioned.length) {
         const tags = mentioned.join(' ');
-        const msg = `${tags} — you were mentioned in a bug note\n*Bug:* ${f.title || ''}\n*Note:* "${text}"\n*By:* ${author || 'someone'}`;
+        const msg = `${tags} — you were mentioned in a bug note\n*Bug:* ${f.title || ''}\n*Note:* "${text}"\n*By:* ${author || 'someone'}\n${window.location.href}`;
         navigator.clipboard.writeText(msg).catch(() => {
           const el = document.createElement('textarea');
           el.value = msg; document.body.appendChild(el);
