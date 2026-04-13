@@ -515,7 +515,7 @@
     .finding-item.status-fixed  { opacity: 0.55; }
     .finding-item.status-wontfix { opacity: 0.45; }
 
-    .finding-content { flex: 1; }
+    .finding-content { flex: 1; min-width: 0; }
     .finding-text { font-size: 13px; margin-bottom: 3px; }
     .finding-meta { font-size: 11px; color: var(--text-muted); }
 
@@ -545,7 +545,13 @@
     }
     .finding-title-edit:hover { background: var(--surface-hover); border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
     .finding-title-edit:focus { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; margin: -4px -6px; }
-    .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
+    .finding-details { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; min-width: 0; }
+    .bug-summary-input {
+      width: 100%; background: var(--surface-hover); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 8px; color: var(--text); font-family: inherit;
+      font-size: 12px; resize: none; outline: none; field-sizing: content; min-height: 32px;
+    }
+    .bug-summary-input:focus { border-color: var(--accent); background: var(--surface); }
     .bug-detail-summary { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
     .finding-wrapper { display: flex; flex-direction: column; }
@@ -1820,7 +1826,7 @@
                                 <span class="bug-number">#${globalIdx + 1}</span>
                                 <textarea class="finding-title-edit" oninput="updateFindingTitle(${i},'${ckey}',${fi},this.value)" style="flex:1;">${esc(f.title || f.text || '')}</textarea>
                               </div>
-                              ${(() => { const s = (f.details || (f.notes&&f.notes[0]&&f.notes[0].text) || '').split('\n')[0].trim(); return s ? `<div class="finding-details">${esc(s)}</div>` : ''; })()}
+                              ${f.summary ? `<div class="finding-details">${esc(f.summary)}</div>` : ''}
                               ${f.author ? `<div class="reporter-badge">&#128100; ${esc(f.author)}</div>` : ''}
                               <div class="finding-meta">${f.date || ''}</div>
                               <button class="bug-detail-toggle" onclick="toggleBugDetail(${i},'${ckey}',${fi})" style="margin-top:5px;">
@@ -2399,6 +2405,11 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       saveQuiet();
     }
 
+    function updateBugSummary(pi, ckey, fi, value) {
+      projects[pi].ceremonies[ckey].findings[fi].summary = value;
+      saveQuiet();
+    }
+
     function updateBugNote(pi, ckey, fi, ni, value) {
       projects[pi].ceremonies[ckey].findings[fi].notes[ni].text = value;
       saveQuiet();
@@ -2527,6 +2538,13 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
           </div>
         </div>
         <div class="bug-detail-col-right">
+          <div class="bug-detail-section">
+            <div class="bug-detail-section-title">Bug summary</div>
+            <textarea class="bug-summary-input" id="bsummary-${pi}-${ckey}-${fi}"
+              placeholder="One-line summary of the bug…"
+              oninput="updateBugSummary(${pi},'${ckey}',${fi},this.value)"
+            >${esc(f.summary || '')}</textarea>
+          </div>
           <div class="bug-detail-section">
             <div class="bug-detail-section-title">Notes</div>
             ${notes.length > 0 ? `
