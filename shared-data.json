@@ -592,7 +592,8 @@
                 "url": "https://thumbtack.slack.com/archives/C0ARZFG8LG0/p1775577811839639",
                 "label": "dogfooding slack msg2"
               }
-            ]
+            ],
+            "summary": "DQ generation is too slow for a fast, mobile-first use case — real-time AI is firing at multiple points in the flow simultaneously; this is an infrastructure issue, not a prompt content problem."
           },
           {
             "severity": "medium",
