@@ -1756,7 +1756,6 @@
             </div>
             <div class="project-header-right">
               <span class="drag-handle" title="Drag to reorder" onclick="event.stopPropagation()">&#8942;&#8942;</span>
-              <button class="btn btn-sm btn-icon btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" title="Delete project">&times;</button>
             </div>
           </div>
           <div class="project-body">
@@ -2079,6 +2078,9 @@
               }).join('')}
             </div>
 
+          </div>
+          <div style="padding: 12px 20px 16px; border-top: 1px solid var(--border); margin-top: 8px;">
+            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deleteProject(${i})" style="opacity:0.5; font-size:11px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.5'">🗑 Delete project</button>
           </div>
         </div>
       `;
@@ -2998,10 +3000,53 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
     }
 
     function deleteProject(index) {
-      if (confirm(`Delete "${projects[index].name}"?`)) {
-        projects.splice(index, 1);
-        save();
-      }
+      const name = projects[index].name;
+      // Show confirmation modal
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML = `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+          <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Delete project?</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">This will permanently delete <strong style="color:var(--text)">${esc(name)}</strong> including all bugs, notes, and prompt versions. Type the project name to confirm.</div>
+          <input id="delete-confirm-input" placeholder="Type project name…" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;margin-bottom:12px;box-sizing:border-box;">
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button id="delete-cancel-btn" class="btn btn-sm">Cancel</button>
+            <button id="delete-confirm-btn" class="btn btn-sm btn-danger" disabled style="opacity:0.4;">Delete</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      const input = overlay.querySelector('#delete-confirm-input');
+      const confirmBtn = overlay.querySelector('#delete-confirm-btn');
+      const cancelBtn = overlay.querySelector('#delete-cancel-btn');
+      input.focus();
+      input.addEventListener('input', () => {
+        const match = input.value.trim() === name;
+        confirmBtn.disabled = !match;
+        confirmBtn.style.opacity = match ? '1' : '0.4';
+      });
+      cancelBtn.addEventListener('click', () => document.body.removeChild(overlay));
+      overlay.addEventListener('click', e => { if (e.target === overlay) document.body.removeChild(overlay); });
+      confirmBtn.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        const deleted = projects.splice(index, 1)[0];
+        render();
+        // Undo toast — 6 seconds to recover
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:#1e1e2e;border:1px solid var(--accent);color:var(--text);padding:12px 20px;border-radius:10px;font-size:13px;z-index:99999;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.4);';
+        toast.innerHTML = `<span>"${esc(deleted.name)}" deleted</span><button style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;cursor:pointer;font-size:12px;font-weight:600;">Undo</button>`;
+        document.body.appendChild(toast);
+        let undone = false;
+        toast.querySelector('button').addEventListener('click', () => {
+          undone = true;
+          projects.splice(index, 0, deleted);
+          save();
+          document.body.removeChild(toast);
+        });
+        setTimeout(() => {
+          if (document.body.contains(toast)) document.body.removeChild(toast);
+          if (!undone) save();
+        }, 6000);
+      });
     }
 
     function openModal() {
