@@ -159,7 +159,13 @@
                 "date": "2026-04-14"
               }
             ],
-            "summary": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs"
+            "summary": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs",
+            "links": [
+              {
+                "url": "https://1977877856098707.7.gcp.databricks.com/editor/notebooks/1158239763473886?o=1977877856098707#command/7407466287173859",
+                "label": ""
+              }
+            ]
           },
           {
             "severity": "medium",
