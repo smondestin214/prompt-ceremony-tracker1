@@ -646,6 +646,15 @@
       border-radius: 6px; margin-top: 2px;
     }
     .bug-screenshot-upload-btn:hover { background: rgba(124,92,252,0.1); }
+    .bug-screenshot-drop-zone {
+      margin: 8px 12px 0;
+      padding: 10px 14px; border: 2px dashed var(--border); border-radius: 8px;
+      font-size: 12px; color: var(--text-muted); text-align: center;
+      cursor: pointer; transition: all 0.15s; user-select: none;
+    }
+    .bug-screenshot-drop-zone:hover,
+    .bug-screenshot-drop-zone:focus { border-color: var(--accent); color: var(--accent-light); background: rgba(124,92,252,0.04); outline: none; }
+    .bug-screenshot-drop-zone.dragover { border-color: var(--accent); background: rgba(124,92,252,0.1); color: var(--accent-light); }
 
     .bug-notes-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
     .bug-note-item {
@@ -1757,6 +1766,16 @@
                   <h3><span class="expand-icon" style="font-size:10px; color:var(--text-muted); margin-right:4px;">${p._allBugsOpen ? '\u25BC' : '\u25B6'}</span>🐛 All bugs <span class="version-count">${allBugs.length} bug${allBugs.length !== 1 ? 's' : ''}${openCount < allBugs.length ? ' &middot; ' + openCount + ' open' : ''}</span></h3>
                 </div>
                 <div class="versions-body ${p._allBugsOpen ? 'open' : ''}">
+                  <!-- Screenshot drop zone -->
+                  <div class="bug-screenshot-drop-zone" id="bugdrop-${i}"
+                    ondragover="event.preventDefault(); this.classList.add('dragover')"
+                    ondragleave="this.classList.remove('dragover')"
+                    ondrop="handleBugScreenshotDrop(event,${i}); this.classList.remove('dragover')"
+                    onpaste="handleBugScreenshotPaste(event,${i})"
+                    tabindex="0"
+                    title="Paste or drop a screenshot to create a new bug">
+                    📸 Drop or paste a screenshot to add a bug
+                  </div>
                   <!-- Project-level bulk import -->
                   <div style="padding:10px 12px 4px;">
                     <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap;">
@@ -2498,6 +2517,56 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
           save();
           return;
         }
+      }
+    }
+
+    async function addBugFromScreenshot(pi, blob) {
+      const result = await resizeImageBlob(blob);
+      const date = new Date().toISOString().slice(0, 10);
+      // Add to the first bug-bash ceremony, or fallback to first ceremony
+      const ckeys = getCeremonies(projects[pi]).map(c => c.key);
+      const ckey = ckeys.includes('bug') ? 'bug' : ckeys[0];
+      if (!projects[pi].ceremonies[ckey].findings) projects[pi].ceremonies[ckey].findings = [];
+      const newBug = {
+        title: 'Screenshot bug — ' + date,
+        severity: 'medium',
+        type: 'prompt-fixable',
+        date,
+        author: localStorage.getItem('pe-note-author') || '',
+        notes: [], screenshots: [{ dataUrl: result.dataUrl, name: 'screenshot-' + date + '.png', date }],
+        links: [], summary: '', status: 'open',
+        _detailOpen: true,
+      };
+      projects[pi].ceremonies[ckey].findings.push(newBug);
+      // Ensure All Bugs and the ceremony are open
+      projects[pi]._allBugsOpen = true;
+      projects[pi].ceremonies[ckey]._open = true;
+      save();
+      // After render, scroll to and focus the new bug's title
+      requestAnimationFrame(() => {
+        const fi = projects[pi].ceremonies[ckey].findings.length - 1;
+        const titleEl = document.querySelector(`[data-index="${pi}"] .finding-title-edit`);
+        if (titleEl) { titleEl.focus(); titleEl.select(); }
+      });
+    }
+
+    async function handleBugScreenshotPaste(event, pi) {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          event.preventDefault();
+          await addBugFromScreenshot(pi, item.getAsFile());
+          return;
+        }
+      }
+    }
+
+    async function handleBugScreenshotDrop(event, pi) {
+      event.preventDefault();
+      const file = event.dataTransfer?.files?.[0];
+      if (file && file.type.startsWith('image/')) {
+        await addBugFromScreenshot(pi, file);
       }
     }
 
