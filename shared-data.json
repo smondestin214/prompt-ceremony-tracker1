@@ -186,6 +186,11 @@
                 "text": "should we build in logic to stop suggestion at a certain point. too many suggestions.",
                 "author": "sarah m",
                 "date": "2026-04-14"
+              },
+              {
+                "text": "stop after the user adopts 2 suggestions, but this may be a client side issue (Grey and Mavish)",
+                "author": "sarah m",
+                "date": "2026-04-14"
               }
             ],
             "screenshots": [
