@@ -1053,7 +1053,7 @@
         "checklistState": {},
         "findings": [
           {
-            "title": "Repetition ",
+            "title": "Repetition on suggestions",
             "severity": "medium",
             "type": "prompt-fixable",
             "date": "2026-04-14",
