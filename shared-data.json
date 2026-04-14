@@ -197,6 +197,11 @@
                 "text": "Added this to prompt: Also exception: do NOT skip the property type question based on home profile or address data alone. Property type from the home profile or a confirmed address is a reasonable starting point but should be prefilled and confirmed — not assumed. Frame it as: \"It looks like you have a [property type]. Is that right?\" Waiting on confirmation from @Jesse",
                 "author": "sarah m",
                 "date": "2026-04-13"
+              },
+              {
+                "text": "Added this: \n\nWhen structured data (e.g., home profile, property type, confirmed address) conflicts with ambiguous words in the project summary (e.g., \"office,\" \"studio,\" \"shop\"), the structured data must take priority. \n\nIf the home profile indicates a residential property, treat all spaces mentioned in the query (e.g., \"office,\" \"studio,\" \"gym\") as rooms within the home — not standalone commercial buildings — unless the customer clearly states otherwise.",
+                "author": "sarah m",
+                "date": "2026-04-14"
               }
             ],
             "screenshots": [
