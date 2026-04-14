@@ -106,7 +106,7 @@
         "docs": []
       },
       "bug": {
-        "status": "not-started",
+        "status": "in-progress",
         "date": "2026-04-13",
         "notes": "",
         "checklistState": {},
@@ -119,7 +119,9 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -129,7 +131,9 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -139,7 +143,9 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -149,7 +155,9 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -159,10 +167,17 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [],
+            "screenshots": []
           }
         ],
-        "signoffState": {},
+        "signoffState": {
+          "0": {
+            "initials": "ss",
+            "date": "2026-04-14"
+          }
+        },
         "notesState": {},
         "docs": []
       },
