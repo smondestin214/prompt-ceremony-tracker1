@@ -1554,19 +1554,32 @@
           serverData = await res.json();
         }
 
-        // Skip overwrite for 75s after a successful write — GitHub CDN can serve stale data for 60-90s
-        if (Date.now() - lastWriteTime < 75000) {
+        // Skip overwrite for 90s after a successful write — GitHub CDN can serve stale data
+        if (Date.now() - lastWriteTime < 90000) {
           updateSyncBadge('connected');
           return;
         }
         const serverJson = JSON.stringify(serverData);
         const localJson = JSON.stringify(projects.map(stripUIState));
-        if (serverJson !== localJson) {
-          const uiState = captureUIState();
-          projects = migrateProjects(serverData);
-          restoreUIState(uiState);
-          render();
+        if (serverJson === localJson) {
+          updateSyncBadge('connected');
+          return;
         }
+        // Safety check: if remote has fewer total bugs than local, it's stale — don't overwrite
+        const countBugs = data => (data || []).reduce((n, p) =>
+          n + Object.values(p.ceremonies || {}).reduce((m, cd) => m + (cd.findings || []).length, 0), 0);
+        const remoteBugs = countBugs(serverData);
+        const localBugs = countBugs(projects);
+        if (remoteBugs < localBugs) {
+          // Remote is behind local — push local instead of pulling
+          pendingWrite = true;
+          updateSyncBadge('connected');
+          return;
+        }
+        const uiState = captureUIState();
+        projects = migrateProjects(serverData);
+        restoreUIState(uiState);
+        render();
         updateSyncBadge('connected');
       } catch {
         updateSyncBadge('disconnected');
