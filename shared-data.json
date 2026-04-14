@@ -145,7 +145,8 @@
             "author": "",
             "status": "open",
             "notes": [],
-            "screenshots": []
+            "screenshots": [],
+            "summary": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs"
           },
           {
             "severity": "medium",
