@@ -1640,8 +1640,13 @@
     // Global paste → create bug from screenshot
     document.addEventListener('paste', async e => {
       const active = document.activeElement;
-      // Allow paste in text fields to work normally
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      // Let text fields, individual paste zones, and drop zones handle their own paste
+      if (active && (
+        active.tagName === 'INPUT' ||
+        active.tagName === 'TEXTAREA' ||
+        active.classList.contains('bug-paste-zone') ||
+        active.classList.contains('bug-screenshot-drop-zone')
+      )) return;
       const items = Array.from(e.clipboardData?.items || []);
       const imgItem = items.find(it => it.type.startsWith('image/'));
       if (!imgItem) return;
