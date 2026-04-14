@@ -157,7 +157,8 @@
                 "name": "pasted-2026-04-14.png",
                 "date": "2026-04-14"
               }
-            ]
+            ],
+            "summary": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs"
           },
           {
             "severity": "medium",
