@@ -145,7 +145,8 @@
             "author": "",
             "status": "open",
             "notes": [],
-            "screenshots": []
+            "screenshots": [],
+            "summary": "typing a category returns generic suggestions instead of specific jobs "
           },
           {
             "severity": "medium",
