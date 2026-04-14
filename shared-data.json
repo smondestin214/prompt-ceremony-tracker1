@@ -174,7 +174,7 @@
           },
           {
             "severity": "medium",
-            "type": "prompt-fixable",
+            "type": "engineering",
             "typeCustom": "",
             "title": "- Run-on sentences — model chains multiple suggestions together into one long query instead of returning separate, distinct completions",
             "details": "",
