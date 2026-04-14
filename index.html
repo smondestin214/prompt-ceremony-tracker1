@@ -524,6 +524,7 @@
     .bug-status-select:focus { outline: none; }
     .bug-status-open   { background: rgba(239,68,68,0.15);  color: #ef4444; border-color: rgba(239,68,68,0.3); }
     .bug-status-in-progress { background: rgba(59,130,246,0.15); color: #3b82f6; border-color: rgba(59,130,246,0.3); }
+    .bug-status-in-testing { background: rgba(234,179,8,0.15); color: #eab308; border-color: rgba(234,179,8,0.3); }
     .bug-status-fixed  { background: rgba(16,185,129,0.15); color: #10b981; border-color: rgba(16,185,129,0.3); }
     .bug-status-wontfix { background: rgba(139,141,151,0.12); color: var(--text-muted); border-color: var(--border); }
     .bug-severity-low      { background: rgba(234,179,8,0.2);   color: #eab308; border-color: rgba(234,179,8,0.3); }
@@ -1949,6 +1950,7 @@
                       { value: 'open', label: 'Open' },
                       { value: 'in-progress', label: 'In progress' },
                       { value: 'fixed', label: 'Fixed' },
+                      { value: 'in-testing', label: '🧪 In testing' },
                       { value: 'wontfix', label: "Won't fix" },
                       { value: 'high', label: '🔴 High' },
                       { value: 'blocking', label: '🚨 Blocking' },
@@ -1981,6 +1983,7 @@
                               <select class="bug-status-select bug-status-${f.status || 'open'}" onchange="updateFindingStatus(${i},'${ckey}',${fi},this.value)">
                                 <option value="open" ${(!f.status||f.status==='open')?'selected':''}>Open</option>
                                 <option value="in-progress" ${f.status==='in-progress'?'selected':''}>In progress</option>
+                                <option value="in-testing" ${f.status==='in-testing'?'selected':''}>In testing</option>
                                 <option value="fixed" ${f.status==='fixed'?'selected':''}>Fixed</option>
                                 <option value="wontfix" ${f.status==='wontfix'?'selected':''}>Won't fix</option>
                               </select>
