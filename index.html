@@ -1274,6 +1274,8 @@
           p.ceremonies[c.key].findings.forEach(f => {
             if (!f.notes) f.notes = [];
             if (!f.screenshots) f.screenshots = [];
+            // Remove empty-dataUrl screenshots left by the previous stripScreenshots pass
+            f.screenshots = f.screenshots.filter(s => s.dataUrl);
             if (!f.title) return;
             const name = extractName(f.title);
             if (name) {
@@ -2796,16 +2798,16 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       return `<div class="bug-detail-panel">
         <div class="bug-detail-col-left">
           <div class="bug-detail-section-title">Screenshots</div>
-          ${screenshots.length > 0 ? `
+          ${screenshots.filter(s => s.dataUrl).length > 0 ? `
             <div class="bug-screenshots-grid">
-              ${screenshots.map((s, si) => `
+              ${screenshots.map((s, si) => s.dataUrl ? `
                 <div class="bug-screenshot-item">
                   <img class="bug-screenshot-thumb" src="${s.dataUrl}" alt="${esc(s.name)}"
                     onclick="openScreenshot(${pi},'${ckey}',${fi},${si})" title="Click to open · ${esc(s.name)}">
                   <div class="bug-screenshot-name">${esc(s.name)}</div>
                   <button class="bug-screenshot-delete" onclick="deleteBugScreenshot(${pi},'${ckey}',${fi},${si})" title="Remove">&times;</button>
                 </div>
-              `).join('')}
+              ` : '').join('')}
             </div>
           ` : ''}
           <div class="bug-screenshot-actions">
