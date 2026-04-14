@@ -150,6 +150,11 @@
                 "text": "changes made in prompt",
                 "author": "sarah m",
                 "date": "2026-04-14"
+              },
+              {
+                "text": "should change top queries (top 10?) and hard code them to what we want",
+                "author": "sarah m",
+                "date": "2026-04-14"
               }
             ],
             "screenshots": [
