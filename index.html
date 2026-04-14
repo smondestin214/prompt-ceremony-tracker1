@@ -1637,6 +1637,30 @@
       }
     });
 
+    // Global paste → create bug from screenshot if an image is in the clipboard
+    // and the user isn't focused on a text input/textarea
+    document.addEventListener('paste', async e => {
+      const active = document.activeElement;
+      const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+      if (isTyping) return; // let normal paste work
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          // Find the first expanded project that has All Bugs open, or just use project 0
+          const pi = projects.findIndex(p => p.expanded && p._allBugsOpen);
+          const target = pi >= 0 ? pi : projects.findIndex(p => p.expanded);
+          if (target < 0) return;
+          // Flash the drop zone so user sees something happened
+          const zone = document.getElementById(`bugdrop-${target}`);
+          if (zone) { zone.classList.add('dragover'); setTimeout(() => zone.classList.remove('dragover'), 600); }
+          await addBugFromScreenshot(target, item.getAsFile());
+          return;
+        }
+      }
+    });
+
     function dragStart(e, idx) {
       dragSrcIdx = idx;
       e.currentTarget.classList.add('dragging');
@@ -1768,13 +1792,14 @@
                 <div class="versions-body ${p._allBugsOpen ? 'open' : ''}">
                   <!-- Screenshot drop zone -->
                   <div class="bug-screenshot-drop-zone" id="bugdrop-${i}"
-                    ondragover="event.preventDefault(); this.classList.add('dragover')"
+                    ondragenter="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
+                    ondragover="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
                     ondragleave="this.classList.remove('dragover')"
-                    ondrop="handleBugScreenshotDrop(event,${i}); this.classList.remove('dragover')"
+                    ondrop="event.preventDefault(); event.stopPropagation(); this.classList.remove('dragover'); handleBugScreenshotDrop(event,${i})"
+                    onclick="this.focus()"
                     onpaste="handleBugScreenshotPaste(event,${i})"
-                    tabindex="0"
-                    title="Paste or drop a screenshot to create a new bug">
-                    📸 Drop or paste a screenshot to add a bug
+                    tabindex="0">
+                    📸 Drop a screenshot here, or click then paste (⌘V)
                   </div>
                   <!-- Project-level bulk import -->
                   <div style="padding:10px 12px 4px;">
