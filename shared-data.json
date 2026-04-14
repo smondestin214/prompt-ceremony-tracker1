@@ -133,7 +133,8 @@
                 "name": "pasted-2026-04-14.png",
                 "date": "2026-04-14"
               }
-            ]
+            ],
+            "summary": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)"
           },
           {
             "severity": "medium",
@@ -143,7 +144,7 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "in-testing",
+            "status": "open",
             "notes": [
               {
                 "text": "changes made in prompt",
