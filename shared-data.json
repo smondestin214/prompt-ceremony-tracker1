@@ -644,6 +644,16 @@
               }
             ],
             "summary": "Out-of-scope queries (e.g. \"fix my car\") aren't caught before the DQ flow starts — the appropriateness guard prompt is too narrowly scoped and doesn't gracefully redirect non-serviceable queries before inference fires."
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Confused with the follow up question that followed me confirming my address. It looks like it was assuming I was talking about an office building? But I confirmed a residential address so I’m confused.",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
           }
         ],
         "signoffState": {
