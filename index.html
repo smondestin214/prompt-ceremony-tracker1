@@ -1637,28 +1637,24 @@
       }
     });
 
-    // Global paste → create bug from screenshot if an image is in the clipboard
-    // and the user isn't focused on a text input/textarea
+    // Global paste → create bug from screenshot
     document.addEventListener('paste', async e => {
       const active = document.activeElement;
-      const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
-      if (isTyping) return; // let normal paste work
-      const items = e.clipboardData?.items;
-      if (!items) return;
-      for (const item of items) {
-        if (item.type.startsWith('image/')) {
-          e.preventDefault();
-          // Find the first expanded project that has All Bugs open, or just use project 0
-          const pi = projects.findIndex(p => p.expanded && p._allBugsOpen);
-          const target = pi >= 0 ? pi : projects.findIndex(p => p.expanded);
-          if (target < 0) return;
-          // Flash the drop zone so user sees something happened
-          const zone = document.getElementById(`bugdrop-${target}`);
-          if (zone) { zone.classList.add('dragover'); setTimeout(() => zone.classList.remove('dragover'), 600); }
-          await addBugFromScreenshot(target, item.getAsFile());
-          return;
-        }
-      }
+      // Allow paste in text fields to work normally
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      const items = Array.from(e.clipboardData?.items || []);
+      const imgItem = items.find(it => it.type.startsWith('image/'));
+      if (!imgItem) return;
+      e.preventDefault();
+      // Use first expanded project, or first project if none expanded
+      let target = projects.findIndex(p => p.expanded);
+      if (target < 0) target = 0;
+      if (projects.length === 0) return;
+      // Make sure All Bugs section opens
+      projects[target]._allBugsOpen = true;
+      const zone = document.getElementById(`bugdrop-${target}`);
+      if (zone) { zone.classList.add('dragover'); setTimeout(() => zone.classList.remove('dragover'), 800); }
+      await addBugFromScreenshot(target, imgItem.getAsFile());
     });
 
     function dragStart(e, idx) {
@@ -1799,7 +1795,13 @@
                     onclick="this.focus()"
                     onpaste="handleBugScreenshotPaste(event,${i})"
                     tabindex="0">
-                    📸 Drop a screenshot here, or click then paste (⌘V)
+                    📸 Drop or paste a screenshot to add a bug
+                    <div style="margin-top:5px;">
+                      <label style="font-size:11px; color:var(--accent-light); cursor:pointer; text-decoration:underline;">
+                        or choose a file
+                        <input type="file" accept="image/*" style="display:none" onchange="handleBugScreenshotFile(event,${i})">
+                      </label>
+                    </div>
                   </div>
                   <!-- Project-level bulk import -->
                   <div style="padding:10px 12px 4px;">
@@ -2573,6 +2575,13 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
         const titleEl = document.querySelector(`[data-index="${pi}"] .finding-title-edit`);
         if (titleEl) { titleEl.focus(); titleEl.select(); }
       });
+    }
+
+    async function handleBugScreenshotFile(event, pi) {
+      const file = event.target.files?.[0];
+      if (file && file.type.startsWith('image/')) {
+        await addBugFromScreenshot(pi, file);
+      }
     }
 
     async function handleBugScreenshotPaste(event, pi) {
