@@ -110,7 +110,68 @@
         "date": "2026-04-13",
         "notes": "",
         "checklistState": {},
-        "findings": [],
+        "findings": [
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Location bleed — suggestions include city names or \"near me\" even though zip code is already provided",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Run-on sentences — model chains multiple suggestions together into one long query instead of returning separate, distinct completions",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Repetition — suggestions are too similar to each other, circling the same concept (e.g. all three suggestions mention \"AC\")",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "- Redundancy with typed text — suffixes repeat words or concepts already in the query instead of completing with new information",
+            "details": "",
+            "date": "2026-04-14",
+            "author": "",
+            "status": "open"
+          }
+        ],
         "signoffState": {},
         "notesState": {},
         "docs": []
