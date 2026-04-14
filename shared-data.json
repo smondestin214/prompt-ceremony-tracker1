@@ -120,7 +120,13 @@
             "date": "2026-04-14",
             "author": "",
             "status": "open",
-            "notes": [],
+            "notes": [
+              {
+                "text": "changed this in the prompt and schema",
+                "author": "sarah m",
+                "date": "2026-04-14"
+              }
+            ],
             "screenshots": []
           },
           {
