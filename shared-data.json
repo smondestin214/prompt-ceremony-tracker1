@@ -1053,7 +1053,7 @@
         "checklistState": {},
         "findings": [
           {
-            "title": "Screenshot bug — 2026-04-14",
+            "title": "Repetition ",
             "severity": "medium",
             "type": "prompt-fixable",
             "date": "2026-04-14",
