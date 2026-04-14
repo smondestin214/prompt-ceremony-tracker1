@@ -1359,8 +1359,49 @@
       }
     }
 
+    // Strip screenshot dataUrls before writing — they're large and blow past GitHub's 1MB API limit.
+    // Screenshots are kept in localStorage only and restored after any remote sync.
+    function stripScreenshots(projectsData) {
+      const copy = JSON.parse(JSON.stringify(projectsData));
+      copy.forEach(p => {
+        Object.values(p.ceremonies || {}).forEach(cd => {
+          (cd.findings || []).forEach(f => {
+            if (f.screenshots) f.screenshots = f.screenshots.map(s => ({ name: s.name, date: s.date, dataUrl: '' }));
+          });
+        });
+      });
+      return copy;
+    }
+
+    // Capture screenshot dataUrls keyed by "ckey::bugTitle" so they survive a remote sync overwrite.
+    function captureLocalScreenshots() {
+      const ss = {};
+      projects.forEach(p => {
+        Object.entries(p.ceremonies || {}).forEach(([ckey, cd]) => {
+          (cd.findings || []).forEach(f => {
+            if (f.screenshots?.some(s => s.dataUrl)) {
+              const key = `${ckey}::${(f.title || '').slice(0, 60)}`;
+              ss[key] = f.screenshots;
+            }
+          });
+        });
+      });
+      return ss;
+    }
+
+    function restoreLocalScreenshots(ss) {
+      projects.forEach(p => {
+        Object.entries(p.ceremonies || {}).forEach(([ckey, cd]) => {
+          (cd.findings || []).forEach(f => {
+            const key = `${ckey}::${(f.title || '').slice(0, 60)}`;
+            if (ss[key]) f.screenshots = ss[key];
+          });
+        });
+      });
+    }
+
     async function ghWrite(projects) {
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(projects, null, 2))));
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(stripScreenshots(projects), null, 2))));
       const body = {
         message: 'Update ceremony tracker data',
         content,
@@ -1512,11 +1553,13 @@
           updateSyncBadge('connected');
           return;
         }
-        const serverJson = JSON.stringify(serverData);
-        const localJson = JSON.stringify(projects.map(stripUIState));
+        const serverJson = JSON.stringify(stripScreenshots(serverData));
+        const localJson = JSON.stringify(stripScreenshots(projects.map(stripUIState)));
         if (serverJson !== localJson) {
           const uiState = captureUIState();
+          const localSS = captureLocalScreenshots(); // preserve screenshots before overwrite
           projects = migrateProjects(serverData);
+          restoreLocalScreenshots(localSS); // re-attach screenshots after overwrite
           restoreUIState(uiState);
           render();
         }
