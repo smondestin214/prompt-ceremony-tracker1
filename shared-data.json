@@ -115,7 +115,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Mixes first-person and second-person tense",
+            "title": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)",
             "details": "",
             "date": "2026-04-14",
             "author": "",
@@ -134,7 +134,7 @@
                 "date": "2026-04-14"
               }
             ],
-            "summary": "model uses \"your\" instead of \"my\" (customer speaks in first person)"
+            "summary": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)"
           },
           {
             "severity": "medium",
