@@ -646,6 +646,19 @@
       border-radius: 6px; margin-top: 2px;
     }
     .bug-screenshot-upload-btn:hover { background: rgba(124,92,252,0.1); }
+    .bug-draft-panel {
+      margin: 8px 12px 0; padding: 12px 14px;
+      border: 2px solid var(--accent); border-radius: 8px;
+      background: rgba(124,92,252,0.06);
+    }
+    .bug-draft-title { font-size: 12px; font-weight: 700; color: var(--accent-light); margin-bottom: 8px; }
+    .bug-draft-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+    .bug-draft-input {
+      flex: 1; min-width: 180px; padding: 5px 8px; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--bg); color: var(--text);
+      font-size: 12px; font-family: inherit;
+    }
+    .bug-draft-input:focus { outline: none; border-color: var(--accent); }
     .bug-screenshot-drop-zone {
       margin: 8px 12px 0;
       padding: 10px 14px; border: 2px dashed var(--border); border-radius: 8px;
@@ -1259,6 +1272,7 @@
       delete clean._allBugsOpen;
       delete clean._bugFilter;
       delete clean._docFormOpen;
+      delete clean._bugDraft;
       if (clean.versions) clean.versions.forEach(v => { delete v._editing; delete v._changelogOpen; });
       CEREMONIES.forEach(c => {
         if (clean.ceremonies[c.key]) {
@@ -1659,7 +1673,7 @@
       projects[target]._allBugsOpen = true;
       const zone = document.getElementById(`bugdrop-${target}`);
       if (zone) { zone.classList.add('dragover'); setTimeout(() => zone.classList.remove('dragover'), 800); }
-      await addBugFromScreenshot(target, imgItem.getAsFile());
+      await addImageToDraft(target, imgItem.getAsFile());
     });
 
     function dragStart(e, idx) {
@@ -1791,7 +1805,33 @@
                   <h3><span class="expand-icon" style="font-size:10px; color:var(--text-muted); margin-right:4px;">${p._allBugsOpen ? '\u25BC' : '\u25B6'}</span>🐛 All bugs <span class="version-count">${allBugs.length} bug${allBugs.length !== 1 ? 's' : ''}${openCount < allBugs.length ? ' &middot; ' + openCount + ' open' : ''}</span></h3>
                 </div>
                 <div class="versions-body ${p._allBugsOpen ? 'open' : ''}">
-                  <!-- Screenshot drop zone -->
+                  <!-- Screenshot drop zone / draft panel -->
+                  ${p._bugDraft ? `
+                  <div class="bug-draft-panel" id="bugdrop-${i}">
+                    <div class="bug-draft-title">📸 New bug from screenshot</div>
+                    <div class="bug-draft-thumbs">
+                      ${p._bugDraft.screenshots.map((s, si) => `
+                        <div style="position:relative; display:inline-block;">
+                          <img src="${s.dataUrl}" style="height:72px; width:auto; border-radius:5px; border:1px solid var(--border); object-fit:cover;">
+                          <button onclick="removeDraftScreenshot(${i},${si})" style="position:absolute;top:-5px;right:-5px;background:#ef4444;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;line-height:1;">&times;</button>
+                        </div>`).join('')}
+                    </div>
+                    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+                      <input id="bdraft-title-${i}" class="bug-draft-input" placeholder="Bug title…" value="${esc(p._bugDraft.title||'')}">
+                      <select id="bdraft-sev-${i}" class="bug-status-select bug-severity-${p._bugDraft.severity||'medium'}" style="font-size:12px;">
+                        <option value="low" ${p._bugDraft.severity==='low'?'selected':''}>Low</option>
+                        <option value="medium" ${(!p._bugDraft.severity||p._bugDraft.severity==='medium')?'selected':''}>Medium</option>
+                        <option value="high" ${p._bugDraft.severity==='high'?'selected':''}>High</option>
+                        <option value="blocking" ${p._bugDraft.severity==='blocking'?'selected':''}>Blocking</option>
+                      </select>
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; align-items:center;">
+                      <button class="btn btn-sm btn-primary" onclick="commitBugDraft(${i})">✓ Add bug</button>
+                      <label class="btn btn-sm" style="cursor:pointer;">+ Add screenshot<input type="file" accept="image/*" multiple style="display:none" onchange="addFilesToDraft(event,${i})"></label>
+                      <button class="btn btn-sm" onclick="discardBugDraft(${i})" style="color:var(--text-muted);">Discard</button>
+                    </div>
+                  </div>
+                  ` : `
                   <div class="bug-screenshot-drop-zone" id="bugdrop-${i}"
                     ondragenter="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
                     ondragover="event.preventDefault(); event.stopPropagation(); this.classList.add('dragover')"
@@ -1800,14 +1840,14 @@
                     onclick="this.focus()"
                     onpaste="handleBugScreenshotPaste(event,${i})"
                     tabindex="0">
-                    📸 Drop or paste a screenshot to add a bug
+                    📸 Drop or paste a screenshot to start a bug
                     <div style="margin-top:5px;">
                       <label style="font-size:11px; color:var(--accent-light); cursor:pointer; text-decoration:underline;">
                         or choose a file
-                        <input type="file" accept="image/*" style="display:none" onchange="handleBugScreenshotFile(event,${i})">
+                        <input type="file" accept="image/*" multiple style="display:none" onchange="handleBugScreenshotFile(event,${i})">
                       </label>
                     </div>
-                  </div>
+                  </div>`}
                   <!-- Project-level bulk import -->
                   <div style="padding:10px 12px 4px;">
                     <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap;">
@@ -2552,41 +2592,64 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       }
     }
 
-    async function addBugFromScreenshot(pi, blob) {
+    async function addImageToDraft(pi, blob) {
       const result = await resizeImageBlob(blob);
       const date = new Date().toISOString().slice(0, 10);
-      // Add to the first bug-bash ceremony, or fallback to first ceremony
-      const ckeys = getCeremonies(projects[pi]).map(c => c.key);
-      const ckey = ckeys.includes('bug') ? 'bug' : ckeys[0];
-      if (!projects[pi].ceremonies[ckey].findings) projects[pi].ceremonies[ckey].findings = [];
-      const newBug = {
-        title: 'Screenshot bug — ' + date,
-        severity: 'medium',
-        type: 'prompt-fixable',
-        date,
-        author: localStorage.getItem('pe-note-author') || '',
-        notes: [], screenshots: [{ dataUrl: result.dataUrl, name: 'screenshot-' + date + '.png', date }],
-        links: [], summary: '', status: 'open',
-        _detailOpen: true,
-      };
-      projects[pi].ceremonies[ckey].findings.push(newBug);
-      // Ensure All Bugs and the ceremony are open
+      if (!projects[pi]._bugDraft) {
+        projects[pi]._bugDraft = { title: '', severity: 'medium', screenshots: [] };
+      }
+      projects[pi]._bugDraft.screenshots.push({ dataUrl: result.dataUrl, name: 'screenshot-' + date + '.png', date });
       projects[pi]._allBugsOpen = true;
-      projects[pi].ceremonies[ckey]._open = true;
-      save();
-      // After render, scroll to and focus the new bug's title
+      render();
       requestAnimationFrame(() => {
-        const fi = projects[pi].ceremonies[ckey].findings.length - 1;
-        const titleEl = document.querySelector(`[data-index="${pi}"] .finding-title-edit`);
-        if (titleEl) { titleEl.focus(); titleEl.select(); }
+        const el = document.getElementById(`bdraft-title-${pi}`);
+        if (el) el.focus();
       });
     }
 
-    async function handleBugScreenshotFile(event, pi) {
-      const file = event.target.files?.[0];
-      if (file && file.type.startsWith('image/')) {
-        await addBugFromScreenshot(pi, file);
+    function removeDraftScreenshot(pi, si) {
+      if (!projects[pi]._bugDraft) return;
+      projects[pi]._bugDraft.screenshots.splice(si, 1);
+      if (projects[pi]._bugDraft.screenshots.length === 0) {
+        delete projects[pi]._bugDraft;
       }
+      render();
+    }
+
+    function commitBugDraft(pi) {
+      const draft = projects[pi]._bugDraft;
+      if (!draft) return;
+      const titleEl = document.getElementById(`bdraft-title-${pi}`);
+      const sevEl = document.getElementById(`bdraft-sev-${pi}`);
+      const title = (titleEl ? titleEl.value.trim() : '') || ('Screenshot bug — ' + new Date().toISOString().slice(0,10));
+      const severity = sevEl ? sevEl.value : 'medium';
+      const ckeys = getCeremonies(projects[pi]).map(c => c.key);
+      const ckey = ckeys.includes('bug') ? 'bug' : ckeys[0];
+      const date = new Date().toISOString().slice(0, 10);
+      projects[pi].ceremonies[ckey].findings.push({
+        title, severity, type: 'prompt-fixable', date,
+        author: localStorage.getItem('pe-note-author') || '',
+        notes: [], screenshots: draft.screenshots,
+        links: [], summary: '', status: 'open', _detailOpen: true,
+      });
+      projects[pi].ceremonies[ckey]._open = true;
+      delete projects[pi]._bugDraft;
+      save();
+    }
+
+    function discardBugDraft(pi) {
+      delete projects[pi]._bugDraft;
+      render();
+    }
+
+    async function addFilesToDraft(event, pi) {
+      const files = Array.from(event.target.files || []).filter(f => f.type.startsWith('image/'));
+      for (const file of files) await addImageToDraft(pi, file);
+    }
+
+    async function handleBugScreenshotFile(event, pi) {
+      const files = Array.from(event.target.files || []).filter(f => f.type.startsWith('image/'));
+      for (const file of files) await addImageToDraft(pi, file);
     }
 
     async function handleBugScreenshotPaste(event, pi) {
@@ -2595,18 +2658,15 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       for (const item of items) {
         if (item.type.startsWith('image/')) {
           event.preventDefault();
-          await addBugFromScreenshot(pi, item.getAsFile());
+          await addImageToDraft(pi, item.getAsFile());
           return;
         }
       }
     }
 
     async function handleBugScreenshotDrop(event, pi) {
-      event.preventDefault();
-      const file = event.dataTransfer?.files?.[0];
-      if (file && file.type.startsWith('image/')) {
-        await addBugFromScreenshot(pi, file);
-      }
+      const files = Array.from(event.dataTransfer?.files || []).filter(f => f.type.startsWith('image/'));
+      for (const file of files) await addImageToDraft(pi, file);
     }
 
     function resizeImageBlob(blob) {
