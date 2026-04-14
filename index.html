@@ -3168,8 +3168,10 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
         document.getElementById('setup-repo').value = ghConfig.repo || '';
         document.getElementById('setup-path').value = ghConfig.path || 'shared-data.json';
         document.getElementById('disconnect-btn').style.display = 'inline-block';
+        document.getElementById('force-reload-btn').style.display = 'inline-block';
       } else {
         document.getElementById('disconnect-btn').style.display = 'none';
+        document.getElementById('force-reload-btn').style.display = 'none';
       }
       document.getElementById('setup-status').textContent = '';
     }
