@@ -1890,6 +1890,7 @@
                     </div>
                     <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:8px;">
                       <input id="bdraft-title-${i}" class="bug-draft-input" placeholder="Bug title…" value="${esc(p._bugDraft.title||'')}">
+                      <input id="bdraft-author-${i}" class="bug-draft-input" placeholder="Your name…" value="${esc(p._bugDraft.author||localStorage.getItem('pe-note-author')||'')}" style="max-width:130px;">
                       <select id="bdraft-sev-${i}" class="bug-status-select bug-severity-${p._bugDraft.severity||'medium'}" style="font-size:12px;">
                         <option value="low" ${p._bugDraft.severity==='low'?'selected':''}>Low</option>
                         <option value="medium" ${(!p._bugDraft.severity||p._bugDraft.severity==='medium')?'selected':''}>Medium</option>
@@ -2697,14 +2698,17 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       if (!draft) return;
       const titleEl = document.getElementById(`bdraft-title-${pi}`);
       const sevEl = document.getElementById(`bdraft-sev-${pi}`);
+      const authorEl = document.getElementById(`bdraft-author-${pi}`);
       const title = (titleEl ? titleEl.value.trim() : '') || ('Screenshot bug — ' + new Date().toISOString().slice(0,10));
       const severity = sevEl ? sevEl.value : 'medium';
+      const author = authorEl ? authorEl.value.trim() : (localStorage.getItem('pe-note-author') || '');
+      if (author) localStorage.setItem('pe-note-author', author);
       const ckeys = getCeremonies(projects[pi]).map(c => c.key);
       const ckey = ckeys.includes('bug') ? 'bug' : ckeys[0];
       const date = new Date().toISOString().slice(0, 10);
       projects[pi].ceremonies[ckey].findings.push({
         title, severity, type: 'prompt-fixable', date,
-        author: localStorage.getItem('pe-note-author') || '',
+        author,
         notes: [], screenshots: draft.screenshots,
         links: [], summary: '', status: 'open', _detailOpen: true,
       });
