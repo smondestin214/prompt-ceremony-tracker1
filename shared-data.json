@@ -115,7 +115,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Mixing first-person and second-person pronouns ",
+            "title": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)",
             "details": "",
             "date": "2026-04-14",
             "author": "",
@@ -133,8 +133,7 @@
                 "name": "pasted-2026-04-14.png",
                 "date": "2026-04-14"
               }
-            ],
-            "summary": "- Second person — model uses \"your\" instead of \"my\" (customer speaks in first person)"
+            ]
           },
           {
             "severity": "medium",
@@ -144,7 +143,7 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "open",
+            "status": "in-testing",
             "notes": [
               {
                 "text": "changes made in prompt",
