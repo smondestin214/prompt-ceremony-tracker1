@@ -1249,6 +1249,7 @@
     let ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
     let ghSha = null; // tracks the file SHA for GitHub API updates
     let lastWriteTime = 0; // timestamp of last successful write — skip pull for a few seconds after
+    let localDirty = false; // true any time user makes a change that hasn't been confirmed written to remote
 
     function migrateProjects(list) {
       const NAME = '[A-Z][a-z]+(?:[-\\s][A-Z][a-z\\-]+)+';
@@ -1534,12 +1535,13 @@
         try {
           const clean = projects.map(stripUIState);
           if (backendMode === 'github') {
-            await ghRead(); // refresh stale SHA
             await ghWrite(clean);
           } else {
             await serverWrite(clean);
           }
           pendingWrite = false;
+          localDirty = false;
+          lastWriteTime = Date.now();
           updateSyncBadge('connected');
         } catch { updateSyncBadge('disconnected'); }
         return;
@@ -1554,6 +1556,12 @@
           serverData = await res.json();
         }
 
+        // Never pull from remote if local has unsaved changes
+        if (localDirty) {
+          pendingWrite = true; // ensure we'll push on next poll
+          updateSyncBadge('connected');
+          return;
+        }
         // Skip overwrite for 90s after a successful write — GitHub CDN can serve stale data
         if (Date.now() - lastWriteTime < 90000) {
           updateSyncBadge('connected');
@@ -1562,17 +1570,6 @@
         const serverJson = JSON.stringify(serverData);
         const localJson = JSON.stringify(projects.map(stripUIState));
         if (serverJson === localJson) {
-          updateSyncBadge('connected');
-          return;
-        }
-        // Safety check: if remote has fewer total bugs than local, it's stale — don't overwrite
-        const countBugs = data => (data || []).reduce((n, p) =>
-          n + Object.values(p.ceremonies || {}).reduce((m, cd) => m + (cd.findings || []).length, 0), 0);
-        const remoteBugs = countBugs(serverData);
-        const localBugs = countBugs(projects);
-        if (remoteBugs < localBugs) {
-          // Remote is behind local — push local instead of pulling
-          pendingWrite = true;
           updateSyncBadge('connected');
           return;
         }
@@ -1616,6 +1613,7 @@
       // Always save to localStorage as backup
       localStorage.setItem('pe-ceremonies', JSON.stringify(projects));
 
+      localDirty = true;
       if (backendMode !== 'local') {
         saving = true;
         pendingWrite = true;
@@ -1627,6 +1625,7 @@
             await serverWrite(clean);
           }
           pendingWrite = false;
+          localDirty = false;
           lastWriteTime = Date.now();
           updateSyncBadge('connected');
         } catch (e) {
@@ -2567,6 +2566,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
     function saveQuiet() {
       // Persist data without re-rendering (safe to call while user is typing)
       localStorage.setItem('pe-ceremonies', JSON.stringify(projects));
+      localDirty = true;
       if (backendMode !== 'local') {
         pendingWrite = true;
         if (_quietSaveTimer) clearTimeout(_quietSaveTimer);
@@ -2576,6 +2576,8 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
             if (backendMode === 'github') await ghWrite(clean);
             else await serverWrite(clean);
             pendingWrite = false;
+            localDirty = false;
+            lastWriteTime = Date.now();
             updateSyncBadge('connected');
           } catch (e) {
             updateSyncBadge('disconnected');
