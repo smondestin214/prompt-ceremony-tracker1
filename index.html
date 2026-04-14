@@ -6,14 +6,16 @@
   <title>Prompt Tracker</title>
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface-hover: #222633;
-      --border: #2a2e3d;
-      --text: #e4e4e7;
-      --text-muted: #8b8d97;
+      --bg: #0c0e16;
+      --surface: #13162080;
+      --surface-solid: #131620;
+      --surface-hover: #1e2235;
+      --border: #252a3e;
+      --text: #eaeaed;
+      --text-muted: #8a8d9e;
       --accent: #7c5cfc;
-      --accent-light: #9b82fc;
+      --accent-light: #a48fff;
+      --shadow-card: 0 2px 12px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
 
       --stage-strategy: #06b6d4;
       --stage-postlaunch: #a855f7;
@@ -35,14 +37,16 @@
     }
 
     html.light {
-      --bg: #f2f4f8;
-      --surface: #ffffff;
-      --surface-hover: #e8ebf2;
-      --border: #cdd0de;
+      --bg: #f0f2f8;
+      --surface: #ffffffcc;
+      --surface-solid: #ffffff;
+      --surface-hover: #e6e9f4;
+      --border: #cdd2e8;
       --text: #1c1f2e;
       --text-muted: #6b6f82;
       --accent: #6d4ef0;
-      --accent-light: #8b72f5;
+      --accent-light: #7c5cfc;
+      --shadow-card: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
 
       --status-not-started: #e4e6ef;
       --status-in-progress: #dbeafe;
@@ -58,67 +62,78 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
+      background-image: radial-gradient(ellipse at 20% 0%, rgba(124,92,252,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 100%, rgba(16,185,129,0.04) 0%, transparent 50%);
       color: var(--text);
       min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.55;
     }
 
     .app {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 32px 24px;
+      padding: 40px 28px;
     }
 
-    header { margin-bottom: 36px; }
+    header { margin-bottom: 40px; }
 
     header h1 {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 32px;
+      font-weight: 800;
       margin-bottom: 6px;
+      letter-spacing: -0.5px;
       background: linear-gradient(135deg, var(--accent-light), var(--stage-eval));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    header p { color: var(--text-muted); font-size: 14px; }
+    header p { color: var(--text-muted); font-size: 15px; }
 
     .controls {
       display: flex;
       gap: 12px;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
       align-items: center;
     }
 
     .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
+      padding: 11px 20px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--surface-hover);
       color: var(--text);
       font-size: 14px;
       cursor: pointer;
       transition: all 0.15s;
       font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
-    .btn:hover { background: var(--surface-hover); }
+    .btn:hover { background: var(--surface-hover); border-color: var(--accent); }
 
-    .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .btn-primary:hover { background: var(--accent-light); }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(124,92,252,0.3);
+    }
+    .btn-primary:hover { background: var(--accent-light); border-color: var(--accent-light); box-shadow: 0 2px 12px rgba(124,92,252,0.45); }
 
-    .btn-sm { padding: 5px 10px; font-size: 12px; }
-    .btn-icon { padding: 6px 10px; font-size: 16px; line-height: 1; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+    .btn-icon { padding: 7px 11px; font-size: 16px; line-height: 1; border-radius: 10px; }
     .btn-danger { color: #ef4444; }
-    .btn-danger:hover { background: #2a1a1a; }
+    .btn-danger:hover { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
 
     .btn-ghost {
       background: transparent;
       border-color: transparent;
       color: var(--text-muted);
       padding: 4px 8px;
-      font-size: 12px;
+      font-size: 13px;
     }
     .btn-ghost:hover { color: var(--text); background: var(--surface-hover); }
 
@@ -126,32 +141,34 @@
     .pipeline-flow {
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 16px 20px;
+      gap: 6px;
+      padding: 18px 22px;
       background: var(--surface);
-      border-radius: 12px;
+      border-radius: 16px;
       border: 1px solid var(--border);
       overflow-x: auto;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(8px);
     }
 
     .pipeline-stage {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 9px 18px;
+      border-radius: 24px;
       font-size: 13px;
       font-weight: 600;
       white-space: nowrap;
       cursor: pointer;
-      transition: filter 0.15s, transform 0.1s;
+      transition: filter 0.15s, transform 0.1s, box-shadow 0.15s;
     }
-    .pipeline-stage:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .pipeline-stage:hover { filter: brightness(1.15); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
     .pipeline-stage.active-info { outline: 2px solid currentColor; outline-offset: 2px; }
 
     .pipeline-wrapper {
       position: relative;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
     }
     .stage-popover {
       position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 200;
@@ -198,16 +215,18 @@
     .stage-eval .num { background: var(--stage-eval); }
 
     /* Project cards */
-    .projects { display: flex; flex-direction: column; gap: 16px; }
+    .projects { display: flex; flex-direction: column; gap: 20px; }
 
     .project-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 18px;
       overflow: hidden;
-      transition: border-color 0.15s;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(8px);
     }
-    .project-card:hover { border-color: var(--card-hover-border); }
+    .project-card:hover { border-color: var(--card-hover-border); box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3); }
     .project-card.drag-over { outline: 2px dashed var(--accent); outline-offset: 2px; opacity: 0.85; }
     .project-card.dragging { opacity: 0.4; }
     .drag-handle {
@@ -218,7 +237,7 @@
 
     .project-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px; cursor: pointer; user-select: none;
+      padding: 20px 24px; cursor: pointer; user-select: none;
       background: var(--project-header-bg);
       border-bottom: 2px solid var(--accent);
     }
@@ -231,16 +250,16 @@
     }
 
     .project-name-input {
-      font-size: 17px; font-weight: 700; background: transparent;
+      font-size: 19px; font-weight: 700; background: transparent;
       border: none; border-bottom: 1px solid transparent; color: var(--text);
-      padding: 0 2px; width: 100%;
+      padding: 0 2px; width: 100%; letter-spacing: -0.2px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .project-name-input:hover, .project-name-input:focus {
       border-bottom-color: var(--accent); outline: none;
     }
     .project-owner-input {
-      font-size: 12px; background: transparent; border: none;
+      font-size: 13px; background: transparent; border: none;
       border-bottom: 1px solid transparent; color: var(--text-muted);
       padding: 0 2px; max-width: 160px;
     }
@@ -248,7 +267,7 @@
       border-bottom-color: var(--accent); outline: none; color: var(--text);
     }
 
-    .project-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .project-meta { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
 
     .bug-filter-bar {
       display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
@@ -328,30 +347,30 @@
     }
     .project-card.expanded .expand-icon { transform: rotate(180deg); }
 
-    .project-body { display: none; padding: 0 20px 20px; }
+    .project-body { display: none; padding: 0 24px 24px; }
     .project-card.expanded .project-body { display: block; }
 
     /* Ceremony rows */
-    .ceremonies { display: flex; flex-direction: column; gap: 4px; }
+    .ceremonies { display: flex; flex-direction: column; gap: 6px; }
 
     .ceremony-section {
-      border-radius: 8px;
+      border-radius: 12px;
       border: 1px solid transparent;
       transition: all 0.15s;
     }
-    .ceremony-section:hover { border-color: var(--border); }
-    .ceremony-section.open { border-color: var(--border); background: rgba(255,255,255,0.01); }
+    .ceremony-section:hover { border-color: var(--border); background: rgba(255,255,255,0.015); }
+    .ceremony-section.open { border-color: var(--border); background: rgba(255,255,255,0.02); }
 
     .ceremony-row {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 12px 16px; cursor: pointer;
-      background: rgba(255,255,255,0.02); border-radius: 8px;
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 18px; cursor: pointer;
+      border-radius: 12px;
     }
 
     .ceremony-badge {
-      width: 36px; height: 36px; border-radius: 8px;
+      width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0; margin-top: 2px;
+      font-size: 18px; flex-shrink: 0; margin-top: 2px;
     }
     .ceremony-badge.crit { background: rgba(245,158,11,0.15); }
     .ceremony-badge.swarm { background: rgba(59,130,246,0.15); }
@@ -362,8 +381,8 @@
     .ceremony-badge.postlaunch { background: rgba(168,85,247,0.15); }
 
     .ceremony-info { flex: 1; min-width: 0; }
-    .ceremony-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .ceremony-meta { font-weight: 400; font-size: 11px; color: var(--text-muted); margin-left: 8px; }
+    .ceremony-name { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+    .ceremony-meta { font-weight: 400; font-size: 12px; color: var(--text-muted); margin-left: 8px; }
     .ceremony-controls {
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px;
     }
@@ -371,8 +390,8 @@
     .ceremony-fields { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
     .status-select {
-      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 12px; cursor: pointer;
+      padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 13px; cursor: pointer;
       appearance: none; -webkit-appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b8d97'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
@@ -381,14 +400,14 @@
     .status-select.in-progress { background-color: var(--status-in-progress); border-color: var(--status-inprogress-border); }
 
     .date-input {
-      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 12px; width: 130px;
+      padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 13px; width: 134px;
     }
     .date-input::-webkit-calendar-picker-indicator { filter: var(--calendar-filter); }
 
     .notes-input {
-      padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 12px; width: 180px;
+      padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 13px; width: 185px;
     }
 
     input:focus, select:focus { outline: none; border-color: var(--accent); }
@@ -396,7 +415,7 @@
     /* Ceremony detail panel (checklist + findings) */
     .ceremony-detail {
       display: none;
-      padding: 12px 16px 16px 60px;
+      padding: 12px 18px 18px 72px;
     }
     .ceremony-section.open .ceremony-detail { display: block; }
 
@@ -404,7 +423,7 @@
       display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border);
     }
     .detail-tab {
-      padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer;
+      padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
       color: var(--text-muted); border-bottom: 2px solid transparent;
       transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none;
     }
@@ -418,7 +437,7 @@
     .checklist { list-style: none; }
     .checklist li {
       display: flex; align-items: flex-start; gap: 10px;
-      padding: 6px 0; font-size: 13px; color: var(--text-muted);
+      padding: 7px 0; font-size: 14px; color: var(--text-muted);
     }
     .checklist li.checked { color: var(--text-muted); opacity: 0.7; }
     .checklist-progress {
@@ -474,8 +493,8 @@
     .findings-list { display: flex; flex-direction: column; gap: 8px; }
 
     .finding-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 10px 12px; background: var(--bg); border-radius: 8px;
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; background: var(--bg); border-radius: 10px;
       border: 1px solid var(--border);
     }
 
@@ -516,17 +535,17 @@
     .finding-item.status-wontfix { opacity: 0.45; }
 
     .finding-content { flex: 1; min-width: 0; }
-    .finding-text { font-size: 13px; margin-bottom: 3px; }
-    .finding-meta { font-size: 11px; color: var(--text-muted); }
+    .finding-text { font-size: 14px; margin-bottom: 3px; }
+    .finding-meta { font-size: 12px; color: var(--text-muted); }
 
     .add-finding-form {
-      display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+      display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
     }
     .add-finding-form select,
     .add-finding-form input,
     .add-finding-form textarea {
-      padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
-      background: var(--bg); color: var(--text); font-size: 12px;
+      padding: 8px 11px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); font-size: 13px;
     }
     .add-finding-form input { flex: 1; min-width: 200px; }
     .add-finding-form textarea {
@@ -536,9 +555,9 @@
     .add-finding-form select:focus,
     .add-finding-form input:focus,
     .add-finding-form textarea:focus { outline: none; border-color: var(--accent); }
-    .finding-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .finding-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
     .finding-title-edit {
-      font-size: 13px; font-weight: 600; margin-bottom: 3px;
+      font-size: 14px; font-weight: 600; margin-bottom: 3px;
       width: 100%; background: transparent; border: none; color: var(--text);
       font-family: inherit; resize: none; padding: 0; outline: none;
       overflow: hidden; field-sizing: content;
@@ -712,31 +731,33 @@
     .bug-note-author-input:focus { outline: none; border-color: var(--accent); }
 
     .no-findings {
-      text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;
+      text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px;
     }
 
     /* Modal */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6); z-index: 100;
+      background: rgba(0,0,0,0.65); z-index: 100;
       align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
     }
     .modal-overlay.active { display: flex; }
 
     .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 28px; width: 420px; max-width: 90vw;
+      background: var(--surface-solid); border: 1px solid var(--border);
+      border-radius: 18px; padding: 32px; width: 440px; max-width: 92vw;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
     }
-    .modal h2 { font-size: 18px; margin-bottom: 20px; }
+    .modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.2px; }
 
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 18px; }
     .form-group label {
-      display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;
+      display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 7px;
     }
     .form-group input, .form-group select {
-      width: 100%; padding: 10px 14px; border-radius: 8px;
+      width: 100%; padding: 11px 14px; border-radius: 10px;
       border: 1px solid var(--border); background: var(--bg);
-      color: var(--text); font-size: 14px;
+      color: var(--text); font-size: 15px;
     }
 
     .modal-actions {
@@ -744,17 +765,18 @@
     }
 
     /* Empty state */
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-    .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+    .empty-state { text-align: center; padding: 72px 20px; color: var(--text-muted); }
+    .empty-state h3 { font-size: 20px; margin-bottom: 10px; font-weight: 700; color: var(--text); }
 
     /* Stats */
-    .stats-bar { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stats-bar { display: flex; gap: 14px; margin-bottom: 32px; flex-wrap: wrap; }
     .stat-card {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px 20px; flex: 1; min-width: 140px;
+      border-radius: 14px; padding: 18px 22px; flex: 1; min-width: 140px;
+      box-shadow: var(--shadow-card); backdrop-filter: blur(8px);
     }
-    .stat-card .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-    .stat-card .value { font-size: 24px; font-weight: 700; }
+    .stat-card .label { font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-card .value { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
 
     /* Prompt Versions */
     .prompt-versions {
@@ -766,7 +788,7 @@
       margin-bottom: 12px; cursor: pointer;
     }
     .versions-header h3 {
-      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+      font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;
     }
     .versions-header .version-count {
       font-size: 11px; font-weight: 400; color: var(--text-muted);
@@ -813,7 +835,7 @@
     .version-author { font-size: 11px; color: var(--text-muted); }
 
     .version-change-summary {
-      font-size: 13px; color: var(--text); margin-bottom: 8px; font-weight: 500;
+      font-size: 14px; color: var(--text); margin-bottom: 8px; font-weight: 500;
     }
     .version-change-summary ul {
       margin: 4px 0 0 16px; padding: 0; font-weight: 400;
@@ -933,8 +955,8 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <button id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle light / dark mode"
-            style="background:var(--surface); border:1px solid var(--border); color:var(--text-muted); border-radius:8px; padding:6px 10px; font-size:16px; line-height:1; cursor:pointer; transition:all 0.15s;">🌙</button>
-          <div id="sync-badge" style="font-size:12px; color:var(--text-muted); padding:6px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; white-space:nowrap;" onclick="openSetup()" title="Click to configure team sync">
+            style="background:var(--surface-hover); border:1px solid var(--border); color:var(--text-muted); border-radius:10px; padding:8px 12px; font-size:16px; line-height:1; cursor:pointer; transition:all 0.15s;">🌙</button>
+          <div id="sync-badge" style="font-size:13px; color:var(--text-muted); padding:8px 14px; background:var(--surface-hover); border:1px solid var(--border); border-radius:10px; cursor:pointer; white-space:nowrap;" onclick="openSetup()" title="Click to configure team sync">
             <span style="color:#f59e0b;">&#9679;</span> Connecting...
           </div>
         </div>
