@@ -1056,6 +1056,7 @@
       <div id="setup-status" style="font-size:12px; margin-top:8px; min-height:20px;"></div>
       <div class="modal-actions">
         <button class="btn btn-danger btn-sm" onclick="disconnectGitHub()" id="disconnect-btn" style="margin-right:auto; display:none;">Disconnect</button>
+        <button class="btn btn-sm" onclick="forceReloadFromGitHub()" id="force-reload-btn" style="margin-right:auto; display:none;">↓ Force reload from GitHub</button>
         <button class="btn" onclick="closeSetup()">Cancel</button>
         <button class="btn btn-primary" onclick="saveSetup()">Connect</button>
       </div>
@@ -1505,12 +1506,16 @@
 
     function updateSyncBadge(state) {
       const badge = document.getElementById('sync-badge');
+      const reloadBtn = document.getElementById('force-reload-btn');
+      const disconnectBtn = document.getElementById('disconnect-btn');
       if (!badge) return;
       const modeLabel = backendMode === 'github' ? 'GitHub' : backendMode === 'server' ? 'Server' : 'Local';
       if (state === 'connected') {
         badge.innerHTML = `<span style="color:#10b981;">&#9679;</span> ${modeLabel} synced`;
         badge.title = `Connected to ${modeLabel} — changes sync automatically`;
         badge.onclick = openSetup;
+        if (reloadBtn) reloadBtn.style.display = '';
+        if (disconnectBtn) disconnectBtn.style.display = '';
       } else if (state === 'disconnected') {
         badge.innerHTML = `<span style="color:#ef4444;">&#9679;</span> ${modeLabel} disconnected`;
         badge.title = 'Lost connection — retrying...';
@@ -3223,6 +3228,21 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       } catch (e) {
         statusEl.innerHTML = `<span style="color:#ef4444;">Connection failed: ${e.message}. Check your token and repo name.</span>`;
         ghConfig = JSON.parse(localStorage.getItem('pe-gh-config') || 'null');
+      }
+    }
+
+    async function forceReloadFromGitHub() {
+      const statusEl = document.getElementById('setup-status');
+      if (statusEl) statusEl.innerHTML = '<span style="color:var(--text-muted);">Reloading from GitHub…</span>';
+      try {
+        const remote = await ghRead();
+        projects = migrateProjects(remote);
+        localStorage.setItem('pe-ceremonies', JSON.stringify(projects));
+        updateSyncBadge('connected');
+        closeSetup();
+        render();
+      } catch(e) {
+        if (statusEl) statusEl.innerHTML = `<span style="color:#ef4444;">Failed: ${e.message}</span>`;
       }
     }
 
