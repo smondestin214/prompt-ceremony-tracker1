@@ -139,14 +139,13 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "- Category cold start — typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs",
+            "title": "- Category cold start — typing a category returns generic or unhelpful suggestions instead of specific jobs",
             "details": "",
             "date": "2026-04-14",
             "author": "",
             "status": "open",
             "notes": [],
-            "screenshots": [],
-            "summary": "typing a category like \"house cleaner\" or \"handyman\" returns generic or unhelpful suggestions instead of specific jobs"
+            "screenshots": []
           },
           {
             "severity": "medium",
