@@ -1507,8 +1507,8 @@
           serverData = await res.json();
         }
 
-        // Skip overwrite for 15s after a successful write — GitHub CDN may serve stale data
-        if (Date.now() - lastWriteTime < 15000) {
+        // Skip overwrite for 75s after a successful write — GitHub CDN can serve stale data for 60-90s
+        if (Date.now() - lastWriteTime < 75000) {
           updateSyncBadge('connected');
           return;
         }
@@ -2299,6 +2299,7 @@
       textEl.value = '';
       if (resultEl) { resultEl.textContent = `Added ${bugs.length} bug${bugs.length !== 1 ? 's' : ''}`; resultEl.style.color = 'var(--stage-eval)'; setTimeout(() => { resultEl.textContent = ''; }, 3000); }
       projects[pi]._allBugsOpen = true;
+      projects[pi]._bugFilter = ''; // clear any active filter so new bugs are visible
       save();
     }
 
@@ -2662,6 +2663,8 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
         links: [], summary: '', status: 'open', _detailOpen: true,
       });
       projects[pi].ceremonies[ckey]._open = true;
+      projects[pi]._allBugsOpen = true;
+      projects[pi]._bugFilter = ''; // clear filter so new bug is visible
       delete projects[pi]._bugDraft;
       save();
     }
