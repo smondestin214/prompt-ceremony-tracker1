@@ -2012,7 +2012,10 @@
                                 ${f._detailOpen ? '▼ Hide details' : '▶ Details' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length > 0 ? ' (' + ((f.notes||[]).length + (f.screenshots||[]).length + (f.links||[]).length) + ')' : '')}
                               </button>
                             </div>
-                            <button class="bug-delete-btn" onclick="if(confirm('Delete this bug?'))deleteFinding(${i},'${ckey}',${fi})" title="Delete bug">&times;</button>
+                            <div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">
+                              <button id="buglink-btn-${i}-${ckey}-${fi}" class="bug-link-copy" onclick="copyBugLink(${i},'${ckey}',${fi})" title="Copy shareable link to this bug">🔗 Copy link</button>
+                              <button class="bug-delete-btn" onclick="if(confirm('Delete this bug?'))deleteFinding(${i},'${ckey}',${fi})" title="Delete bug" style="align-self:flex-end;">&times;</button>
+                            </div>
                           </div>
                           ${f._detailOpen ? renderBugDetail(i, ckey, fi, f) : ''}
                         </div>`).join('')}
@@ -3452,6 +3455,44 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       return div.innerHTML;
     }
 
+    function copyBugLink(pi, ckey, fi) {
+      const p = projects[pi];
+      const hash = '#bug=' + encodeURIComponent(btoa(JSON.stringify({ p: p.name, c: ckey, f: fi })));
+      const url = location.href.split('#')[0] + hash;
+      navigator.clipboard?.writeText(url).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+      // Brief visual feedback
+      const btn = document.getElementById(`buglink-btn-${pi}-${ckey}-${fi}`);
+      if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = '🔗 Copy link'; }, 2000); }
+    }
+
+    function handleDeepLink() {
+      const hash = location.hash;
+      if (!hash.startsWith('#bug=')) return;
+      try {
+        const { p: pname, c: ckey, f: fi } = JSON.parse(atob(decodeURIComponent(hash.slice(5))));
+        const pi = projects.findIndex(p => p.name === pname);
+        if (pi < 0) return;
+        projects[pi].expanded = true;
+        projects[pi]._allBugsOpen = true;
+        if (projects[pi].ceremonies[ckey]) {
+          projects[pi].ceremonies[ckey]._open = true;
+          if (projects[pi].ceremonies[ckey].findings[fi]) {
+            projects[pi].ceremonies[ckey].findings[fi]._detailOpen = true;
+          }
+        }
+        render();
+        requestAnimationFrame(() => {
+          const el = document.getElementById(`buglink-btn-${pi}-${ckey}-${fi}`);
+          if (el) el.closest('.finding-wrapper')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      } catch {}
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.getElementById('modal-overlay').classList.contains('active')) {
         saveProject();
@@ -3459,7 +3500,7 @@ Write a short, specific prompt instruction (2–5 sentences or bullets) that cou
       if (e.key === 'Escape') { closeModal(); closeTeamModal(); }
     });
 
-    init();
+    init().then(handleDeepLink);
   </script>
 </body>
 </html>
