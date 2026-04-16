@@ -495,7 +495,7 @@
             "details": "",
             "date": "2026-04-08",
             "author": "Valerie Peppers",
-            "status": "in-progress",
+            "status": "in-testing",
             "notes": [
               {
                 "text": "\"After confirming address, DQ still asks for property type — she expected it known/pre-selected. Address context not threaded into next DQ prompt.\"",
