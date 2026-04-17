@@ -245,7 +245,14 @@
             "details": "",
             "date": "2026-04-17",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "notes": [
+              {
+                "text": "need more feedback on what the gaps are (shree has some ideas); need more feedback from more people.",
+                "author": "sarah m",
+                "date": "2026-04-17"
+              }
+            ]
           }
         ],
         "signoffState": {
