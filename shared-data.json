@@ -180,7 +180,7 @@
             "details": "",
             "date": "2026-04-14",
             "author": "",
-            "status": "in-testing",
+            "status": "fixed",
             "notes": [
               {
                 "text": "should we build in logic to stop suggestion at a certain point. too many suggestions.",
