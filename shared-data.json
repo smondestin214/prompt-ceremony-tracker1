@@ -236,6 +236,16 @@
                 "date": "2026-04-14"
               }
             ]
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "how to improve the relevancy vs. the grammar. data-driven decisions needed here.",
+            "details": "",
+            "date": "2026-04-17",
+            "author": "",
+            "status": "open"
           }
         ],
         "signoffState": {
