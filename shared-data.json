@@ -312,7 +312,7 @@
             "date": "2026-04-20",
             "author": "",
             "status": "open",
-            "summary": "Suggestions don't account for what information the customer has already provided.\n"
+            "summary": "Suggestions don't account for what information the customer has already provided."
           },
           {
             "severity": "medium",
