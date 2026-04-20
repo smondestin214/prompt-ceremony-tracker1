@@ -257,16 +257,6 @@
           },
           {
             "severity": "medium",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "Prompt changes",
-            "details": "",
-            "date": "2026-04-20",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "medium",
             "type": "engineering",
             "typeCustom": "",
             "title": "Hardcoded suggestion length too long",
