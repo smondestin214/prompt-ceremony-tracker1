@@ -293,7 +293,8 @@
             "details": "",
             "date": "2026-04-20",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "summary": " Right now suggestions don't necessarily narrow down as the customer adds detail"
           },
           {
             "severity": "medium",
