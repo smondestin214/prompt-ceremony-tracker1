@@ -329,7 +329,8 @@
             "details": "",
             "date": "2026-04-20",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "summary": "The current model is a general-purpose AI being guided by prompt instructions every time."
           },
           {
             "severity": "medium",
