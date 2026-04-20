@@ -273,7 +273,8 @@
             "details": "",
             "date": "2026-04-20",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "summary": " — suggestions in the prefix map that are too long get cut off mid-sentence on screen. "
           },
           {
             "severity": "medium",
