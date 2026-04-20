@@ -330,7 +330,14 @@
             "date": "2026-04-20",
             "author": "",
             "status": "open",
-            "summary": "The current model is a general-purpose AI being guided by prompt instructions every time."
+            "summary": "The current model is a general-purpose AI being guided by prompt instructions every time.",
+            "notes": [
+              {
+                "text": "Fine-tuning would retrain it on Thumbtack-specific examples so it natively understands the task — making suggestions more consistent and less reliant on a long prompt.\nThe hardcoded prefix map is a good starting point for the training dataset. Prashanth flagged OpenAI's SFT (supervised fine-tuning) as the most practical path since the team is already on OpenAI infrastructure. Not a pre-launch fix — needs dataset prep, training runs, evaluation, and likely data science support. Best pursued after launch when real user query data is available to train on.",
+                "author": "sarah m",
+                "date": "2026-04-20"
+              }
+            ]
           },
           {
             "severity": "medium",
