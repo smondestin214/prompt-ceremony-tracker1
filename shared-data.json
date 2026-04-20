@@ -311,7 +311,8 @@
             "details": "",
             "date": "2026-04-20",
             "author": "",
-            "status": "open"
+            "status": "open",
+            "summary": "Suggestions don't account for what information the customer has already provided.\n"
           },
           {
             "severity": "medium",
