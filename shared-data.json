@@ -239,24 +239,6 @@
           },
           {
             "severity": "medium",
-            "type": "prompt-fixable",
-            "typeCustom": "",
-            "title": "how to improve the relevancy vs. the grammar. data-driven decisions needed here.",
-            "details": "",
-            "date": "2026-04-17",
-            "author": "",
-            "status": "open",
-            "notes": [
-              {
-                "text": "need more feedback on what the gaps are (shree has some ideas); need more feedback from more people.",
-                "author": "sarah m",
-                "date": "2026-04-17"
-              }
-            ],
-            "screenshots": []
-          },
-          {
-            "severity": "medium",
             "type": "engineering",
             "typeCustom": "",
             "title": "Hardcoded suggestion length too long",
