@@ -317,16 +317,6 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Not prompt changes — engineering",
-            "details": "",
-            "date": "2026-04-20",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "medium",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "Fine-tuning — Prashanth and Shree both flagged OpenAI SFT as the quickest path to better quality. The hardcoded dataset is a good starting point for training data. Not a prompt change but worth tracking as a parallel workstream.",
             "details": "",
             "date": "2026-04-20",
