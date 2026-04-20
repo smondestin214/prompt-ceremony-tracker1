@@ -343,16 +343,6 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Try GPT-5.4 / 5.4-nano again — Prashanth noted it wasn't much better before but wants to retry with the current prompt. Not a prompt change.",
-            "details": "",
-            "date": "2026-04-20",
-            "author": "",
-            "status": "open"
-          },
-          {
-            "severity": "medium",
-            "type": "prompt-fixable",
-            "typeCustom": "",
             "title": "Hardcoded entry trimming — stripping or capping long entries in the prefix map is a script/data task, not a prompt task.",
             "details": "",
             "date": "2026-04-20",
