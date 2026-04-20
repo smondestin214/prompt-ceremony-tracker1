@@ -307,7 +307,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "What / where / when framing — Shree's suggestion: check whether the query has answered (1) what the job is, (2) where it is, (3) when it's needed. If what and where are present, suggest timing. This could be added as an adaptive rule in the prompt.",
+            "title": "What / where / when framing ",
             "details": "",
             "date": "2026-04-20",
             "author": "",
