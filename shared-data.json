@@ -312,7 +312,14 @@
             "date": "2026-04-20",
             "author": "",
             "status": "open",
-            "summary": "Suggestions don't account for what information the customer has already provided."
+            "summary": "Suggestions don't account for what information the customer has already provided.",
+            "notes": [
+              {
+                "text": "Shree flagged that if the query already answers what and where, the suggestion should prompt for when (urgency, timing). Worth exploring as a prompt-level rule — check what's already in the query before deciding what to suggest next.",
+                "author": "sarah m",
+                "date": "2026-04-20"
+              }
+            ]
           },
           {
             "severity": "medium",
