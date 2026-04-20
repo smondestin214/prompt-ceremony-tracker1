@@ -269,7 +269,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Hardcoded suggestion length — suggestions in the prefix map that are too long get cut off mid-sentence on screen. Need to strip any hardcoded entry longer than a set character limit, or use an LLM to trim them intelligently. Confirm the character cap with Prashanth.",
+            "title": "Hardcoded suggestion length",
             "details": "",
             "date": "2026-04-20",
             "author": "",
