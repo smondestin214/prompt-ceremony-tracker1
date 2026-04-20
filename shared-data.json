@@ -274,7 +274,14 @@
             "date": "2026-04-20",
             "author": "",
             "status": "open",
-            "summary": "suggestions in the prefix map that are too long get cut off mid-sentence on screen. "
+            "summary": "suggestions in the prefix map that are too long get cut off mid-sentence on screen. ",
+            "notes": [
+              {
+                "text": "Need to strip any hardcoded entry longer than a set character limit, or use an LLM to trim them intelligently. Confirm the character cap with Prashanth.",
+                "author": "sarah m",
+                "date": "2026-04-20"
+              }
+            ]
           },
           {
             "severity": "medium",
