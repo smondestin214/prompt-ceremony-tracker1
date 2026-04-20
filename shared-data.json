@@ -323,7 +323,7 @@
           },
           {
             "severity": "medium",
-            "type": "prompt-fixable",
+            "type": "engineering",
             "typeCustom": "",
             "title": "Fine-tuning ",
             "details": "",
