@@ -252,7 +252,88 @@
                 "author": "sarah m",
                 "date": "2026-04-17"
               }
-            ]
+            ],
+            "screenshots": []
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Prompt changes",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Hardcoded suggestion length — suggestions in the prefix map that are too long get cut off mid-sentence on screen. Need to strip any hardcoded entry longer than a set character limit, or use an LLM to trim them intelligently. Confirm the character cap with Prashanth.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Progressive refinement — suggestions should get more specific as the query gets longer. Right now suggestions don't necessarily narrow down as the customer adds detail (e.g. \"I need to fix a leak\" → \"I need to fix a leak in the bathroom\"). Worth adding guidance to the prompt that later-stage queries should suggest finer details, not restart with broad options.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "What / where / when framing — Shree's suggestion: check whether the query has answered (1) what the job is, (2) where it is, (3) when it's needed. If what and where are present, suggest timing. This could be added as an adaptive rule in the prompt.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Not prompt changes — engineering",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Fine-tuning — Prashanth and Shree both flagged OpenAI SFT as the quickest path to better quality. The hardcoded dataset is a good starting point for training data. Not a prompt change but worth tracking as a parallel workstream.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Try GPT-5.4 / 5.4-nano again — Prashanth noted it wasn't much better before but wants to retry with the current prompt. Not a prompt change.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
+          },
+          {
+            "severity": "medium",
+            "type": "prompt-fixable",
+            "typeCustom": "",
+            "title": "Hardcoded entry trimming — stripping or capping long entries in the prefix map is a script/data task, not a prompt task.",
+            "details": "",
+            "date": "2026-04-20",
+            "author": "",
+            "status": "open"
           }
         ],
         "signoffState": {
