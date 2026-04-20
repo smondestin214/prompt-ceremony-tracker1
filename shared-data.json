@@ -267,7 +267,7 @@
           },
           {
             "severity": "medium",
-            "type": "prompt-fixable",
+            "type": "engineering",
             "typeCustom": "",
             "title": "Hardcoded suggestion length too long",
             "details": "",
