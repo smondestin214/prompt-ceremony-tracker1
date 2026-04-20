@@ -269,7 +269,7 @@
             "severity": "medium",
             "type": "prompt-fixable",
             "typeCustom": "",
-            "title": "Hardcoded suggestion length",
+            "title": "Hardcoded suggestion length too long",
             "details": "",
             "date": "2026-04-20",
             "author": "",
