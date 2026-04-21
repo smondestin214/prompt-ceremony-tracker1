@@ -1,6 +1,6 @@
 [
   {
-    "name": "Predictive Text Prompt (finish their sentence) - Express",
+    "name": "Predictive Text Prompt (finishing their sentence) - Express",
     "owner": "sarah m. / prashanth",
     "targetDate": "2026-04-17",
     "ceremonies": {
@@ -283,7 +283,8 @@
                 "author": "sarah m",
                 "date": "2026-04-20"
               }
-            ]
+            ],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -301,7 +302,8 @@
                 "author": "sarah m",
                 "date": "2026-04-20"
               }
-            ]
+            ],
+            "screenshots": []
           },
           {
             "severity": "medium",
@@ -319,7 +321,8 @@
                 "author": "sarah m",
                 "date": "2026-04-20"
               }
-            ]
+            ],
+            "screenshots": []
           }
         ],
         "signoffState": {
